@@ -1,0 +1,42 @@
+{
+  "name": "portal-jabar-cms",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "concurrently \"npm run serve:css\" \"vue-cli-service serve\"",
+    "serve:css": "tailwindcss -i ./src/assets/styles/tailwind.css -o ./src/assets/styles/main.css -w",
+    "build": "npm run build:css && vue-cli-service build",
+    "build:css": "NODE_ENV=production tailwindcss -i ./src/assets/styles/tailwind.css -o ./src/assets/styles/main.css -m",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0"
+  },
+  "devDependencies": {
+    "@jabardigitalservice/jds-design-system": "^0.0.3-beta.13",
+    "@tailwindcss/aspect-ratio": "^0.4.0",
+    "@tailwindcss/line-clamp": "^0.3.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-unit-jest": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "@vue/test-utils": "^1.3.0",
+    "babel-eslint": "^10.1.0",
+    "concurrently": "^6.4.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^12.1.2",
+    "tailwindcss": "^3.0.5",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
