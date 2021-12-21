@@ -9,6 +9,11 @@ Vue.use(DesignSystem);
 
 Vue.config.productionTip = false;
 
+if (process.env.VUE_APP_ENV === 'local') {
+  const { worker } = require('./mocks/browser');
+  worker.start();
+}
+
 new Vue({
   router,
   store,
