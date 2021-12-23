@@ -1,6 +1,12 @@
 <template>
-  <aside class="min-h-screen h-full flex flex-col bg-green-600 p-6">
-    <section class="flex gap-2">
+  <aside
+    ref="sidebar"
+    class="min-h-screen h-full flex flex-col bg-green-600 p-6"
+  >
+    <section
+      ref="sidebar-title"
+      class="flex gap-2"
+    >
       <img
         src="@/assets/icons/logo.svg"
         alt="Portal Jabar Logo"
@@ -22,7 +28,10 @@
         </h1>
       </div>
     </section>
-    <nav class="w-full mt-10">
+    <nav
+      ref="sidebar-navigation"
+      class="w-full mt-10"
+    >
       <router-link
         v-for="navigation in navigationMenu"
         :key="navigation.label"
@@ -55,7 +64,10 @@
         </a>
       </router-link>
     </nav>
-    <section class="mt-auto">
+    <section
+      ref="sidebar-bottom-nav"
+      class="mt-auto"
+    >
       <router-link
         tag="li"
         to="/pengaturan"
