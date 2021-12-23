@@ -2,6 +2,9 @@ module.exports = {
   content: ['./src/**/*.vue'],
   theme: {
     extend: {
+      gridTemplateColumns: {
+        layout: 'minmax(260px, 15%) 1fr',
+      },
       backgroundImage: {
         hero: "radial-gradient(100% 820.78% at 0% 0%, rgba(0, 39, 39, 0.9) 0%, rgba(0, 24, 11, 0.96) 76.87%), url('~@/assets/images/hero.webp')",
         pattern: "url('~@/assets/images/pattern.svg')",
