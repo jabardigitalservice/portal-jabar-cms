@@ -6,13 +6,16 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import('../pages/Home'),
+    name: 'Dashboard',
+    component: () => import('../pages/HomePage'),
   },
   {
     path: '/login',
     name: 'Login',
     component: () => import('../pages/Login'),
+    meta: {
+      layout: 'AppLayoutPublic',
+    },
   },
 ];
 
