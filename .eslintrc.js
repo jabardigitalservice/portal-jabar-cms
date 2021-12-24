@@ -13,8 +13,10 @@ module.exports = {
   rules: {
     'global-require': 'off',
     'import/extensions': 'off',
+    'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': 'off',
     'max-len': 'off',
+    'no-param-reassign': 'off'
   },
   overrides: [
     {
