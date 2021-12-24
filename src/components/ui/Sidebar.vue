@@ -94,6 +94,7 @@
 import { NAVIGATION_MENU } from '@/static/data';
 
 export default {
+  name: 'Sidebar',
   data() {
     return {
       navigationMenu: NAVIGATION_MENU,
