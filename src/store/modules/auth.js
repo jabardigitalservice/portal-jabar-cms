@@ -39,6 +39,11 @@ export default {
         dispatch('setUser', null);
       }
     },
+    /**
+     * Logging user in
+     * @param {Object} payload - The object contains email and password
+     * @returns {Promise}
+     */
     async login({ dispatch }, payload) {
       try {
         const response = await auth.login(payload);
@@ -55,9 +60,17 @@ export default {
         throw new Error('Terjadi kesalahan pada sistem.');
       }
     },
+    /**
+     * Set user data
+     * @param {Object} payload - The object contains user data obtained from the api's response
+     */
     setUser({ commit }, payload) {
       commit('SET_USER', payload);
     },
+    /**
+     * Set token
+     * @param {Object} payload - The object contains access token, refresh token and expiration
+     */
     setToken({ commit }, payload) {
       commit('SET_TOKEN', payload);
     },
