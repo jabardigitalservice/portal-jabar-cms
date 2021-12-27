@@ -94,7 +94,7 @@
                 <a class="flex gap-2 items-center font-lato font-medium text-sm text-gray-800">
                   <img
                     src="@/assets/icons/logout.svg"
-                    alt="pengaturan icon"
+                    alt="logout icon"
                     width="20"
                     height="20"
                     class="w-5 h-5 object-cover object-center"
