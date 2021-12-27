@@ -10,7 +10,23 @@
       {{ pageName }}
     </h1>
     <div class="flex gap-6">
-      <!-- TODO: Add notification menu -->
+      <!-- Notification -->
+      <button
+        ref="header-notification"
+        title="Notification"
+      >
+        <JdsBadge
+          :show="notification"
+          class="notification__custom-badge"
+          :value="1"
+        >
+          <JdsIcon
+            fill="#069550"
+            name="bell"
+            size="20px"
+          />
+        </JdsBadge>
+      </button>
       <!-- TODO: Add avatar and menu dropdown -->
     </div>
   </header>
@@ -19,6 +35,11 @@
 <script>
 export default {
   name: 'Header',
+  data() {
+    return {
+      notification: false,
+    };
+  },
   computed: {
     pageName() {
       return this.$route.name;
@@ -26,3 +47,15 @@ export default {
   },
 };
 </script>
+
+<style>
+.notification__custom-badge .jds-badge__indicator {
+  position: relative !important;
+  left: -12px !important;
+}
+
+.notification__custom-badge .jds-badge__indicator span {
+  color: white !important;
+  font-weight: bold !important;
+}
+</style>
