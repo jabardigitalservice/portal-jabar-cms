@@ -5,36 +5,20 @@ import routes from './routes';
 
 Vue.use(VueRouter);
 
-const beforeEach = async (to, from, next) => {
-  const isAuthenticated = await store.getters['auth/isAuthenticated'];
-
-  if (to.matched.some((record) => record.meta.public)) {
-    if (isAuthenticated) {
-      next('/');
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
-
-  if (to.matched.some((record) => !record.meta.public)) {
-    if (isAuthenticated) {
-      next();
-    } else {
-      next('/login');
-    }
-  } else {
-    next();
-  }
-};
-
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
 });
 
-router.beforeEach(beforeEach);
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = store.getters['auth/isAuthenticated'];
+  const privateRoute = to.matched.some((record) => !record.meta.public);
+  const publicRoute = to.matched.some((record) => record.meta.public);
+
+  if (privateRoute && !isAuthenticated) next('/login');
+  if (publicRoute && isAuthenticated) next('/');
+  else next();
+});
 
 export default router;
