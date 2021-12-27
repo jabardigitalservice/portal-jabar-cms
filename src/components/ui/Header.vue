@@ -27,7 +27,7 @@
           />
         </JdsBadge>
       </button>
-      <!-- TODO: Add avatar and menu dropdown -->
+      <!-- User Dropdown -->
       <div
         ref="header-user"
         class="px-4"
