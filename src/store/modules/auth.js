@@ -1,0 +1,65 @@
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { getAllCookies } from '@/lib/js-cookie';
+
+const auth = RepositoryFactory.get('auth');
+
+export default {
+  namespaced: true,
+  state: {
+    token: null,
+    user: null,
+  },
+  getters: {
+    isAuthenticated(state) {
+      return !!(state.token && state.user);
+    },
+    user(state) {
+      return state.user;
+    },
+  },
+  mutations: {
+    SET_TOKEN(state, payload) {
+      state.token = payload;
+    },
+    SET_USER(state, payload) {
+      state.user = payload;
+    },
+  },
+  actions: {
+    async getUser({ dispatch }) {
+      const token = getAllCookies();
+      if (!Object.keys(token).length) return;
+
+      try {
+        const response = await auth.getUser();
+        dispatch('setToken', token);
+        dispatch('setUser', response.data.data);
+      } catch (error) {
+        dispatch('setToken', null);
+        dispatch('setUser', null);
+      }
+    },
+    async login({ dispatch }, payload) {
+      try {
+        const response = await auth.login(payload);
+        await Promise.all([
+          dispatch('setToken', response.data),
+          dispatch('getUser', response.data),
+        ]);
+      } catch (error) {
+        dispatch('setToken', null);
+        dispatch('setUser', null);
+        if (error.response?.status === 401) {
+          throw new Error('Akun tidak dapat ditemukan.');
+        }
+        throw new Error('Terjadi kesalahan pada sistem.');
+      }
+    },
+    setUser({ commit }, payload) {
+      commit('SET_USER', payload);
+    },
+    setToken({ commit }, payload) {
+      commit('SET_TOKEN', payload);
+    },
+  },
+};

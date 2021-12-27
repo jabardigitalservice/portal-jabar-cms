@@ -3,10 +3,20 @@
     <h2 class="text-green-700 text-2xl font-medium mb-3">
       Login
     </h2>
-    <p class="text-xs text-gray-700 leading-5 mb-7">
+    <p class="text-xs text-gray-700 leading-5 mb-5">
       Selamat Datang! Silakan masukkan email dan kata sandi untuk masuk ke Portal Jabar Content Management System.
     </p>
-    <form>
+    <div v-if="isError">
+      <JdsSectionMessage
+        :show="isError"
+        variant="error"
+        dismissible
+        :message="error.message"
+        class="mb-5"
+        @click:close="resetForm"
+      />
+    </div>
+    <form @submit.prevent="onSubmit">
       <div class="flex flex-col gap-1 mb-5">
         <label
           for="email"
@@ -24,7 +34,9 @@
             v-model.trim="email"
             type="email"
             placeholder="Contoh: agus.permadi@gmail.com"
-            class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none"
+            :disabled="isError"
+            class="text-sm placeholder:text-gray-600 p-2 w-full bg-white focus:outline-none"
+            :class="{'cursor-not-allowed': isError}"
           >
         </div>
       </div>
@@ -45,7 +57,9 @@
             v-model.trim="password"
             :type="passwordInputType"
             placeholder="Masukkan kata sandi"
-            class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none"
+            :disabled="isError"
+            class="text-sm placeholder:text-gray-600 p-2 w-full bg-white focus:outline-none"
+            :class="{'cursor-not-allowed': isError}"
           >
           <div
             v-show="showPasswordIcon"
@@ -70,17 +84,35 @@
         </router-link>
       </div>
       <button
+        v-if="!isLoading"
         ref="login-button"
-        type="button"
-        class="bg-green-700 rounded-lg text-sm py-[9px] w-full text-white font-bold leading-6 hover:bg-green-800 uppercase focus:outline-none"
+        type="submit"
+        :disabled="!isValidInput || isError"
+        class="rounded-lg text-sm py-[9px] w-full font-bold leading-6 uppercase focus:outline-none"
+        :class="[ isValidInput && !isError ? 'text-white bg-green-700 hover:bg-green-800' : 'text-gray-500 bg-gray-200 cursor-not-allowed']"
       >
         Masuk
+      </button>
+      <button
+        v-else
+        ref="login-button"
+        type="submit"
+        :disabled="!isValidInput"
+        class="flex justify-between items-center text-gray-500 bg-gray-200 rounded-lg text-sm px-4 py-[9px] w-full font-bold leading-6 focus:outline-none"
+      >
+        Mengecek Akun
+        <JdsSpinner
+          v-show="isLoading"
+          size="16px"
+        />
       </button>
     </form>
   </section>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'LoginForm',
   data() {
@@ -88,6 +120,8 @@ export default {
       email: '',
       password: '',
       showPasswordInput: false,
+      loading: false,
+      error: null,
     };
   },
   computed: {
@@ -100,10 +134,42 @@ export default {
     passwordIconName() {
       return this.showPasswordInput ? 'eye-off' : 'eye';
     },
+    isError() {
+      return !!this.error;
+    },
+    isLoading() {
+      return this.loading;
+    },
+    isValidInput() {
+      return this.email !== '' && this.isValidEmail(this.email) && this.password !== '';
+    },
   },
   methods: {
+    ...mapActions({
+      login: 'auth/login',
+    }),
+    isValidEmail(email) {
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      return emailPattern.test(email);
+    },
     toggleShowPasswordInput() {
       this.showPasswordInput = !this.showPasswordInput;
+    },
+    resetForm() {
+      this.error = null;
+      this.email = '';
+      this.password = '';
+    },
+    async onSubmit() {
+      try {
+        this.loading = true;
+        await this.login({ email: this.email, password: this.password });
+        this.$router.push({ path: '/' });
+      } catch (error) {
+        this.error = { message: error.message };
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };
