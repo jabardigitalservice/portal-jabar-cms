@@ -1,7 +1,7 @@
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import { getAllCookies } from '@/lib/js-cookie';
 
-const auth = RepositoryFactory.get('auth');
+const authRepository = RepositoryFactory.get('auth');
 
 export default {
   namespaced: true,
@@ -31,7 +31,7 @@ export default {
       if (!Object.keys(token).length) return;
 
       try {
-        const response = await auth.getUser();
+        const response = await authRepository.getUser();
         dispatch('setToken', token);
         dispatch('setUser', response.data.data);
       } catch (error) {
@@ -46,7 +46,7 @@ export default {
      */
     async login({ dispatch }, payload) {
       try {
-        const response = await auth.login(payload);
+        const response = await authRepository.login(payload);
         await Promise.all([
           dispatch('setToken', response.data),
           dispatch('getUser', response.data),
