@@ -3,6 +3,7 @@
     <AppLayout>
       <router-view />
     </AppLayout>
+    <portal-target name="modal" />
   </div>
 </template>
 
