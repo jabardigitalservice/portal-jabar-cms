@@ -111,8 +111,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
   name: 'LoginForm',
   data() {
@@ -145,9 +143,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions({
-      login: 'auth/login',
-    }),
     isValidEmail(email) {
       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       return emailPattern.test(email);
@@ -163,7 +158,7 @@ export default {
     async onSubmit() {
       try {
         this.loading = true;
-        await this.login({ email: this.email, password: this.password });
+        await this.$store.dispatch('auth/login', { email: this.email, password: this.password });
         this.$router.push({ path: '/' });
       } catch (error) {
         this.error = { message: error.message };
