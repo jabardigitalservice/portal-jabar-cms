@@ -131,6 +131,7 @@
           <JdsButton
             variant="primary"
             class="text-sm font-bold h-[38px]"
+            @click="onLogout"
           >
             Ya, saya yakin
           </JdsButton>
@@ -166,6 +167,10 @@ export default {
     },
     toggleLogoutModal() {
       this.isLogoutModalOpen = !this.isLogoutModalOpen;
+    },
+    async onLogout() {
+      await this.$store.dispatch('auth/logout');
+      window.location.replace('/login');
     },
   },
 };
