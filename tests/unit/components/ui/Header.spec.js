@@ -25,7 +25,7 @@ describe('Component: Header', () => {
 
   beforeEach(() => {
     wrapper = mount(Header, {
-      stubs: ['router-link', 'JdsIcon', 'JdsBadge', 'JdsPopover'],
+      stubs: ['router-link', 'JdsIcon', 'JdsBadge', 'JdsPopover', 'portal'],
       localVue,
       router,
     });

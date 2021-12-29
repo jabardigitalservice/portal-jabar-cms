@@ -86,12 +86,11 @@
                   Pengaturan Akun
                 </a>
               </router-link>
-              <router-link
-                tag="li"
-                to="#"
+              <button
                 class="p-2 rounded-md hover:bg-gray-100"
+                @click="toggleLogoutModal"
               >
-                <a class="flex gap-2 items-center font-lato font-medium text-sm text-gray-800">
+                <p class="flex gap-2 items-center font-lato font-medium text-sm text-gray-800">
                   <img
                     src="@/assets/icons/logout.svg"
                     alt="logout icon"
@@ -100,23 +99,61 @@
                     class="w-5 h-5 object-cover object-center"
                   >
                   Keluar
-                </a>
-              </router-link>
+                </p>
+              </button>
             </ul>
           </div>
         </JdsPopover>
       </div>
     </div>
+    <!-- Logout Modal -->
+    <BaseModal
+      :open="isLogoutModalOpen"
+      @close="toggleLogoutModal"
+    >
+      <div class="w-full h-full">
+        <h1 class="font-roboto font-bold text-center text-green-700 text-[21px] leading-[34px] mb-4">
+          Keluar CMS
+        </h1>
+        <p class="text-center text-sm text-gray-800">
+          Apakah Anda yakin akan keluar dari CMS Portal Jabar?
+        </p>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4">
+          <JdsButton
+            variant="secondary"
+            class="text-sm font-bold h-[38px]"
+            @click="toggleLogoutModal"
+          >
+            Batal
+          </JdsButton>
+          <JdsButton
+            variant="primary"
+            class="text-sm font-bold h-[38px]"
+            @click="onLogout"
+          >
+            Ya, saya yakin
+          </JdsButton>
+        </div>
+      </template>
+    </BaseModal>
   </header>
 </template>
 
 <script>
+import BaseModal from '@/components/ui/BaseModal';
+
 export default {
   name: 'Header',
+  components: {
+    BaseModal,
+  },
   data() {
     return {
       notification: true,
       isUserDropdownOpen: false,
+      isLogoutModalOpen: false,
     };
   },
   computed: {
@@ -127,6 +164,13 @@ export default {
   methods: {
     toggleUserDropdown() {
       this.isUserDropdownOpen = !this.isUserDropdownOpen;
+    },
+    toggleLogoutModal() {
+      this.isLogoutModalOpen = !this.isLogoutModalOpen;
+    },
+    async onLogout() {
+      await this.$store.dispatch('auth/logout');
+      window.location.replace('/login');
     },
   },
 };

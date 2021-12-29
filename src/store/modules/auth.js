@@ -1,5 +1,5 @@
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
-import { getAllCookies } from '@/lib/js-cookie';
+import { getAllCookies, removeAllCookies } from '@/lib/js-cookie';
 
 const authRepository = RepositoryFactory.get('auth');
 
@@ -59,6 +59,15 @@ export default {
         }
         throw new Error('Terjadi kesalahan pada sistem.');
       }
+    },
+    /**
+     * Clear all cookies
+     * reset user and token
+     */
+    logout({ dispatch }) {
+      removeAllCookies();
+      dispatch('setToken', null);
+      dispatch('setUser', null);
     },
     /**
      * Set user data
