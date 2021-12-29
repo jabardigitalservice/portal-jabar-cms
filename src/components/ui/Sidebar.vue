@@ -35,33 +35,40 @@
       <router-link
         v-for="navigation in navigationMenu"
         :key="navigation.label"
-        tag="li"
+        v-slot="{ href, navigate, isExactActive }"
         :to="navigation.link"
-        class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
-        font-bold text-sm text-white hover:bg-green-700"
+        custom
       >
-        <a
-          :title="navigation.label"
-          class="w-full flex items-center gap-3 whitespace-nowrap"
+        <li
+          class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
+          font-bold text-sm text-white hover:bg-green-700 mb-2"
+          :class="{'bg-green-700' : isExactActive}"
         >
-          <img
-            :src="require(`@/assets/icons/${navigation.icon}.svg`)"
-            :alt="navigation.label"
-            width="20px"
-            height="20px"
+          <a
+            :href="href"
+            :title="navigation.label"
+            class="w-full flex items-center gap-3 whitespace-nowrap"
+            @click="navigate"
           >
-          {{ navigation.label }}
-          <span
-            v-show="navigation.arrow"
-            class="ml-auto"
-          >
-            <JdsIcon
-              fill="#fff"
-              name="chevron-right"
-              size="16px"
-            />
-          </span>
-        </a>
+            <img
+              :src="require(`@/assets/icons/${navigation.icon}.svg`)"
+              :alt="navigation.label"
+              width="20px"
+              height="20px"
+            >
+            {{ navigation.label }}
+            <span
+              v-show="navigation.arrow"
+              class="ml-auto"
+            >
+              <JdsIcon
+                fill="#fff"
+                name="chevron-right"
+                size="16px"
+              />
+            </span>
+          </a>
+        </li>
       </router-link>
     </nav>
     <section
@@ -69,22 +76,29 @@
       class="mt-auto"
     >
       <router-link
-        tag="li"
+        v-slot="{ href, navigate, isExactActive }"
         to="/pengaturan"
-        class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
-        font-bold text-sm text-white hover:bg-green-700"
+        custom
       >
-        <a
-          title="Pengaturan"
-          class="w-full flex items-center gap-3 whitespace-nowrap"
+        <li
+          class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
+          font-bold text-sm text-white hover:bg-green-700 mb-2"
+          :class="{'bg-green-700' : isExactActive}"
         >
-          <img
-            src="@/assets/icons/setting.svg"
-            width="20px"
-            height="20px"
+          <a
+            :href="href"
+            title="Pengaturan Akun"
+            class="w-full flex items-center gap-3 whitespace-nowrap"
+            @click="navigate"
           >
-          Pengaturan Akun
-        </a>
+            <img
+              src="@/assets/icons/setting.svg"
+              width="20px"
+              height="20px"
+            >
+            Pengaturan Akun
+          </a>
+        </li>
       </router-link>
     </section>
   </aside>
@@ -102,9 +116,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.router-link-exact-active {
-  background: #069550;
-}
-</style>

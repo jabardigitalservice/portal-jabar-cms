@@ -71,26 +71,36 @@
               class="flex flex-col gap-2"
             >
               <router-link
-                tag="li"
+                v-slot="{ href, navigate }"
                 to="/pengaturan"
-                class="p-2 rounded-md hover:bg-gray-100"
+                custom
               >
-                <a class="flex gap-2 items-center font-lato font-medium text-sm text-gray-800">
-                  <img
-                    src="@/assets/icons/setting-outline.svg"
-                    alt="pengaturan icon"
-                    width="20"
-                    height="20"
-                    class="w-5 h-5 object-cover object-center"
+                <li class="p-2 rounded-md group hover:bg-green-50">
+                  <a
+                    :href="href"
+                    class="flex gap-2 items-center font-lato font-medium text-sm
+                    text-gray-800 group-hover:text-green-700"
+                    @click="navigate"
                   >
-                  Pengaturan Akun
-                </a>
+                    <img
+                      src="@/assets/icons/setting-outline.svg"
+                      alt="pengaturan icon"
+                      width="20"
+                      height="20"
+                      class="w-5 h-5 object-cover object-center"
+                    >
+                    Pengaturan Akun
+                  </a>
+                </li>
               </router-link>
               <button
-                class="p-2 rounded-md hover:bg-gray-100"
+                class="p-2 rounded-md group hover:bg-green-50"
                 @click="toggleLogoutModal"
               >
-                <p class="flex gap-2 items-center font-lato font-medium text-sm text-gray-800">
+                <p
+                  class="flex gap-2 items-center font-lato font-medium text-sm text-gray-800
+                  group-hover:text-green-700"
+                >
                   <img
                     src="@/assets/icons/logout.svg"
                     alt="logout icon"
