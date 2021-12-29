@@ -16,7 +16,8 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': 'off',
     'max-len': 'off',
-    'no-param-reassign': 'off'
+    'no-param-reassign': 'off',
+    'no-underscore-dangle': 'off'
   },
   overrides: [
     {
