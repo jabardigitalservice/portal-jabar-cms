@@ -30,11 +30,11 @@
       <!-- User Dropdown -->
       <div
         ref="header-user"
-        class="px-4"
+        class="ml-4"
       >
         <JdsPopover :value="isUserDropdownOpen">
           <template #activator>
-            <div class="w-full flex gap-4 whitespace-nowrap items-center">
+            <div class="grid grid-cols-[34px,_minmax(0,_1fr)] gap-4 items-center">
               <!-- TODO: Replace dummy image with user avatar -->
               <img
                 ref="header-user-avatar"
@@ -46,12 +46,13 @@
               >
               <button
                 ref="header-user-dropdown-button"
-                class="flex items-center gap-2"
+                class="flex items-center"
+                title="Superadmin"
                 @click="toggleUserDropdown"
               >
                 <p
                   ref="header-user-name"
-                  class="font-lato font-semibold text-sm text-blue-gray-800"
+                  class="max-w-[100px] text-left font-lato font-semibold text-sm text-blue-gray-800 line-clamp-1 mr-2"
                 >
                   Superadmin
                 </p>
