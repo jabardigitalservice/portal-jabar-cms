@@ -107,12 +107,21 @@
         />
       </button>
     </form>
+    <ForgotPassword
+      :open="showForgotPassword"
+      @close="closeForgotPasswordModal"
+    />
   </section>
 </template>
 
 <script>
+import ForgotPassword from '@/components/Login/ForgotPassword';
+
 export default {
   name: 'LoginForm',
+  components: {
+    ForgotPassword,
+  },
   data() {
     return {
       email: '',
@@ -120,6 +129,7 @@ export default {
       showPasswordInput: false,
       loading: false,
       error: null,
+      loginAttempts: 0,
     };
   },
   computed: {
@@ -141,6 +151,9 @@ export default {
     isValidInput() {
       return this.email !== '' && this.isValidEmail(this.email) && this.password !== '';
     },
+    showForgotPassword() {
+      return this.loginAttempts >= 3;
+    },
   },
   methods: {
     isValidEmail(email) {
@@ -161,10 +174,19 @@ export default {
         await this.$store.dispatch('auth/login', { email: this.email, password: this.password });
         this.$router.push({ path: '/' });
       } catch (error) {
-        this.error = { message: error.message };
+        if (error.status === 401) {
+          this.error = { message: 'Akun tidak ditemukan' };
+          this.loginAttempts += 1;
+        } else {
+          this.error = { message: error.message };
+        }
       } finally {
         this.loading = false;
       }
+    },
+    closeForgotPasswordModal() {
+      this.loginAttempts = 0;
+      this.resetForm();
     },
   },
 };
