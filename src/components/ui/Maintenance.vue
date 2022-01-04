@@ -12,7 +12,7 @@
         Oops, fitur ini sedang dalam tahap pengembangan
       </h1>
       <p class="font-lato text-sm text-blue-gray-800 leading-6 text-center">
-        Silahkan menuju halaman lain untuk memanfaatkan<br>
+        Silakan menuju halaman lain untuk memanfaatkan<br>
         fitur di CMS Portal Jabar.
         <br>
       </p>
