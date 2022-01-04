@@ -1,8 +1,5 @@
 <template>
-  <BaseModal
-    :open="open"
-    @close="onClose"
-  >
+  <BaseModal :open="open">
     <div class="w-full h-full px-2 pb-4">
       <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
         Lupa Kata Sandi
@@ -89,7 +86,7 @@
       >
         <JdsButton
           class="text-sm font-bold h-[38px]"
-          @click="onClose"
+          @click="onClose()"
         >
           Saya Mengerti
         </JdsButton>

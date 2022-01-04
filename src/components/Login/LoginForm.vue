@@ -74,14 +74,13 @@
         </div>
       </div>
       <div class="w-full text-right">
-        <router-link
+        <div
           ref="forgot-password-link"
-          to="#"
-          role="link"
-          class="text-[#1E88E5] inline-block mb-6 text-sm"
+          class="text-[#1E88E5] inline-block mb-6 text-sm cursor-pointer"
+          @click="openForgotPasswordModal"
         >
           Lupa kata sandi?
-        </router-link>
+        </div>
       </div>
       <button
         v-if="!isLoading"
@@ -108,7 +107,7 @@
       </button>
     </form>
     <ForgotPassword
-      :open="showForgotPassword"
+      :open="showForgotPasswordModal"
       @close="closeForgotPasswordModal"
     />
   </section>
@@ -151,7 +150,7 @@ export default {
     isValidInput() {
       return this.email !== '' && this.isValidEmail(this.email) && this.password !== '';
     },
-    showForgotPassword() {
+    showForgotPasswordModal() {
       return this.loginAttempts >= 3;
     },
   },
@@ -187,6 +186,9 @@ export default {
     closeForgotPasswordModal() {
       this.loginAttempts = 0;
       this.resetForm();
+    },
+    openForgotPasswordModal() {
+      this.loginAttempts = 3;
     },
   },
 };
