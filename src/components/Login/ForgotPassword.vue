@@ -118,7 +118,7 @@ export default {
   },
   computed: {
     isValidInput() {
-      return this.email !== '' && this.isValidEmail(this.email) && this.password !== '';
+      return this.email !== '' && this.isValidEmail(this.email);
     },
     isError() {
       return !!this.error;
