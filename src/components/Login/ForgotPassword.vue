@@ -6,7 +6,12 @@
       </h1>
       <div class="flex gap-8">
         <div class="w-[68px] h-[55px]">
-          <img src="@/assets/icons/mailbox.svg">
+          <img
+            src="@/assets/icons/mailbox.svg"
+            alt="Mailbox"
+            width="68"
+            height="55"
+          >
         </div>
         <div
           v-if="!success"
