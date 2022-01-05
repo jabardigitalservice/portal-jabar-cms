@@ -10,16 +10,21 @@
       </p>
     </section>
 
-    <section class="px-6 py-4 rounded-lg bg-white border-2 border-green-600">
-      <div class="w-full min-h-[500px]">
-        <!-- TODO: add Table Filter, Table Body and Pagination -->
+    <section class="px-3 py-6 rounded-lg bg-white border-2 border-green-600">
+      <div class="w-full">
+        <AgendaTable />
       </div>
     </section>
   </main>
 </template>
 
 <script>
+import AgendaTable from './AgendaTable.vue';
+
 export default {
   name: 'Agenda',
+  components: {
+    AgendaTable,
+  },
 };
 </script>
