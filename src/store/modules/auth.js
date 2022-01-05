@@ -54,10 +54,11 @@ export default {
       } catch (error) {
         dispatch('setToken', null);
         dispatch('setUser', null);
-        if (error.response?.status === 401) {
-          throw new Error('Akun tidak dapat ditemukan.');
+
+        if (error.response) {
+          throw error.response;
         }
-        throw new Error('Terjadi kesalahan pada sistem.');
+        throw error;
       }
     },
     /**
