@@ -74,14 +74,13 @@
         </div>
       </div>
       <div class="w-full text-right">
-        <router-link
+        <div
           ref="forgot-password-link"
-          to="#"
-          role="link"
-          class="text-[#1E88E5] inline-block mb-6 text-sm"
+          class="text-[#1E88E5] inline-block mb-6 text-sm cursor-pointer"
+          @click="openForgotPasswordModal"
         >
           Lupa kata sandi?
-        </router-link>
+        </div>
       </div>
       <button
         v-if="!isLoading"
@@ -107,12 +106,21 @@
         />
       </button>
     </form>
+    <ForgotPassword
+      :open="showForgotPasswordModal"
+      @close="closeForgotPasswordModal"
+    />
   </section>
 </template>
 
 <script>
+import ForgotPassword from '@/components/Login/ForgotPassword';
+
 export default {
   name: 'LoginForm',
+  components: {
+    ForgotPassword,
+  },
   data() {
     return {
       email: '',
@@ -120,6 +128,7 @@ export default {
       showPasswordInput: false,
       loading: false,
       error: null,
+      loginAttempts: 0,
     };
   },
   computed: {
@@ -141,6 +150,9 @@ export default {
     isValidInput() {
       return this.email !== '' && this.isValidEmail(this.email) && this.password !== '';
     },
+    showForgotPasswordModal() {
+      return this.loginAttempts >= 3;
+    },
   },
   methods: {
     isValidEmail(email) {
@@ -161,10 +173,22 @@ export default {
         await this.$store.dispatch('auth/login', { email: this.email, password: this.password });
         this.$router.push({ path: '/' });
       } catch (error) {
-        this.error = { message: error.message };
+        if (error.status === 401) {
+          this.error = { message: 'Akun tidak ditemukan' };
+          this.loginAttempts += 1;
+        } else {
+          this.error = { message: error.message };
+        }
       } finally {
         this.loading = false;
       }
+    },
+    closeForgotPasswordModal() {
+      this.loginAttempts = 0;
+      this.resetForm();
+    },
+    openForgotPasswordModal() {
+      this.loginAttempts = 3;
     },
   },
 };
