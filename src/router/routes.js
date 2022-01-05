@@ -11,8 +11,8 @@ export default [
   },
   {
     path: '/agenda',
-    name: 'Agenda',
-    component: () => import('@/pages/HomePage'),
+    name: 'Agenda Jawa Barat',
+    component: () => import('@/pages/AgendaPage'),
   },
   {
     path: '/berita-dan-informasi',
