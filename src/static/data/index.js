@@ -24,3 +24,35 @@ export const NAVIGATION_MENU = [
     arrow: true,
   },
 ];
+
+export const AGENDA_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Judul Agenda/Event',
+    sortable: true,
+  },
+  {
+    key: 'category',
+    text: 'Ketegori',
+    sortable: true,
+  },
+  {
+    key: 'date',
+    text: 'Tanggal',
+    sortable: true,
+  },
+  {
+    key: 'time',
+    text: 'Waktu',
+    sortable: true,
+  },
+  {
+    key: 'status',
+    text: 'Status',
+    sortable: true,
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+  },
+];
