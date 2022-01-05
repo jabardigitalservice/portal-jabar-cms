@@ -65,7 +65,7 @@ export default {
   props: {
     item: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
   },
   data() {
@@ -75,12 +75,7 @@ export default {
         modifiers: [
           {
             name: 'offset',
-            options: {
-              offset: [
-                -8,
-                8,
-              ],
-            },
+            options: { offset: [-8, 8] },
           },
         ],
       },
