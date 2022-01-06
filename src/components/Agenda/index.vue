@@ -1,5 +1,5 @@
 <template>
-  <main class="w-full h-full">
+  <main class="w-full pb-20">
     <section class="px-6 py-4 rounded-lg bg-white mb-4">
       <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3">
         Daftar Semua Agenda
@@ -12,7 +12,10 @@
 
     <section class="px-3 py-6 rounded-lg bg-white border-2 border-green-600">
       <div class="w-full">
-        <AgendaTable />
+        <AgendaTable
+          :items="items"
+          :loading="loading"
+        />
       </div>
     </section>
   </main>
@@ -20,11 +23,77 @@
 
 <script>
 import AgendaTable from './AgendaTable.vue';
+import { formatDate } from '@/lib/date-fns';
+
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const agendaRepository = RepositoryFactory.get('agenda');
 
 export default {
   name: 'Agenda',
   components: {
     AgendaTable,
+  },
+  data() {
+    return {
+      events: [],
+      meta: {},
+      params: {
+        start_date: null,
+        end_date: null,
+        per_page: 10,
+        page: 1,
+      },
+      pagination: {},
+      loading: false,
+    };
+  },
+  computed: {
+    items() {
+      if (Array.isArray(this.events) && !!this.events.length) {
+        const items = this.events.map((event) => ({
+          id: event.id,
+          title: event.title,
+          category: event.category,
+          date: formatDate(event.date, 'dd/MM/yyyy'),
+          time: `${event.start_hour} - ${event.end_hour}`,
+          status: this.getEventStatus(event.status),
+        }));
+
+        return items;
+      }
+
+      return [];
+    },
+  },
+  async mounted() {
+    await this.fetchEvents();
+  },
+  methods: {
+    async fetchEvents() {
+      try {
+        this.loading = true;
+
+        const response = await agendaRepository.getEvents(this.params);
+        const { data, meta } = response.data;
+
+        this.events = data;
+        this.meta = meta;
+      } catch (error) {
+        // silent error
+      } finally {
+        this.loading = false;
+      }
+    },
+    getEventStatus(status) {
+      const statusMap = {
+        publish: 'Dipublish',
+        unpublish: 'Belum Dipublish',
+        archive: 'Dibuang',
+      };
+
+      return statusMap[status] ?? status;
+    },
   },
 };
 </script>

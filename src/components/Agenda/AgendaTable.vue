@@ -3,6 +3,7 @@
     <JdsDataTable
       :headers="tableHeader"
       :items="items"
+      :loading="loading"
     >
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.action="{item}">
@@ -21,44 +22,21 @@ export default {
   components: {
     AgendaTableAction,
   },
+  props: {
+    items: {
+      type: Array,
+      require: false,
+      default: () => [],
+    },
+    loading: {
+      type: Boolean,
+      require: false,
+      default: false,
+    },
+  },
   data() {
     return {
       tableHeader: AGENDA_TABLE_HEADER,
-      // TODO: Remoe this dummy data with real data
-      items: [
-        {
-          id: '1',
-          title: 'lorem ipsum 1',
-          category: 'Agenda OPD',
-          date: '12/01/2022',
-          time: '08:00 - 12:00',
-          status: 'Dipublish',
-        },
-        {
-          id: '2',
-          title: 'lorem ipsum 2',
-          category: 'Agenda OPD',
-          date: '12/01/2022',
-          time: '08:00 - 12:00',
-          status: 'Dipublish',
-        },
-        {
-          id: '3',
-          title: 'lorem ipsum 3',
-          category: 'Agenda OPD',
-          date: '12/01/2022',
-          time: '08:00 - 12:00',
-          status: 'Dipublish',
-        },
-        {
-          id: '4',
-          title: 'lorem ipsum 4',
-          category: 'Agenda OPD',
-          date: '12/01/2022',
-          time: '08:00 - 12:00',
-          status: 'Dipublish',
-        },
-      ],
     };
   },
 };
