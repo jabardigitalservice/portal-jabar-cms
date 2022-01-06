@@ -25,7 +25,7 @@ export default {
    *
    * @returns {Promise}
    */
-  getEventsById(id = null) {
+  getEventById(id = null) {
     return Repository.get(`${resource}/${id}`);
   },
 
