@@ -24,10 +24,10 @@ export const axiosInterceptors = (store) => {
     (response) => response,
     async (error) => {
       const originalConfig = error.config;
-      if (error.response.status === 400 && originalConfig.url.includes('auth/refresh')) {
+      if (error.response.status === 401 && originalConfig.url.includes('auth/refresh')) {
         return Promise.reject(error);
       }
-      if (error.response.status === 400 && !originalConfig._retry) {
+      if (error.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
         const refreshToken = getCookies('refresh_token');
         if (refreshToken) {
