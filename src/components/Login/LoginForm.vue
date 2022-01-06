@@ -13,7 +13,7 @@
         dismissible
         :message="error.message"
         class="mb-5"
-        @click:close="resetForm"
+        @click:close="clearErrorMessage"
       />
     </div>
     <form @submit.prevent="onSubmit">
@@ -162,10 +162,8 @@ export default {
     toggleShowPasswordInput() {
       this.showPasswordInput = !this.showPasswordInput;
     },
-    resetForm() {
+    clearErrorMessage() {
       this.error = null;
-      this.email = '';
-      this.password = '';
     },
     async onSubmit() {
       try {
@@ -185,7 +183,6 @@ export default {
     },
     closeForgotPasswordModal() {
       this.loginAttempts = 0;
-      this.resetForm();
     },
     openForgotPasswordModal() {
       this.loginAttempts = 3;
