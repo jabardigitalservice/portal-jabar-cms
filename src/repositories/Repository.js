@@ -34,10 +34,10 @@ export const axiosInterceptors = (store) => {
           const response = await store.dispatch('auth/refreshToken', { token: refreshToken });
           if (response.data && response.status === 200) {
             const accessToken = response.data.access_token;
-            axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+            originalConfig.headers.Authorization = `Bearer ${accessToken}`;
+            return axiosInstance(originalConfig);
           }
         }
-        return axiosInstance(originalConfig);
       }
       return Promise.reject(error);
     },
