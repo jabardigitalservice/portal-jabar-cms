@@ -152,11 +152,7 @@ export default {
   },
   watch: {
     password() {
-      if (this.password !== '') {
-        this.setPasswordIconVisibility(true);
-      } else {
-        this.setPasswordIconVisibility(false);
-      }
+      this.setPasswordIconVisibility(this.password !== '');
     },
     loginAttempts() {
       if (this.loginAttempts >= 3) {
