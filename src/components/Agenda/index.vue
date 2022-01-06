@@ -12,7 +12,10 @@
 
     <section class="px-3 py-6 rounded-lg bg-white border-2 border-green-600">
       <div class="w-full">
-        <AgendaTable />
+        <AgendaTable
+          :items="items"
+          :loading="loading"
+        />
       </div>
     </section>
   </main>
@@ -21,10 +24,66 @@
 <script>
 import AgendaTable from './AgendaTable.vue';
 
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const agendaRepository = RepositoryFactory.get('agenda');
+
 export default {
   name: 'Agenda',
   components: {
     AgendaTable,
+  },
+  data() {
+    return {
+      events: [],
+      meta: {},
+      params: {
+        start_date: null,
+        end_date: null,
+        per_page: 10,
+        page: 1,
+      },
+      pagination: {},
+      loading: false,
+    };
+  },
+  computed: {
+    items() {
+      if (Array.isArray(this.events) && !!this.events.length) {
+        const items = this.events.map((event) => ({
+          id: event.id,
+          title: event.title,
+          category: event.category,
+          date: event.date,
+          time: `${event.start_hour} - ${event.end_hour}`,
+          status: event.status,
+        }));
+
+        return items;
+      }
+
+      return [];
+    },
+  },
+  async mounted() {
+    this.fetchEvents();
+  },
+  methods: {
+    async fetchEvents() {
+      try {
+        this.loading = true;
+
+        const response = await agendaRepository.getEvents(this.params);
+        const { data, meta } = response.data;
+
+        this.events = data;
+        this.meta = meta;
+      } catch (error) {
+        // silent error
+      } finally {
+        this.loading = false;
+      }
+    },
   },
 };
 </script>
