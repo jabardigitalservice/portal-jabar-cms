@@ -23,6 +23,7 @@
 
 <script>
 import AgendaTable from './AgendaTable.vue';
+import { formatDate } from '@/lib/date-fns';
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
@@ -54,9 +55,9 @@ export default {
           id: event.id,
           title: event.title,
           category: event.category,
-          date: event.date,
+          date: formatDate(event.date, 'dd/MM/yyyy'),
           time: `${event.start_hour} - ${event.end_hour}`,
-          status: event.status,
+          status: this.getEventStatus(event.status),
         }));
 
         return items;
@@ -66,7 +67,7 @@ export default {
     },
   },
   async mounted() {
-    this.fetchEvents();
+    await this.fetchEvents();
   },
   methods: {
     async fetchEvents() {
@@ -83,6 +84,15 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    getEventStatus(status) {
+      const statusMap = {
+        publish: 'Dipublish',
+        unpublish: 'Belum Dipublish',
+        archive: 'Dibuang',
+      };
+
+      return statusMap[status] ?? status;
     },
   },
 };
