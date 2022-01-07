@@ -79,8 +79,6 @@ export default {
       try {
         const response = await authRepository.refreshToken(payload);
         setCookies(response.data);
-        dispatch('setToken', response.data);
-        dispatch('setUser', response.data);
         return response;
       } catch (error) {
         removeAllCookies();
