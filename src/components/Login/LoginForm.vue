@@ -13,7 +13,7 @@
         dismissible
         :message="error.message"
         class="mb-5"
-        @click:close="resetForm"
+        @click:close="clearErrorMessage"
       />
     </div>
     <form @submit.prevent="onSubmit">
@@ -62,9 +62,9 @@
             :class="{'cursor-not-allowed': isError}"
           >
           <div
-            v-show="showPasswordIcon"
+            v-show="isPasswordIconVisible"
             class="p-2 flex justify-center items-center cursor-pointer"
-            @click="toggleShowPasswordInput"
+            @click="togglePasswordInputVisibility"
           >
             <JdsIcon
               :name="passwordIconName"
@@ -77,7 +77,7 @@
         <div
           ref="forgot-password-link"
           class="text-[#1E88E5] inline-block mb-6 text-sm cursor-pointer"
-          @click="openForgotPasswordModal"
+          @click="toggleForgotPasswordModal"
         >
           Lupa kata sandi?
         </div>
@@ -107,8 +107,8 @@
       </button>
     </form>
     <ForgotPassword
-      :open="showForgotPasswordModal"
-      @close="closeForgotPasswordModal"
+      :open="isForgotPasswordModalOpen"
+      @close="toggleForgotPasswordModal"
     />
   </section>
 </template>
@@ -125,21 +125,20 @@ export default {
     return {
       email: '',
       password: '',
-      showPasswordInput: false,
+      isPasswordIconVisible: false,
+      isPasswordInputVisible: false,
       loading: false,
       error: null,
       loginAttempts: 0,
+      isForgotPasswordModalOpen: false,
     };
   },
   computed: {
-    showPasswordIcon() {
-      return this.password !== '';
-    },
     passwordInputType() {
-      return this.showPasswordInput ? 'text' : 'password';
+      return this.isPasswordInputVisible ? 'text' : 'password';
     },
     passwordIconName() {
-      return this.showPasswordInput ? 'eye-off' : 'eye';
+      return this.isPasswordInputVisible ? 'eye-off' : 'eye';
     },
     isError() {
       return !!this.error;
@@ -150,8 +149,20 @@ export default {
     isValidInput() {
       return this.email !== '' && this.isValidEmail(this.email) && this.password !== '';
     },
-    showForgotPasswordModal() {
-      return this.loginAttempts >= 3;
+  },
+  watch: {
+    password() {
+      this.setPasswordIconVisibility(this.password !== '');
+    },
+    loginAttempts() {
+      if (this.loginAttempts >= 3) {
+        this.setForgotPasswordModal(true);
+      }
+    },
+    isForgotPasswordModalOpen() {
+      if (this.isForgotPasswordModalOpen) {
+        this.resetLoginAttempts();
+      }
     },
   },
   methods: {
@@ -159,13 +170,26 @@ export default {
       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       return emailPattern.test(email);
     },
-    toggleShowPasswordInput() {
-      this.showPasswordInput = !this.showPasswordInput;
+    setPasswordIconVisibility(value) {
+      this.isPasswordIconVisible = value;
     },
-    resetForm() {
+    togglePasswordInputVisibility() {
+      this.setPasswordInputVisibility(!this.isPasswordInputVisible);
+    },
+    setPasswordInputVisibility(value) {
+      this.isPasswordInputVisible = value;
+    },
+    clearErrorMessage() {
       this.error = null;
-      this.email = '';
-      this.password = '';
+    },
+    resetLoginAttempts() {
+      this.loginAttempts = 0;
+    },
+    toggleForgotPasswordModal() {
+      this.setForgotPasswordModal(!this.isForgotPasswordModalOpen);
+    },
+    setForgotPasswordModal(value) {
+      this.isForgotPasswordModalOpen = value;
     },
     async onSubmit() {
       try {
@@ -182,13 +206,6 @@ export default {
       } finally {
         this.loading = false;
       }
-    },
-    closeForgotPasswordModal() {
-      this.loginAttempts = 0;
-      this.resetForm();
-    },
-    openForgotPasswordModal() {
-      this.loginAttempts = 3;
     },
   },
 };
