@@ -1,5 +1,5 @@
-import { RepositoryFactory } from '@/repositories/RepositoryFactory';
-import { getAllCookies, removeAllCookies } from '@/lib/js-cookie';
+import { RepositoryFactory } from '../../repositories/RepositoryFactory';
+import { getAllCookies, removeAllCookies, setCookies } from '../../lib/js-cookie';
 
 const authRepository = RepositoryFactory.get('auth');
 
@@ -48,10 +48,12 @@ export default {
       try {
         const response = await authRepository.login(payload);
         await Promise.all([
+          setCookies(response.data),
           dispatch('setToken', response.data),
           dispatch('getUser', response.data),
         ]);
       } catch (error) {
+        removeAllCookies();
         dispatch('setToken', null);
         dispatch('setUser', null);
 
@@ -69,6 +71,22 @@ export default {
       removeAllCookies();
       dispatch('setToken', null);
       dispatch('setUser', null);
+    },
+    /**
+     * Get new token
+     * @param {Object} payload
+     */
+    async refreshToken({ dispatch }, payload) {
+      try {
+        const response = await authRepository.refreshToken(payload);
+        setCookies(response.data);
+        return response;
+      } catch (error) {
+        removeAllCookies();
+        dispatch('setToken', null);
+        dispatch('setUser', null);
+        throw new Error(error);
+      }
     },
     /**
      * Set user data
