@@ -18,4 +18,12 @@ export default {
   login(payload) {
     return Repository.post(`${resource}/login`, payload);
   },
+  /**
+   * Get new token
+   * @param {Object} payload
+   * @returns {Promise}
+   */
+  refreshToken(payload) {
+    return Repository.post(`${resource}/refresh`, payload);
+  },
 };
