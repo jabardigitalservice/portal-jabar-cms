@@ -15,6 +15,8 @@
         <AgendaTable
           :items="items"
           :loading="loading"
+          :meta="meta"
+          @update:pagination="onUpdatePagination($event)"
         />
       </div>
     </section>
@@ -37,14 +39,19 @@ export default {
   data() {
     return {
       events: [],
-      meta: {},
+      meta: {
+        total_count: 0,
+        total_page: 0,
+        current_page: 1,
+        per_page: 10,
+      },
       params: {
         start_date: null,
         end_date: null,
         per_page: 10,
         page: 1,
       },
-      pagination: {},
+
       loading: false,
     };
   },
@@ -85,6 +92,30 @@ export default {
         this.loading = false;
       }
     },
+
+    /**
+     * Set new query params based on argument
+     *
+     * @param {object} data - object containing new params
+     */
+    setParams(data) {
+      const newParams = { ...this.params, ...data };
+      this.params = { ...newParams };
+    },
+
+    /**
+     * Set new params when pagination changes
+     * and fetch events again
+     *
+     * @param {object} data - object cotaining new param based on emit values
+     * @property {string} page
+     * @property {string} per_page
+     */
+    onUpdatePagination(data) {
+      this.setParams(data);
+      this.fetchEvents();
+    },
+
     getEventStatus(status) {
       const statusMap = {
         publish: 'Dipublish',
