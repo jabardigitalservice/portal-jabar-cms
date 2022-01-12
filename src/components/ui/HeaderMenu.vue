@@ -1,5 +1,5 @@
 <template>
-  <section class="relative h-[66px] -mt-[14px] z-50 flex items-center sticky top-[72px] bg-gray-100">
+  <section class="h-[66px] -mt-[14px] z-40 flex items-center sticky top-[72px] bg-gray-100">
     <div class="flex items-center">
       <BaseButton
         variant="primary"
