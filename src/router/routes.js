@@ -15,6 +15,11 @@ export default [
     component: () => import('@/pages/AgendaPage'),
   },
   {
+    path: '/agenda/detail',
+    name: 'Agenda Jawa Barat',
+    component: () => import('@/pages/AgendaDetailPage.vue'),
+  },
+  {
     path: '/berita-dan-informasi',
     name: 'Berita dan Informasi',
     component: () => import('@/pages/HomePage'),
