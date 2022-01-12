@@ -1,6 +1,7 @@
 <template>
-  <main>
+  <main class="pb-20">
     <HeaderMenu>
+      <!-- TODO: Add action on button click -->
       <BaseButton
         variant="secondary"
       >
@@ -30,7 +31,7 @@ import BaseButton from '../ui/BaseButton.vue';
 import HeaderMenu from '../ui/HeaderMenu.vue';
 
 export default {
+  name: 'AgendaDetail',
   components: { HeaderMenu, BaseButton },
-
 };
 </script>
