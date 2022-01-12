@@ -12,6 +12,34 @@
 
     <section class="px-3 py-6 rounded-lg bg-white border-2 border-green-600">
       <div class="w-full">
+        <!-- Table Menu -->
+        <div class="flex mb-4">
+          <!-- TODO: handle search events -->
+          <SearchBar placeholder="Cari agenda" />
+          <LinkButton
+            href="agenda/tambah"
+            title="Tambah Agenda"
+            class="ml-auto"
+          >
+            <template #icon-left>
+              <JdsIcon
+                name="plus"
+                size="14px"
+                fill="#fff"
+                class="h-[14px] w-[14px]"
+              />
+            </template>
+            <p class="font-lato font-bold text-sm text-white leading-none">
+              Tambah Agenda
+            </p>
+          </LinkButton>
+        </div>
+        <!-- Table Aditional Info -->
+        <div class="w-full mb-4">
+          <p class="font-lato text-sm text-blue-gray-800 leading-6">
+            Tampilkan agenda dalam bentuk :
+          </p>
+        </div>
         <AgendaTable
           :items="items"
           :loading="loading"
@@ -25,8 +53,10 @@
 
 <script>
 import AgendaTable from './AgendaTable.vue';
-import { formatDate } from '@/lib/date-fns';
+import LinkButton from '@/components/ui/LinkButton.vue';
+import SearchBar from '@/components/ui/SearchBar.vue';
 
+import { formatDate } from '@/lib/date-fns';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const agendaRepository = RepositoryFactory.get('agenda');
@@ -35,6 +65,8 @@ export default {
   name: 'Agenda',
   components: {
     AgendaTable,
+    LinkButton,
+    SearchBar,
   },
   data() {
     return {
