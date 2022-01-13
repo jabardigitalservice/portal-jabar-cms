@@ -34,6 +34,7 @@
         <!-- TODO: Add preview action on button click -->
         <BaseButton
           variant="secondary"
+          @click="togglePreviewModal"
         >
           <template #icon-left>
             <JdsIcon
@@ -267,6 +268,11 @@
       </div>
       <!-- TODO: Add page content -->
     </section>
+    <AgendaPreview
+      :open="isPreviewModalOpen"
+      :event="eventDetails"
+      @close="togglePreviewModal"
+    />
   </main>
 </template>
 
@@ -274,6 +280,7 @@
 import BaseButton from '@/components/ui/BaseButton.vue';
 import LinkButton from '@/components/ui/LinkButton.vue';
 import HeaderMenu from '@/components/ui/HeaderMenu.vue';
+import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import { formatDate } from '@/lib/date-fns';
@@ -282,11 +289,14 @@ const agendaRepository = RepositoryFactory.get('agenda');
 
 export default {
   name: 'AgendaDetail',
-  components: { HeaderMenu, BaseButton, LinkButton },
+  components: {
+    HeaderMenu, BaseButton, LinkButton, AgendaPreview,
+  },
   data() {
     return {
       event: {},
       loading: false,
+      isPreviewModalOpen: false,
     };
   },
   computed: {
@@ -313,6 +323,24 @@ export default {
       return statusMap[this.event.status] ?? this.event.status;
     },
 
+    eventDetails() {
+      // Check if event object is empty
+      if (Object.keys(this.event).length === 0) {
+        return {};
+      }
+
+      return {
+        title: this.event.title,
+        category: this.event.category,
+        type: this.event.type,
+        date: formatDate(this.event.date, 'EEEE, dd MMM yyyy'),
+        time: this.time,
+        url: this.event.url,
+        address: this.event.address,
+        tags: this.event.tags,
+      };
+    },
+
   },
   async mounted() {
     try {
@@ -327,6 +355,11 @@ export default {
     } finally {
       this.loading = false;
     }
+  },
+  methods: {
+    togglePreviewModal() {
+      this.isPreviewModalOpen = !this.isPreviewModalOpen;
+    },
   },
 };
 </script>
