@@ -24,7 +24,7 @@
               name="radio-button-group"
               orientation="horizontal"
               :value="form.type"
-              @change="settype"
+              @change="setType"
             />
           </div>
         </div>
@@ -181,8 +181,8 @@ export default {
     },
   },
   methods: {
-    settype(value) {
-      this.form.type = value;
+    setType(type) {
+      this.form.type = type;
     },
     setTags(tag) {
       this.form.tags.push(tag);
