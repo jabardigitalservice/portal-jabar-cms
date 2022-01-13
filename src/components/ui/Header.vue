@@ -1,7 +1,7 @@
 <template>
   <header
     ref="header"
-    class="w-full h-[72px] sticky top-0 px-6 flex items-center justify-between bg-white"
+    class="z-50 w-full h-[72px] sticky top-0 px-6 flex items-center justify-between bg-white"
   >
     <h1
       ref="header-title"
@@ -66,7 +66,7 @@
               </button>
             </div>
           </template>
-          <div class="w-full bg-white rounded-lg shadow-xl p-2">
+          <div class="relative z-50 w-full bg-white rounded-lg shadow-xl p-2">
             <ul
               ref="header-user-dropdown-menu"
               class="flex flex-col gap-2"

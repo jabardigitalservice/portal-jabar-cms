@@ -15,6 +15,11 @@ export default [
     component: () => import('@/pages/AgendaPage'),
   },
   {
+    path: '/agenda/detail',
+    name: 'Agenda Jawa Barat',
+    component: () => import('@/pages/AgendaDetailPage'),
+  },
+  {
     path: '/agenda/tambah',
     name: 'Tambah Agenda Baru',
     component: () => import('@/pages/AgendaPage/CreateAgendaPage'),
