@@ -214,4 +214,12 @@ export default {
   background-color: white;
   z-index: 10 !important;
 }
+.create-agenda__form .jds-calendar {
+  max-width: none !important;
+}
+.create-agenda__form .jds-calendar .jds-calendar__list-of-days,
+.create-agenda__form .jds-calendar .jds-calendar__days {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+}
 </style>
