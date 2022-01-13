@@ -291,7 +291,7 @@ export default {
   },
   computed: {
     date() {
-      return this.event.title ? formatDate(this.event.date) : '-';
+      return this.event.date ? formatDate(this.event.date) : '-';
     },
     time() {
       const startTime = this.event.start_hour;
