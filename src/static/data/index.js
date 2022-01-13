@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 export const NAVIGATION_MENU = [
   {
     link: '/',
@@ -54,5 +52,28 @@ export const AGENDA_TABLE_HEADER = [
   {
     key: 'action',
     text: 'Aksi',
+  },
+];
+
+export const AGENDA_CATEGORIES = [
+  {
+    label: 'Gubernur',
+    value: 'Gubernur',
+  },
+  {
+    label: 'Wakil Gubernur',
+    value: 'Wakil Gubernur',
+  },
+  {
+    label: 'Bu Atalia',
+    value: 'Bu Atalia',
+  },
+  {
+    label: 'Sekretaris Daerah',
+    value: 'Sekretaris Daerah',
+  },
+  {
+    label: 'OPD',
+    value: 'OPD',
   },
 ];

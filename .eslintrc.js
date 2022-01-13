@@ -15,6 +15,7 @@ module.exports = {
     'import/extensions': 'off',
     'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'import/no-unresolved': 'off',
     'max-len': 'off',
     'no-param-reassign': 'off',
     'no-underscore-dangle': 'off'
