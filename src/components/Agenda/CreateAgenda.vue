@@ -1,5 +1,37 @@
 <template>
   <main>
+    <HeaderMenu>
+      <div class="flex gap-4">
+        <BaseButton
+          variant="secondary"
+        >
+          <template #icon-left>
+            <JdsIcon
+              name="eye"
+              size="16px"
+              class="h-4 text-green-700"
+            />
+          </template>
+          <p class="font-lato font-bold text-sm text-green-700">
+            Pratinjau
+          </p>
+        </BaseButton>
+        <BaseButton
+          :disabled="!isInputValid"
+          :class="{'cursor-not-allowed': !isInputValid}"
+        >
+          <img
+            src="@/assets/icons/save.svg"
+            alt="Save"
+            width="20"
+            height="20"
+          >
+          <p class="font-lato font-bold text-sm text-white">
+            Simpan Agenda
+          </p>
+        </BaseButton>
+      </div>
+    </HeaderMenu>
     <form class="create-agenda__form grid grid-cols-3 gap-4">
       <div class="col-span-2">
         <div class="p-4 rounded-lg bg-white mb-4">
@@ -8,8 +40,8 @@
               Judul Agenda/Event
             </h2>
             <JdsInputText
-              v-model="form.title"
-              placeholder="Masukkan judul berita"
+              v-model.trim="form.title"
+              placeholder="Masukkan judul agenda/event"
             />
           </div>
         </div>
@@ -37,7 +69,7 @@
               Tempat Pelaksanaan
             </h2>
             <JdsTextArea
-              v-model="form.location"
+              v-model.trim="form.address"
               placeholder="Masukkan tempat pelaksanaan atau alamat lengkap tempat pelaksanaan"
             />
           </div>
@@ -49,7 +81,7 @@
               Link Agenda
             </h2>
             <JdsInputText
-              v-model="form.url"
+              v-model.trim="form.url"
               placeholder="Masukkan link kegiatan"
             >
               <template #prefix-icon>
@@ -77,6 +109,7 @@
                 label="Pilih Tanggal"
               />
               <JdsCheckbox
+                v-model="isTodayChecked"
                 class="self-end py-2"
                 text="Hari ini"
               />
@@ -132,13 +165,33 @@
                 </label>
                 <input
                   id="tag"
-                  v-model="tag"
+                  v-model.trim="tag"
                   class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   placeholder="Ketikkan tag disini lalu tekan enter"
                   @keyup.enter="onTagInputEnter()"
                 >
-                <div class="border border-gray-500 rounded-lg px-2 py-1 h-24 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500">
-                  Belum ada tag
+                <div class="border border-gray-500 overflow-y-auto rounded-lg p-2 h-[88px] text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500">
+                  <div
+                    v-if="hasTags"
+                    class="flex gap-1 flex-wrap"
+                  >
+                    <div
+                      v-for="(tagName, index) in form.tags"
+                      :key="index"
+                      class="bg-gray-200 text-gray-700 text-sm rounded-3xl px-[10px] py-[6px] flex items-center justify-center gap-1"
+                    >
+                      {{ tagName }}
+                      <JdsIcon
+                        name="times"
+                        size="12px"
+                        class="pt-[2px] cursor-pointer"
+                        @click="removeTag(index)"
+                      />
+                    </div>
+                  </div>
+                  <p v-else>
+                    Belum ada tag
+                  </p>
                 </div>
               </div>
             </div>
@@ -150,20 +203,27 @@
 </template>
 
 <script>
+import { formatDate } from '@/lib/date-fns';
 import { AGENDA_CATEGORIES } from '@/static/data';
+import HeaderMenu from '@/components/ui/HeaderMenu.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
 
 export default {
   name: 'CreateAgenda',
+  components: {
+    HeaderMenu,
+    BaseButton,
+  },
   data() {
     return {
       form: {
         title: '',
         type: 'offline',
-        location: '',
+        address: '',
         url: '',
         date: '',
-        startHour: '00:00',
-        endHour: '00:00',
+        startHour: '',
+        endHour: '',
         category: '',
         tags: [],
       },
@@ -173,26 +233,65 @@ export default {
       ],
       categories: AGENDA_CATEGORIES,
       tag: '',
+      isTodayChecked: false,
     };
   },
   computed: {
     isTypeOffline() {
       return this.form.type === 'offline';
     },
+    hasTags() {
+      return Array.isArray(this.form.tags) && !!this.form.tags.length;
+    },
+    isInputValid() {
+      const hasTitle = !this.isEmpty(this.form.title);
+      const hasType = !this.isEmpty(this.form.type);
+      const hasAddress = this.isTypeOffline ? !this.isEmpty(this.form.address) : true;
+      const hasUrl = this.isTypeOffline ? true : !this.isEmpty(this.form.url);
+      const hasDate = !this.isEmpty(this.form.date);
+      const hasStartHour = !this.isEmpty(this.form.startHour);
+      const hasEndHour = !this.isEmpty(this.form.endHour);
+      const hasCategory = !this.isEmpty(this.form.category);
+      const hasTags = Array.isArray(this.form.tags) && !!this.form.tags.length;
+
+      return hasTitle && hasType && hasAddress && hasUrl && hasDate && hasStartHour && hasEndHour && hasCategory && hasTags;
+    },
+    today() {
+      return formatDate(new Date(), 'dd/MM/yyyy');
+    },
+  },
+  watch: {
+    isTodayChecked() {
+      if (this.isTodayChecked) {
+        this.setDate(this.today);
+      }
+    },
   },
   methods: {
+    isEmpty(string) {
+      return string === '';
+    },
     setType(type) {
       this.form.type = type;
     },
     setTags(tag) {
       this.form.tags.push(tag);
     },
+    setDate(date) {
+      this.form.date = date;
+    },
+    removeTag(index) {
+      this.form.tags.splice(index, 1);
+    },
     clearTag() {
       this.tag = '';
     },
     onTagInputEnter() {
-      this.setTags(this.tag);
-      this.clearTag();
+      const tag = this.tag.trim().split(' ').join('-').toLowerCase();
+      if (!this.isEmpty(tag)) {
+        this.setTags(tag);
+        this.clearTag();
+      }
     },
   },
 };
