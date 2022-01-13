@@ -1,21 +1,52 @@
 <template>
   <main class="pb-20">
     <HeaderMenu>
-      <!-- TODO: Add action on button click -->
-      <BaseButton
-        variant="secondary"
-      >
-        <template #icon-left>
-          <JdsIcon
-            name="eye"
-            size="16px"
-            class="h-4 text-green-700"
-          />
-        </template>
-        <p class="font-lato font-bold text-sm text-green-700">
-          Pratinjau
-        </p>
-      </BaseButton>
+      <div class="flex gap-3">
+        <!-- Delete Button -->
+        <!-- TODO: Add Delete action on button click -->
+        <BaseButton
+          variant="secondary"
+          class="border-red-500 hover:bg-red-50"
+        >
+          <p class="font-lato font-bold text-sm text-red-500">
+            Hapus
+          </p>
+        </BaseButton>
+        <!-- Edit Button -->
+        <!-- TODO: Add edit action on button click -->
+        <LinkButton
+          href="#"
+          variant="secondary"
+          class="hover:bg-green-50"
+        >
+          <template #icon-left>
+            <JdsIcon
+              name="pencil-outline"
+              size="16px"
+              class="h-4 text-green-700"
+            />
+          </template>
+          <p class="font-lato font-bold text-sm text-green-700">
+            Ubah Agenda
+          </p>
+        </LinkButton>
+        <!-- Preview Button -->
+        <!-- TODO: Add preview action on button click -->
+        <BaseButton
+          variant="secondary"
+        >
+          <template #icon-left>
+            <JdsIcon
+              name="eye"
+              size="16px"
+              class="h-4 text-green-700"
+            />
+          </template>
+          <p class="font-lato font-bold text-sm text-green-700">
+            Pratinjau
+          </p>
+        </BaseButton>
+      </div>
     </HeaderMenu>
     <section class="px-6 py-4 rounded-lg bg-white mb-4">
       <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3">
@@ -241,6 +272,7 @@
 
 <script>
 import BaseButton from '@/components/ui/BaseButton.vue';
+import LinkButton from '@/components/ui/LinkButton.vue';
 import HeaderMenu from '@/components/ui/HeaderMenu.vue';
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
@@ -250,7 +282,7 @@ const agendaRepository = RepositoryFactory.get('agenda');
 
 export default {
   name: 'AgendaDetail',
-  components: { HeaderMenu, BaseButton },
+  components: { HeaderMenu, BaseButton, LinkButton },
   data() {
     return {
       event: {},
