@@ -1,6 +1,6 @@
 <template>
   <main>
-    <form class="grid grid-cols-3 gap-4">
+    <form class="create-agenda__form grid grid-cols-3 gap-4">
       <div class="col-span-2">
         <div class="p-4 rounded-lg bg-white mb-4">
           <div class="flex flex-col">
@@ -199,18 +199,18 @@ export default {
 </script>
 
 <style>
-.jds-form-control-label {
+.create-agenda__form .jds-form-control-label {
   margin-bottom: 4px !important;
 }
-.jds-select,
-.jds-popover__activator,
-.jds-input-text {
+.create-agenda__form .jds-select,
+.create-agenda__form .jds-popover__activator,
+.create-agenda__form .jds-input-text {
   width: 100% !important;
 }
-.jds-text-area__input-wrapper > textarea {
+.create-agenda__form .jds-text-area__input-wrapper > textarea {
   border: 1px solid #16a34a;
 }
-.jds-popover__content {
+.create-agenda__form .jds-popover__content {
   background-color: white;
   z-index: 10 !important;
 }
