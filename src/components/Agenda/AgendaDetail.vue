@@ -31,7 +31,6 @@
           </p>
         </LinkButton>
         <!-- Preview Button -->
-        <!-- TODO: Add preview action on button click -->
         <BaseButton
           variant="secondary"
           @click="togglePreviewModal"
@@ -266,8 +265,8 @@
           </JdsSimpleTable>
         </div>
       </div>
-      <!-- TODO: Add page content -->
     </section>
+    <!-- Agenda Preview Modal -->
     <AgendaPreview
       :open="isPreviewModalOpen"
       :event="eventDetails"
