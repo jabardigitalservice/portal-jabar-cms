@@ -26,7 +26,7 @@
       <ul class="flex flex-col gap-4">
         <li>
           <router-link
-            to="#"
+            :to="`/agenda/detail/${item.id}`"
             class="font-lato text-sm leading-4 text-gray-800"
           >
             Lihat Detail
