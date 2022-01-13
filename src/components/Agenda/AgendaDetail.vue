@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import BaseButton from '../ui/BaseButton.vue';
-import HeaderMenu from '../ui/HeaderMenu.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
+import HeaderMenu from '@/components/ui/HeaderMenu.vue';
 
 export default {
   name: 'AgendaDetail',
