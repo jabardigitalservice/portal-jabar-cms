@@ -195,6 +195,7 @@ export default {
   props: {
     open: {
       type: Boolean,
+      required: true,
       default: false,
     },
     event: {
