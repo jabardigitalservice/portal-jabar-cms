@@ -269,7 +269,7 @@
     <!-- Agenda Preview Modal -->
     <AgendaPreview
       :open="isPreviewModalOpen"
-      :event="eventDetails"
+      :event="event"
       @close="togglePreviewModal"
     />
   </main>
@@ -283,6 +283,7 @@ import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import { formatDate } from '@/lib/date-fns';
+import { AGENDA_STATUS_MAP } from '@/static/data';
 
 const agendaRepository = RepositoryFactory.get('agenda');
 
@@ -313,33 +314,8 @@ export default {
       return '-';
     },
     status() {
-      const statusMap = {
-        publish: 'Dipublish',
-        unpublish: 'Belum Dipublish',
-        archive: 'Dibuang',
-      };
-
-      return statusMap[this.event.status] ?? this.event.status;
+      return AGENDA_STATUS_MAP[this.event.status] ?? this.event.status;
     },
-
-    eventDetails() {
-      // Check if event object is empty
-      if (Object.keys(this.event).length === 0) {
-        return {};
-      }
-
-      return {
-        title: this.event.title,
-        category: this.event.category,
-        type: this.event.type,
-        date: formatDate(this.event.date, 'EEEE, dd MMM yyyy'),
-        time: this.time,
-        url: this.event.url,
-        address: this.event.address,
-        tags: this.event.tags,
-      };
-    },
-
   },
   async mounted() {
     try {
