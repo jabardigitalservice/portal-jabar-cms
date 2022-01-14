@@ -6,7 +6,7 @@
         <!-- TODO: Add Delete action on button click -->
         <BaseButton
           variant="secondary"
-          class="border-red-500 hover:bg-red-50"
+          class="!border-red-500 hover:!bg-red-50"
         >
           <p class="font-lato font-bold text-sm text-red-500">
             Hapus
