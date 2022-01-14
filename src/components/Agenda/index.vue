@@ -63,6 +63,7 @@ import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 import LinkButton from '@/components/ui/LinkButton.vue';
 import SearchBar from '@/components/ui/SearchBar.vue';
 
+import { AGENDA_STATUS_MAP } from '@/static/data';
 import { formatDate } from '@/lib/date-fns';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
@@ -158,13 +159,7 @@ export default {
     },
 
     getEventStatus(status) {
-      const statusMap = {
-        publish: 'Dipublish',
-        unpublish: 'Belum Dipublish',
-        archive: 'Dibuang',
-      };
-
-      return statusMap[status] ?? status;
+      return AGENDA_STATUS_MAP[status] ?? status;
     },
 
     /**
