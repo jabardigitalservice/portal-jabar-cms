@@ -12,7 +12,10 @@
     >
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.action="{item}">
-        <AgendaTableAction :item="item" />
+        <AgendaTableAction
+          :item="item"
+          @open-preview="$emit('open-preview', $event)"
+        />
       </template>
     </JdsDataTable>
   </div>

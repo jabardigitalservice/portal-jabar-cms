@@ -33,7 +33,10 @@
           </router-link>
         </li>
         <li>
-          <button class="font-lato text-sm leading-4 text-gray-800">
+          <button
+            class="font-lato text-sm leading-4 text-gray-800"
+            @click="$emit('open-preview', item.id)"
+          >
             Pratinjau
           </button>
         </li>
