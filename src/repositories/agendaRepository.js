@@ -29,4 +29,22 @@ export default {
     return Repository.get(`${resource}/${id}`);
   },
 
+  /**
+   * Create event
+   * @param {Object} body
+   *
+   * @property {string} title
+   * @property {string} type
+   * @property {string} address
+   * @property {string} url
+   * @property {string} start_hour
+   * @property {string} end_hour
+   * @property {string} category
+   * @property {Array} tags
+   *
+   * @returns {Promise}
+   */
+  createEvent(body) {
+    return Repository.post(`${resource}`, body);
+  },
 };

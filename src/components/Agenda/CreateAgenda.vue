@@ -4,6 +4,7 @@
       <div class="flex gap-4">
         <BaseButton
           variant="secondary"
+          @click="togglePreviewModal"
         >
           <template #icon-left>
             <JdsIcon
@@ -19,6 +20,7 @@
         <BaseButton
           :disabled="!isInputValid"
           :class="{'cursor-not-allowed': !isInputValid}"
+          @click="onSubmit"
         >
           <img
             src="@/assets/icons/save.svg"
@@ -27,7 +29,7 @@
             height="20"
           >
           <p class="font-lato font-bold text-sm text-white">
-            Simpan Agenda
+            Tambah Agenda
           </p>
         </BaseButton>
       </div>
@@ -199,6 +201,37 @@
         </div>
       </div>
     </form>
+    <AgendaPreview
+      :open="isPreviewModalOpen"
+      :event="eventData"
+      @close="togglePreviewModal"
+    />
+    <BaseModal :open="isMessageModalOpen">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          {{ messageTitle }}
+        </h1>
+        <div class="flex items-center gap-4">
+          <JdsIcon
+            :name="messageIconName"
+            :class="messageIconClassName"
+          />
+          <p class="text-sm leading-6 to-blue-gray-800">
+            {{ messageBody }}
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
+          <JdsButton
+            class="text-sm font-bold h-[38px]"
+            @click="messageAction"
+          >
+            Saya Mengerti
+          </JdsButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
@@ -207,12 +240,19 @@ import { formatDate } from '@/lib/date-fns';
 import { AGENDA_CATEGORIES } from '@/static/data';
 import HeaderMenu from '@/components/ui/HeaderMenu.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
+import BaseModal from '@/components/ui/BaseModal';
+import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const agendaRepository = RepositoryFactory.get('agenda');
 
 export default {
   name: 'CreateAgenda',
   components: {
     HeaderMenu,
     BaseButton,
+    BaseModal,
+    AgendaPreview,
   },
   data() {
     return {
@@ -234,6 +274,17 @@ export default {
       categories: AGENDA_CATEGORIES,
       tag: '',
       isTodayChecked: false,
+      loading: false,
+      errorMessage: {
+        title: '',
+        body: '',
+      },
+      successMessage: {
+        title: '',
+        body: '',
+      },
+      isMessageModalOpen: false,
+      isPreviewModalOpen: false,
     };
   },
   computed: {
@@ -259,12 +310,58 @@ export default {
     today() {
       return formatDate(new Date(), 'dd/MM/yyyy');
     },
+    isSuccess() {
+      return !!this.successMessage.title && !!this.successMessage.body;
+    },
+    isError() {
+      return !!this.errorMessage.title && !!this.errorMessage.body;
+    },
+    isLoading() {
+      return this.loading;
+    },
+    messageTitle() {
+      return this.isSuccess ? this.successMessage.title : this.errorMessage.title;
+    },
+    messageBody() {
+      return this.isSuccess ? this.successMessage.body : this.errorMessage.body;
+    },
+    messageIconName() {
+      return this.isSuccess ? 'check-mark-circle' : 'warning';
+    },
+    messageIconClassName() {
+      return this.isSuccess ? 'text-green-600' : 'text-red-600';
+    },
+    eventData() {
+      const date = this.form.date.split('/');
+      const year = date[2];
+      // month is zero based, we need to subtract 1
+      const month = date[1] - 1;
+      const day = date[0];
+
+      return {
+        title: this.form.title,
+        type: this.form.type,
+        address: this.form.address,
+        url: this.form.url,
+        date: formatDate(new Date(year, month, day), 'yyyy-MM-dd'),
+        start_hour: `${this.form.startHour}:00`,
+        end_hour: `${this.form.endHour}:00`,
+        category: this.form.category,
+        tags: this.form.tags,
+      };
+    },
   },
   watch: {
     isTodayChecked() {
       if (this.isTodayChecked) {
         this.setDate(this.today);
       }
+    },
+    isSuccess() {
+      this.setMessageModalVisibility(this.isSuccess);
+    },
+    isError() {
+      this.setMessageModalVisibility(this.isError);
     },
   },
   methods: {
@@ -286,11 +383,56 @@ export default {
     clearTag() {
       this.tag = '';
     },
+    setMessageModalVisibility(value) {
+      this.isMessageModalOpen = value;
+    },
+    togglePreviewModal() {
+      this.isPreviewModalOpen = !this.isPreviewModalOpen;
+    },
+    clearErrorMessage() {
+      this.errorMessage = { title: '', body: '' };
+    },
+    clearSuccessMessage() {
+      this.successMessage = { title: '', body: '' };
+    },
+    clearAllMessages() {
+      this.clearErrorMessage();
+      this.clearSuccessMessage();
+    },
     onTagInputEnter() {
       const tag = this.tag.trim().split(' ').join('-').toLowerCase();
       if (!this.isEmpty(tag)) {
         this.setTags(tag);
         this.clearTag();
+      }
+    },
+    closeModal() {
+      this.setMessageModalVisibility(false);
+    },
+    messageAction() {
+      if (this.isSuccess) {
+        this.$router.push('/agenda');
+        this.clearAllMessages();
+      } else {
+        this.closeModal();
+        this.clearAllMessages();
+      }
+    },
+    async onSubmit() {
+      try {
+        this.loading = true;
+        await agendaRepository.createEvent(this.eventData);
+        this.successMessage = {
+          title: 'Tambah Agenda Berhasil',
+          body: 'Agenda yang Anda buat berhasil ditambahkan.',
+        };
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Tambah Agenda Gagal',
+          body: 'Agenda yang Anda buat gagal ditambahkan.',
+        };
+      } finally {
+        this.loading = false;
       }
     },
   },
