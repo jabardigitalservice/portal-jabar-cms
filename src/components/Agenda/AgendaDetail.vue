@@ -208,7 +208,7 @@
                   </div>
                 </td>
               </tr>
-              <tr>
+              <tr v-if="event.type === 'online'">
                 <td class="font-lato text-blue-gray-500 font-bold text-sm">
                   Link Meeting
                 </td>
@@ -219,14 +219,29 @@
                   />
                   <div v-else>
                     <a
-                      v-if="event.type === 'online'"
                       :href="event.url"
                       target="_blank"
                       rel="noopener noreferrer"
                       class="text-blue-500 hover:text-blue-400"
-                    >{{ event.url }}</a>
-
-                    <span v-else> - </span>
+                    >
+                      {{ event.url }}
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr v-else>
+                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                  Alamat
+                </td>
+                <td class="font-lato text-blue-gray-500 text-sm">
+                  <div
+                    v-if="loading"
+                    class="h-4 w-1/3 rounded-lg animate-pulse bg-gray-200"
+                  />
+                  <div v-else>
+                    <div class="capitalize">
+                      {{ event.address || '-' }}
+                    </div>
                   </div>
                 </td>
               </tr>
