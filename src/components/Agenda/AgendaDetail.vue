@@ -6,7 +6,7 @@
         <!-- TODO: Add Delete action on button click -->
         <BaseButton
           variant="secondary"
-          class="border-red-500 hover:bg-red-50"
+          class="!border-red-500 hover:!bg-red-50"
         >
           <p class="font-lato font-bold text-sm text-red-500">
             Hapus
@@ -208,7 +208,7 @@
                   </div>
                 </td>
               </tr>
-              <tr>
+              <tr v-if="event.type === 'online'">
                 <td class="font-lato text-blue-gray-500 font-bold text-sm">
                   Link Meeting
                 </td>
@@ -219,14 +219,29 @@
                   />
                   <div v-else>
                     <a
-                      v-if="event.type === 'online'"
                       :href="event.url"
                       target="_blank"
                       rel="noopener noreferrer"
                       class="text-blue-500 hover:text-blue-400"
-                    >{{ event.url }}</a>
-
-                    <span v-else> - </span>
+                    >
+                      {{ event.url }}
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr v-else>
+                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                  Alamat
+                </td>
+                <td class="font-lato text-blue-gray-500 text-sm">
+                  <div
+                    v-if="loading"
+                    class="h-4 w-1/3 rounded-lg animate-pulse bg-gray-200"
+                  />
+                  <div v-else>
+                    <div class="capitalize">
+                      {{ event.address || '-' }}
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -269,7 +284,7 @@
     <!-- Agenda Preview Modal -->
     <AgendaPreview
       :open="isPreviewModalOpen"
-      :event="eventDetails"
+      :event="event"
       @close="togglePreviewModal"
     />
   </main>
@@ -283,6 +298,7 @@ import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import { formatDate } from '@/lib/date-fns';
+import { AGENDA_STATUS_MAP } from '@/static/data';
 
 const agendaRepository = RepositoryFactory.get('agenda');
 
@@ -313,33 +329,8 @@ export default {
       return '-';
     },
     status() {
-      const statusMap = {
-        publish: 'Dipublish',
-        unpublish: 'Belum Dipublish',
-        archive: 'Dibuang',
-      };
-
-      return statusMap[this.event.status] ?? this.event.status;
+      return AGENDA_STATUS_MAP[this.event.status] ?? this.event.status;
     },
-
-    eventDetails() {
-      // Check if event object is empty
-      if (Object.keys(this.event).length === 0) {
-        return {};
-      }
-
-      return {
-        title: this.event.title,
-        category: this.event.category,
-        type: this.event.type,
-        date: formatDate(this.event.date, 'EEEE, dd MMM yyyy'),
-        time: this.time,
-        url: this.event.url,
-        address: this.event.address,
-        tags: this.event.tags,
-      };
-    },
-
   },
   async mounted() {
     try {
