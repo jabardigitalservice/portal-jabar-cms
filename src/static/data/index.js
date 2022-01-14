@@ -77,3 +77,9 @@ export const AGENDA_CATEGORIES = [
     value: 'OPD',
   },
 ];
+
+export const AGENDA_STATUS_MAP = {
+  publish: 'Telah Dipublish',
+  unpublish: 'Belum Dipublish',
+  archive: 'Dibuang',
+};

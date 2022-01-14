@@ -63,7 +63,7 @@
         </div>
 
         <div
-          ref="agenda-preview-category"
+          ref="agenda-preview-date"
           class="flex gap-2 mb-6"
         >
           <div class="h-4 w-4">
@@ -81,9 +81,8 @@
             </h2>
             <p
               class="text-sm text-gray-800 line-clamp-1 capitalize"
-              :title="event.category"
             >
-              {{ event.date || '-' }}
+              {{ date }}
             </p>
           </div>
         </div>
@@ -98,9 +97,8 @@
             </h2>
             <p
               class="text-sm text-gray-800 line-clamp-1"
-              :title="event.category"
             >
-              {{ `${event.time} WIB` || '-' }}
+              {{ time }}
             </p>
           </div>
         </div>
@@ -154,7 +152,6 @@
             </h2>
             <p
               class="text-sm text-gray-800 line-clamp-1 capitalize"
-              :title="event.category"
             >
               {{ event.address || '-' }}
             </p>
@@ -188,6 +185,7 @@
 
 <script>
 import BaseModal from '@/components/ui/BaseModal.vue';
+import { formatDate } from '@/lib/date-fns';
 
 export default {
   name: 'AgendaPreview',
@@ -200,8 +198,23 @@ export default {
     },
     event: {
       type: Object,
-      required: false,
+      required: true,
       default: () => ({}),
+    },
+  },
+  computed: {
+    time() {
+      const startTime = this.event?.start_hour || null;
+      const endTime = this.event?.end_hour || null;
+
+      if (startTime && endTime) {
+        return `${startTime.substring(0, 5)} sampai ${endTime.substring(0, 5)} WIB`;
+      }
+
+      return '-';
+    },
+    date() {
+      return this.event?.date ? formatDate(this.event.date, 'EEEE, dd MMM yyyy') : '-';
     },
   },
 };
