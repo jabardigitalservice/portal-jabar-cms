@@ -408,6 +408,10 @@ export default {
     isError() {
       this.setMessageModalVisibility(this.isError);
     },
+    'form.date': function () {
+      const isToday = daysDifference(this.selectedDate, this.today);
+      this.isTodayChecked = !isToday;
+    },
   },
   methods: {
     isEmpty(string) {
