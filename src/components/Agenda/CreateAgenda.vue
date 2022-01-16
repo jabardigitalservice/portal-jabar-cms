@@ -502,6 +502,9 @@ export default {
   width: 100% !important;
 }
 .create-agenda__form .jds-text-area__input-wrapper > textarea {
+  border: 1px solid #9E9E9E;
+}
+.create-agenda__form .jds-text-area__input-wrapper > textarea:hover {
   border: 1px solid #16a34a;
 }
 .create-agenda__form .jds-popover__content {
