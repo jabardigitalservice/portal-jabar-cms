@@ -1,4 +1,4 @@
-import { format, isValid } from 'date-fns';
+import { differenceInDays, format, isValid } from 'date-fns';
 import { id } from 'date-fns/locale';
 
 /**
@@ -19,3 +19,14 @@ export const formatDate = (date, pattern = 'dd/MM/yyyy') => {
 
   return date;
 };
+
+/**
+ * Get the number of full day periods between two dates.
+ *
+ * @param {Date} laterDate - the later date
+ * @param {Date} earlierDate - the earlier date
+ * @returns {Number}
+ */
+export function daysDifference(laterDate, earlierDate) {
+  return differenceInDays(new Date(laterDate), new Date(earlierDate));
+}

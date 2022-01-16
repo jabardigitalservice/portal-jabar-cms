@@ -106,13 +106,21 @@
               Tanggal dan Waktu Pelaksanaan
             </h2>
             <div class="grid grid-cols-2 grid-rows-2 gap-x-6 gap-y-4">
-              <JdsDateInput
-                v-model="form.date"
-                label="Pilih Tanggal"
-              />
+              <div class="flex flex-col gap-1">
+                <JdsDateInput
+                  v-model="form.date"
+                  label="Pilih Tanggal"
+                />
+                <p
+                  v-if="isDateHasPast"
+                  class="text-sm text-red-600"
+                >
+                  Tanggal sudah lewat
+                </p>
+              </div>
               <JdsCheckbox
                 v-model="isTodayChecked"
-                class="self-end py-2"
+                :class="[isDateHasPast ? 'self-center' : 'self-end py-[10px]']"
                 text="Hari ini"
               />
               <div class="flex flex-col gap-1">
@@ -236,7 +244,7 @@
 </template>
 
 <script>
-import { formatDate } from '@/lib/date-fns';
+import { daysDifference, formatDate } from '@/lib/date-fns';
 import { AGENDA_CATEGORIES } from '@/static/data';
 import HeaderMenu from '@/components/ui/HeaderMenu.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
@@ -308,7 +316,7 @@ export default {
       return hasTitle && hasType && hasAddress && hasUrl && hasDate && hasStartHour && hasEndHour && hasCategory && hasTags;
     },
     today() {
-      return formatDate(new Date(), 'dd/MM/yyyy');
+      return new Date().setHours(0, 0, 0, 0);
     },
     isSuccess() {
       return !!this.successMessage.title && !!this.successMessage.body;
@@ -331,19 +339,25 @@ export default {
     messageIconClassName() {
       return this.isSuccess ? 'text-green-600' : 'text-red-600';
     },
-    eventData() {
+    selectedDate() {
       const date = this.form.date.split('/');
       const year = date[2];
       // month is zero based, we need to subtract 1
       const month = date[1] - 1;
       const day = date[0];
 
+      return new Date(year, month, day);
+    },
+    isDateHasPast() {
+      return daysDifference(this.selectedDate, this.today) < 0;
+    },
+    eventData() {
       return {
         title: this.form.title,
         type: this.form.type,
         address: this.form.address,
         url: this.form.url,
-        date: formatDate(new Date(year, month, day), 'yyyy-MM-dd'),
+        date: !this.isDateHasPast ? formatDate(this.selectedDate, 'yyyy-MM-dd') : '',
         start_hour: `${this.form.startHour}:00`,
         end_hour: `${this.form.endHour}:00`,
         category: this.form.category,
@@ -354,7 +368,7 @@ export default {
   watch: {
     isTodayChecked() {
       if (this.isTodayChecked) {
-        this.setDate(this.today);
+        this.setDate(formatDate(this.today, 'dd/MM/yyyy'));
       }
     },
     isSuccess() {
@@ -440,6 +454,10 @@ export default {
 </script>
 
 <style>
+.create-agenda__form .jds-popover,
+.create-agenda__form .jds-date-input {
+  width: 100%;
+}
 .create-agenda__form .jds-form-control-label {
   margin-bottom: 4px !important;
 }
