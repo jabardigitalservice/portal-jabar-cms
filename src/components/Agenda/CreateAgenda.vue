@@ -105,51 +105,61 @@
             <h2 class="font-roboto font-medium text-green-700 mb-3">
               Tanggal dan Waktu Pelaksanaan
             </h2>
-            <div class="grid grid-cols-2 grid-rows-2 gap-x-6 gap-y-4">
-              <div class="flex flex-col gap-1">
+            <div class="grid grid-cols-1 gap-y-4">
+              <div class="col-span-2 gap-x-6 gap-y-1 grid grid-cols-2">
                 <JdsDateInput
                   v-model="form.date"
                   label="Pilih Tanggal"
                 />
+                <JdsCheckbox
+                  v-model="isTodayChecked"
+                  class="self-end py-[10px]"
+                  text="Hari ini"
+                />
                 <p
-                  v-if="isDateHasPast"
-                  class="text-sm text-red-600"
+                  v-if="isDateHasPassed"
+                  class="text-sm text-red-600 col-span-2"
                 >
                   Tanggal sudah lewat
                 </p>
               </div>
-              <JdsCheckbox
-                v-model="isTodayChecked"
-                :class="[isDateHasPast ? 'self-center' : 'self-end py-[10px]']"
-                text="Hari ini"
-              />
-              <div class="flex flex-col gap-1">
-                <label
-                  for="start-time"
-                  class="text-[15px] text-gray-800"
+              <div class="col-span-2 gap-x-6 gap-y-1 grid grid-cols-2">
+                <div class="flex flex-col gap-1">
+                  <label
+                    for="start-time"
+                    class="text-[15px] text-gray-800"
+                  >
+                    Waktu Dimulai
+                  </label>
+                  <input
+                    id="start-time"
+                    v-model="form.startHour"
+                    type="time"
+                    class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  >
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label
+                    for="end-time"
+                    class="text-[15px] text-gray-800"
+                  >
+                    Waktu Berakhir
+                  </label>
+                  <input
+                    id="end-time"
+                    v-model="form.endHour"
+                    type="time"
+                    :disabled="!hasStartHour"
+                    class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                    :class="{'cursor-not-allowed': !hasStartHour}"
+                  >
+                </div>
+                <p
+                  v-if="isTimeHasPassed"
+                  class="text-sm text-red-600 col-span-2"
                 >
-                  Waktu Dimulai
-                </label>
-                <input
-                  id="start-time"
-                  v-model="form.startHour"
-                  type="time"
-                  class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
-                >
-              </div>
-              <div class="flex flex-col gap-1">
-                <label
-                  for="end-time"
-                  class="text-[15px] text-gray-800"
-                >
-                  Waktu Berakhir
-                </label>
-                <input
-                  id="end-time"
-                  v-model="form.endHour"
-                  type="time"
-                  class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
-                >
+                  Waktu pelaksanaan tidak valid
+                </p>
               </div>
             </div>
           </div>
@@ -302,6 +312,12 @@ export default {
     hasTags() {
       return Array.isArray(this.form.tags) && !!this.form.tags.length;
     },
+    hasStartHour() {
+      return !!this.form.startHour;
+    },
+    hasEndHour() {
+      return !!this.form.endHour;
+    },
     isInputValid() {
       const hasTitle = !this.isEmpty(this.form.title);
       const hasType = !this.isEmpty(this.form.type);
@@ -348,8 +364,23 @@ export default {
 
       return new Date(year, month, day);
     },
-    isDateHasPast() {
+    isDateHasPassed() {
       return daysDifference(this.selectedDate, this.today) < 0;
+    },
+    isTimeHasPassed() {
+      if (!this.hasEndHour) return false;
+
+      const startHour = this.form.startHour.split(':');
+      const endHour = this.form.endHour.split(':');
+      const startHourInHour = startHour[0];
+      const startHourInMinute = startHour[1];
+      const endHourInHour = endHour[0];
+      const endHourInMinute = endHour[1];
+
+      const hourHasPassed = endHourInHour < startHourInHour;
+      const minuteHasPassed = endHourInMinute <= startHourInMinute && endHourInHour <= startHourInHour;
+
+      return hourHasPassed || minuteHasPassed;
     },
     eventData() {
       return {
@@ -357,7 +388,7 @@ export default {
         type: this.form.type,
         address: this.form.address,
         url: this.form.url,
-        date: !this.isDateHasPast ? formatDate(this.selectedDate, 'yyyy-MM-dd') : '',
+        date: !this.isDateHasPassed ? formatDate(this.selectedDate, 'yyyy-MM-dd') : '',
         start_hour: `${this.form.startHour}:00`,
         end_hour: `${this.form.endHour}:00`,
         category: this.form.category,
