@@ -120,7 +120,7 @@
                   v-if="isDateHasPassed"
                   class="text-sm text-red-600 col-span-2"
                 >
-                  Tanggal sudah lewat
+                  Tanggal tidak valid
                 </p>
               </div>
               <div class="col-span-2 gap-x-6 gap-y-1 grid grid-cols-2">
