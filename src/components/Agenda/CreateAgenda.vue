@@ -18,8 +18,8 @@
           </p>
         </BaseButton>
         <BaseButton
-          :disabled="!isInputValid"
-          :class="{'cursor-not-allowed': !isInputValid}"
+          :disabled="!isFormValid"
+          :class="{'cursor-not-allowed': !isFormValid}"
           @click="onSubmit"
         >
           <img
@@ -105,43 +105,61 @@
             <h2 class="font-roboto font-medium text-green-700 mb-3">
               Tanggal dan Waktu Pelaksanaan
             </h2>
-            <div class="grid grid-cols-2 grid-rows-2 gap-x-6 gap-y-4">
-              <JdsDateInput
-                v-model="form.date"
-                label="Pilih Tanggal"
-              />
-              <JdsCheckbox
-                v-model="isTodayChecked"
-                class="self-end py-2"
-                text="Hari ini"
-              />
-              <div class="flex flex-col gap-1">
-                <label
-                  for="start-time"
-                  class="text-[15px] text-gray-800"
+            <div class="grid grid-cols-1 gap-y-4">
+              <div class="col-span-2 gap-x-6 gap-y-1 grid grid-cols-2">
+                <JdsDateInput
+                  v-model="form.date"
+                  label="Pilih Tanggal"
+                />
+                <JdsCheckbox
+                  v-model="isTodayChecked"
+                  class="self-end py-[10px]"
+                  text="Hari ini"
+                />
+                <p
+                  v-show="isDateHasPassed"
+                  class="text-sm text-red-600 col-span-2"
                 >
-                  Waktu Dimulai
-                </label>
-                <input
-                  id="start-time"
-                  v-model="form.startHour"
-                  type="time"
-                  class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
-                >
+                  Tanggal tidak valid
+                </p>
               </div>
-              <div class="flex flex-col gap-1">
-                <label
-                  for="end-time"
-                  class="text-[15px] text-gray-800"
+              <div class="col-span-2 gap-x-6 gap-y-1 grid grid-cols-2">
+                <div class="flex flex-col gap-1">
+                  <label
+                    for="start-time"
+                    class="text-[15px] text-gray-800"
+                  >
+                    Waktu Dimulai
+                  </label>
+                  <input
+                    id="start-time"
+                    v-model="form.startHour"
+                    type="time"
+                    class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  >
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label
+                    for="end-time"
+                    class="text-[15px] text-gray-800"
+                  >
+                    Waktu Berakhir
+                  </label>
+                  <input
+                    id="end-time"
+                    v-model="form.endHour"
+                    type="time"
+                    :disabled="!hasStartHour"
+                    class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                    :class="{'cursor-not-allowed': !hasStartHour}"
+                  >
+                </div>
+                <p
+                  v-show="isTimeHasPassed"
+                  class="text-sm text-red-600 col-span-2"
                 >
-                  Waktu Berakhir
-                </label>
-                <input
-                  id="end-time"
-                  v-model="form.endHour"
-                  type="time"
-                  class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
-                >
+                  Waktu pelaksanaan tidak valid
+                </p>
               </div>
             </div>
           </div>
@@ -236,7 +254,7 @@
 </template>
 
 <script>
-import { formatDate } from '@/lib/date-fns';
+import { daysDifference, formatDate, minutesDifference } from '@/lib/date-fns';
 import { AGENDA_CATEGORIES } from '@/static/data';
 import HeaderMenu from '@/components/ui/HeaderMenu.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
@@ -294,6 +312,12 @@ export default {
     hasTags() {
       return Array.isArray(this.form.tags) && !!this.form.tags.length;
     },
+    hasStartHour() {
+      return !!this.form.startHour;
+    },
+    hasEndHour() {
+      return !!this.form.endHour;
+    },
     isInputValid() {
       const hasTitle = !this.isEmpty(this.form.title);
       const hasType = !this.isEmpty(this.form.type);
@@ -308,7 +332,7 @@ export default {
       return hasTitle && hasType && hasAddress && hasUrl && hasDate && hasStartHour && hasEndHour && hasCategory && hasTags;
     },
     today() {
-      return formatDate(new Date(), 'dd/MM/yyyy');
+      return new Date().setHours(0, 0, 0, 0);
     },
     isSuccess() {
       return !!this.successMessage.title && !!this.successMessage.body;
@@ -331,19 +355,36 @@ export default {
     messageIconClassName() {
       return this.isSuccess ? 'text-green-600' : 'text-red-600';
     },
-    eventData() {
+    selectedDate() {
       const date = this.form.date.split('/');
       const year = date[2];
       // month is zero based, we need to subtract 1
       const month = date[1] - 1;
       const day = date[0];
 
+      return new Date(year, month, day);
+    },
+    isDateHasPassed() {
+      return daysDifference(this.selectedDate, this.today) < 0;
+    },
+    isTimeHasPassed() {
+      if (!this.hasEndHour) return false;
+
+      const startHour = this.form.startHour.split(':');
+      const endHour = this.form.endHour.split(':');
+
+      return minutesDifference(new Date().setHours(...startHour), new Date().setHours(...endHour)) >= 0;
+    },
+    isFormValid() {
+      return this.isInputValid && !this.isDateHasPassed && !this.isTimeHasPassed;
+    },
+    eventData() {
       return {
         title: this.form.title,
         type: this.form.type,
         address: this.form.address,
         url: this.form.url,
-        date: formatDate(new Date(year, month, day), 'yyyy-MM-dd'),
+        date: !this.isDateHasPassed ? formatDate(this.selectedDate, 'yyyy-MM-dd') : '',
         start_hour: `${this.form.startHour}:00`,
         end_hour: `${this.form.endHour}:00`,
         category: this.form.category,
@@ -354,7 +395,7 @@ export default {
   watch: {
     isTodayChecked() {
       if (this.isTodayChecked) {
-        this.setDate(this.today);
+        this.setDate(formatDate(this.today, 'dd/MM/yyyy'));
       }
     },
     isSuccess() {
@@ -362,6 +403,10 @@ export default {
     },
     isError() {
       this.setMessageModalVisibility(this.isError);
+    },
+    'form.date': function () {
+      const isToday = daysDifference(this.selectedDate, this.today);
+      this.isTodayChecked = !isToday;
     },
   },
   methods: {
@@ -440,6 +485,10 @@ export default {
 </script>
 
 <style>
+.create-agenda__form .jds-popover,
+.create-agenda__form .jds-date-input {
+  width: 100%;
+}
 .create-agenda__form .jds-form-control-label {
   margin-bottom: 4px !important;
 }
@@ -449,6 +498,9 @@ export default {
   width: 100% !important;
 }
 .create-agenda__form .jds-text-area__input-wrapper > textarea {
+  border: 1px solid #9E9E9E;
+}
+.create-agenda__form .jds-text-area__input-wrapper > textarea:hover {
   border: 1px solid #16a34a;
 }
 .create-agenda__form .jds-popover__content {
