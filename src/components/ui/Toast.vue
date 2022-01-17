@@ -6,14 +6,14 @@
     >
       <div
         v-if="isOpen"
-        class="absolute z-[50] top-[88px] w-full min-h-[55px]"
+        class="absolute z-[50] top-[88px] right-0 min-h-[55px] ml-auto mr-8"
       >
         <JdsSectionMessage
           :show="isOpen"
           :variant="type"
           :message="message"
           dismissible
-          class="w-fit min-w-[150px] ml-auto mr-6"
+          class="w-fit min-w-[150px] shadow-lg"
           @click:close="onClose"
         />
       </div>

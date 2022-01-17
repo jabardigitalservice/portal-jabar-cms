@@ -74,7 +74,7 @@ module.exports = {
         'slide-up': 'slide-up 300ms cubic-bezier(0,.89,.47,1.01)',
         'slide-down': 'slide-down 350ms cubic-bezier(0,.89,.47,1.01)',
         'fade-in': 'fade-in 400ms cubic-bezier(.11,.64,.43,.98)',
-        'close-to-right': 'close-to-right 2000ms ease-out',
+        'close-to-right': 'close-to-right 1500ms cubic-bezier(.65,-0.08,.08,1.03)',
       },
     },
   },
