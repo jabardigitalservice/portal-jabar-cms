@@ -2,7 +2,7 @@ export default {
   namespaced: true,
   state: {
     isOpen: false,
-    variant: 'info',
+    type: 'info',
     message: '',
   },
   getters: {
@@ -12,8 +12,8 @@ export default {
     message(state) {
       return state.message;
     },
-    variant(state) {
-      return state.variant;
+    type(state) {
+      return state.type;
     },
   },
   mutations: {
@@ -23,19 +23,19 @@ export default {
     SET_MESSAGE(state, payload) {
       state.message = payload;
     },
-    SET_VARIANT(state, payload) {
-      state.variant = payload;
+    SET_type(state, payload) {
+      state.type = payload;
     },
   },
   actions: {
     showAlert({ commit }, payload) {
-      commit('SET_VARIANT', payload.variant);
+      commit('SET_type', payload.type);
       commit('SET_MESSAGE', payload.message);
       commit('SET_OPEN', true);
     },
     closeAlert({ commit }) {
       commit('SET_MESSAGE', '');
-      commit('SET_VARIANT', 'info');
+      commit('SET_type', 'info');
       commit('SET_OPEN', false);
     },
   },

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { DesignSystem } from '@jabardigitalservice/jds-design-system';
 import PortalVue from 'portal-vue';
-import alert from '@/plugins/alert';
+import toast from '@/plugins/toast';
 import { axiosInterceptors } from './repositories/Repository';
 import router from './router';
 import store from './store';
@@ -10,7 +10,7 @@ import './assets/styles/main.css';
 
 Vue.use(DesignSystem);
 Vue.use(PortalVue);
-Vue.use(alert);
+Vue.use(toast);
 axiosInterceptors(store);
 
 Vue.config.productionTip = false;

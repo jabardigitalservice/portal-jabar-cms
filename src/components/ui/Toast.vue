@@ -10,7 +10,7 @@
       >
         <JdsSectionMessage
           :show="isOpen"
-          :variant="variant"
+          :variant="type"
           :message="message"
           dismissible
           class="w-fit min-w-[150px] ml-auto mr-6"
@@ -27,7 +27,7 @@ import { mapState } from 'vuex';
 export default {
   name: 'Toast',
   computed: {
-    ...mapState('alert', ['isOpen', 'variant', 'message']),
+    ...mapState('alert', ['isOpen', 'type', 'message']),
   },
   watch: {
     isOpen: {
