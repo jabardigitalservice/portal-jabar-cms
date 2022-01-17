@@ -45,17 +45,25 @@
           :loading="loading"
           :meta="meta"
           @update:pagination="onUpdatePagination($event)"
+          @open-preview="handleShowPreview($event)"
         />
       </div>
     </section>
+    <AgendaPreview
+      :open="isPreviewModalOpen"
+      :event="eventDetail"
+      @close="togglePreviewModal"
+    />
   </main>
 </template>
 
 <script>
 import AgendaTable from './AgendaTable.vue';
+import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 import LinkButton from '@/components/ui/LinkButton.vue';
 import SearchBar from '@/components/ui/SearchBar.vue';
 
+import { AGENDA_STATUS_MAP } from '@/static/data';
 import { formatDate } from '@/lib/date-fns';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
@@ -65,6 +73,7 @@ export default {
   name: 'Agenda',
   components: {
     AgendaTable,
+    AgendaPreview,
     LinkButton,
     SearchBar,
   },
@@ -83,7 +92,8 @@ export default {
         per_page: 10,
         page: 1,
       },
-
+      isPreviewModalOpen: false,
+      eventDetail: {},
       loading: false,
     };
   },
@@ -149,13 +159,40 @@ export default {
     },
 
     getEventStatus(status) {
-      const statusMap = {
-        publish: 'Dipublish',
-        unpublish: 'Belum Dipublish',
-        archive: 'Dibuang',
-      };
+      return AGENDA_STATUS_MAP[status] ?? status;
+    },
 
-      return statusMap[status] ?? status;
+    /**
+     * Filter events data by id
+     * @param {number} id - id of specific event to filter
+     * @returns {Object}
+     */
+    filterEventsById(id) {
+      const eventDetail = this.events.filter((event) => event.id === id)[0];
+      return eventDetail;
+    },
+
+    /**
+     * Set eventDetail data property
+     * @param {Object} event - event detail
+     */
+    setEventDetail(event) {
+      this.eventDetail = { ...event };
+    },
+
+    /**
+     * Handle data filtering and data mutation
+     * when preview button clicked
+     * @param {number} id - id of specific event
+     */
+    handleShowPreview(id) {
+      const event = this.filterEventsById(id);
+      this.setEventDetail(event);
+      this.togglePreviewModal();
+    },
+
+    togglePreviewModal() {
+      this.isPreviewModalOpen = !this.isPreviewModalOpen;
     },
   },
 };
