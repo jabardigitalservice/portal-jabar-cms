@@ -117,7 +117,7 @@
                   text="Hari ini"
                 />
                 <p
-                  v-if="isDateHasPassed"
+                  v-show="isDateHasPassed"
                   class="text-sm text-red-600 col-span-2"
                 >
                   Tanggal tidak valid
@@ -155,7 +155,7 @@
                   >
                 </div>
                 <p
-                  v-if="isTimeHasPassed"
+                  v-show="isTimeHasPassed"
                   class="text-sm text-red-600 col-span-2"
                 >
                   Waktu pelaksanaan tidak valid
