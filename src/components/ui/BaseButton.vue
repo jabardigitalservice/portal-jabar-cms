@@ -4,9 +4,10 @@
     v-bind="$attrs"
     :class="{
       'h-[38px] px-4 flex items-center rounded-lg border whitespace-nowrap': true,
+      'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600': true,
       'border-transparent bg-green-700 hover:bg-green-600': variant === 'primary',
       'border-green-700 hover:bg-green-50': variant === 'secondary',
-      'border-transparent': variant === 'tertiary'
+      'border-transparent': variant === 'tertiary',
     }"
     v-on="$listeners"
   >
