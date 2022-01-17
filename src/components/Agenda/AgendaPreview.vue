@@ -176,7 +176,6 @@
             <h2 class="text-xs text-blue-gray-200">
               Tags
             </h2>
-            <!-- TODO: Add tags pills -->
             <div class="min-w-0 flex gap-2 flex-wrap items-center">
               <span
                 v-for="tag in event.tags"
