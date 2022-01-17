@@ -254,7 +254,7 @@
 </template>
 
 <script>
-import { daysDifference, formatDate } from '@/lib/date-fns';
+import { daysDifference, formatDate, minutesDifference } from '@/lib/date-fns';
 import { AGENDA_CATEGORIES } from '@/static/data';
 import HeaderMenu from '@/components/ui/HeaderMenu.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
@@ -372,15 +372,8 @@ export default {
 
       const startHour = this.form.startHour.split(':');
       const endHour = this.form.endHour.split(':');
-      const startHourInHour = startHour[0];
-      const startHourInMinute = startHour[1];
-      const endHourInHour = endHour[0];
-      const endHourInMinute = endHour[1];
 
-      const hourHasPassed = endHourInHour < startHourInHour;
-      const minuteHasPassed = endHourInMinute <= startHourInMinute && endHourInHour <= startHourInHour;
-
-      return hourHasPassed || minuteHasPassed;
+      return minutesDifference(new Date().setHours(...startHour), new Date().setHours(...endHour)) >= 0;
     },
     isFormValid() {
       return this.isInputValid && !this.isDateHasPassed && !this.isTimeHasPassed;

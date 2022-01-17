@@ -1,4 +1,6 @@
-import { differenceInDays, format, isValid } from 'date-fns';
+import {
+  differenceInDays, differenceInMinutes, format, isValid,
+} from 'date-fns';
 import { id } from 'date-fns/locale';
 
 /**
@@ -29,4 +31,15 @@ export const formatDate = (date, pattern = 'dd/MM/yyyy') => {
  */
 export function daysDifference(laterDate, earlierDate) {
   return differenceInDays(new Date(laterDate), new Date(earlierDate));
+}
+
+/**
+ * Get the signed number of full (rounded towards 0) minutes between the given dates.
+ *
+ * @param {Date} laterDate - the later date
+ * @param {Date} earlierDate - the earlier date
+ * @returns {Number}
+ */
+export function minutesDifference(laterDate, earlierDate) {
+  return differenceInMinutes(new Date(laterDate), new Date(earlierDate));
 }
