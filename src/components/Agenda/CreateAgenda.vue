@@ -18,8 +18,8 @@
           </p>
         </BaseButton>
         <BaseButton
-          :disabled="!isInputValid"
-          :class="{'cursor-not-allowed': !isInputValid}"
+          :disabled="!isFormValid"
+          :class="{'cursor-not-allowed': !isFormValid}"
           @click="onSubmit"
         >
           <img
@@ -381,6 +381,9 @@ export default {
       const minuteHasPassed = endHourInMinute <= startHourInMinute && endHourInHour <= startHourInHour;
 
       return hourHasPassed || minuteHasPassed;
+    },
+    isFormValid() {
+      return this.isInputValid && !this.isDateHasPassed && !this.isTimeHasPassed;
     },
     eventData() {
       return {
