@@ -42,7 +42,7 @@
         </li>
         <li>
           <router-link
-            to="#"
+            :to="`/agenda/detail/${item.id}/ubah`"
             class="font-lato text-sm leading-4 text-gray-800"
           >
             Ubah
