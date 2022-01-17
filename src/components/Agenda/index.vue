@@ -62,10 +62,7 @@
       @close="toggleDeletePrompt"
     >
       <div class="w-full h-full">
-        <h1
-          ref="agenda-preview-title"
-          class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6"
-        >
+        <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
           Hapus Agenda
         </h1>
         <p class="font-lato text-sm text-gray-800 mb-2">
