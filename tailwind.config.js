@@ -52,6 +52,20 @@ module.exports = {
           900: '#001B3D',
         },
       },
+      keyframes: {
+        'slide-up': {
+          '0%': { transform: 'translateY(200%)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '0.5' },
+        },
+      },
+      animation: {
+        'slide-up': 'slide-up 300ms cubic-bezier(0,.89,.47,1.01)',
+        'fade-in': 'fade-in 400ms cubic-bezier(.11,.64,.43,.98)',
+      },
     },
   },
   plugins: [

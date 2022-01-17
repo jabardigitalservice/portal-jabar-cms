@@ -8,12 +8,12 @@
       <!-- Background Overlay -->
       <div
         ref="modal-overlay"
-        class="absolute w-full h-full bg-black opacity-50"
+        class="animate-fade-in absolute w-full h-full bg-black opacity-50"
       />
       <!-- Modal -->
       <section
         ref="modal-container"
-        class="relative min-w-[510px] max-w-screen-lg min-h-[200px] max-h-[90%]
+        class="animate-slide-up relative min-w-[510px] max-w-screen-lg min-h-[200px] max-h-[90%]
         grid grid-rows-[minmax(0,_1fr)_70px] rounded-lg overflow-hidden"
       >
         <div
