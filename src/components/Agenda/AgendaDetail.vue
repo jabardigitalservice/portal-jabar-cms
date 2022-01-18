@@ -306,7 +306,7 @@
       <template #footer>
         <div class="flex gap-4 justify-end">
           <BaseButton
-            class="border-green-700"
+            class="border-green-700 hover:bg-green-50"
             @click="toggleDeletePrompt"
           >
             <p class="text-sm text-green-700">
