@@ -3,7 +3,7 @@
     <HeaderMenu>
       <div class="flex gap-4">
         <BaseButton
-          variant="secondary"
+          class="border-green-700 hover:bg-green-50"
           @click="togglePreviewModal"
         >
           <template #icon-left>
@@ -19,7 +19,7 @@
         </BaseButton>
         <BaseButton
           :disabled="!isFormValid"
-          :class="{'cursor-not-allowed': !isFormValid}"
+          class="bg-green-700 hover:bg-green-600"
           @click="onSubmit"
         >
           <img

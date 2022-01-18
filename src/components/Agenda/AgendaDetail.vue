@@ -4,8 +4,7 @@
       <div class="flex gap-3">
         <!-- Delete Button -->
         <BaseButton
-          variant="secondary"
-          class="!border-red-500 hover:!bg-red-50"
+          class="border-red-500 hover:bg-red-50"
           @click="toggleDeletePrompt"
         >
           <p class="font-lato font-bold text-sm text-red-500">
@@ -32,7 +31,7 @@
         </LinkButton>
         <!-- Preview Button -->
         <BaseButton
-          variant="secondary"
+          class="border-green-700 hover:bg-green-50"
           @click="togglePreviewModal"
         >
           <template #icon-left>
@@ -307,7 +306,7 @@
       <template #footer>
         <div class="flex gap-4 justify-end">
           <BaseButton
-            variant="secondary"
+            class="border-green-700 hover:bg-green-50"
             @click="toggleDeletePrompt"
           >
             <p class="text-sm text-green-700">
@@ -315,7 +314,6 @@
             </p>
           </BaseButton>
           <BaseButton
-            variant="primary"
             class="bg-red-500 hover:bg-red-400"
             :disabled="deleteLoading"
             @click="deleteEvent(event.id)"
