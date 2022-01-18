@@ -3,10 +3,10 @@
     <HeaderMenu>
       <div class="flex gap-3">
         <!-- Delete Button -->
-        <!-- TODO: Add Delete action on button click -->
         <BaseButton
           variant="secondary"
           class="!border-red-500 hover:!bg-red-50"
+          @click="toggleDeletePrompt"
         >
           <p class="font-lato font-bold text-sm text-red-500">
             Hapus
@@ -287,11 +287,65 @@
       :event="event"
       @close="togglePreviewModal"
     />
+
+    <!-- Delete Action Prompt -->
+    <BaseModal
+      :open="isDeletePromptOpen"
+      @close="toggleDeletePrompt"
+    >
+      <div class="w-full h-full">
+        <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
+          Hapus Agenda
+        </h1>
+        <p class="font-lato text-sm text-gray-800 mb-2">
+          Apakah Anda yakin akan menghapus agenda ini?
+        </p>
+        <h2 class="font-lato text-md font-bold text-gray-800">
+          {{ event.title }}
+        </h2>
+      </div>
+      <template #footer>
+        <div class="flex gap-4 justify-end">
+          <BaseButton
+            variant="secondary"
+            @click="toggleDeletePrompt"
+          >
+            <p class="text-sm text-green-700">
+              Batal
+            </p>
+          </BaseButton>
+          <BaseButton
+            variant="primary"
+            class="bg-red-500 hover:bg-red-400"
+            :disabled="deleteLoading"
+            @click="deleteEvent(event.id)"
+          >
+            <p
+              v-if="!deleteLoading"
+              class="text-sm text-white"
+            >
+              Ya, saya yakin
+            </p>
+            <p
+              v-else
+              class="flex gap-2 items-center text-sm text-gray-500"
+            >
+              <JdsSpinner
+                size="16"
+                foreground="#757575"
+              />
+              Loading...
+            </p>
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
 <script>
 import BaseButton from '@/components/ui/BaseButton.vue';
+import BaseModal from '@/components/ui/BaseModal.vue';
 import LinkButton from '@/components/ui/LinkButton.vue';
 import HeaderMenu from '@/components/ui/HeaderMenu.vue';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
@@ -305,13 +359,19 @@ const agendaRepository = RepositoryFactory.get('agenda');
 export default {
   name: 'AgendaDetail',
   components: {
-    HeaderMenu, BaseButton, LinkButton, AgendaPreview,
+    HeaderMenu,
+    BaseButton,
+    LinkButton,
+    AgendaPreview,
+    BaseModal,
   },
   data() {
     return {
       event: {},
       loading: false,
+      deleteLoading: false,
       isPreviewModalOpen: false,
+      isDeletePromptOpen: false,
     };
   },
   computed: {
@@ -347,8 +407,29 @@ export default {
     }
   },
   methods: {
+    /**
+     * Delete event by id
+     * @param {number} id - id of event to delete
+     */
+    async deleteEvent(id) {
+      try {
+        this.deleteLoading = true;
+        await agendaRepository.deleteEvent(id);
+      } catch (error) {
+        // silent error
+      } finally {
+        this.deleteLoading = false;
+        this.toggleDeletePrompt();
+        this.$router.back();
+      }
+    },
+
     togglePreviewModal() {
       this.isPreviewModalOpen = !this.isPreviewModalOpen;
+    },
+
+    toggleDeletePrompt() {
+      this.isDeletePromptOpen = !this.isDeletePromptOpen;
     },
   },
 };
