@@ -75,7 +75,7 @@
       <template #footer>
         <div class="flex gap-4 justify-end">
           <BaseButton
-            variant="secondary"
+            class="border-green-700 hover:bg-green-50"
             @click="closeDeletePrompt"
           >
             <p class="text-sm text-green-700">
@@ -83,7 +83,6 @@
             </p>
           </BaseButton>
           <BaseButton
-            variant="primary"
             class="bg-red-500 hover:bg-red-400"
             :disabled="deleteLoading"
             @click="deleteEvent(eventDetail.id)"
