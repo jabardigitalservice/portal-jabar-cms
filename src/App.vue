@@ -4,6 +4,7 @@
       <router-view />
     </AppLayout>
     <portal-target name="modal" />
+    <portal-target name="alert" />
   </div>
 </template>
 
