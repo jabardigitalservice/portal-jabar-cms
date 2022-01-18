@@ -1,12 +1,12 @@
 <template>
-  <AgendaForm mode="create" />
+  <AgendaForm mode="edit" />
 </template>
 
 <script>
 import AgendaForm from '@/components/Agenda/AgendaForm';
 
 export default {
-  name: 'CreateAgendaPage',
+  name: 'EditAgendaPage',
   components: {
     AgendaForm,
   },

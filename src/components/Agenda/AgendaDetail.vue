@@ -15,7 +15,7 @@
         <!-- Edit Button -->
         <!-- TODO: Add edit action on button click -->
         <LinkButton
-          href="#"
+          :href="`/agenda/detail/${$route.params.id}/ubah`"
           variant="secondary"
           class="hover:bg-green-50"
         >
