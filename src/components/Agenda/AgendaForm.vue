@@ -29,12 +29,12 @@
             height="20"
           >
           <p class="font-lato font-bold text-sm text-white">
-            Tambah Agenda
+            {{ submitButtonLabel }}
           </p>
         </BaseButton>
       </div>
     </HeaderMenu>
-    <form class="create-agenda__form grid grid-cols-3 gap-4">
+    <form class="agenda__form grid grid-cols-3 gap-4">
       <div class="col-span-2">
         <div class="p-4 rounded-lg bg-white mb-4">
           <div class="flex flex-col">
@@ -265,12 +265,22 @@ import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 const agendaRepository = RepositoryFactory.get('agenda');
 
 export default {
-  name: 'CreateAgenda',
+  name: 'AgendaForm',
   components: {
     HeaderMenu,
     BaseButton,
     BaseModal,
     AgendaPreview,
+  },
+  props: {
+    mode: {
+      type: String,
+      default: 'create',
+      validator(value) {
+        return ['create', 'edit']
+          .includes(value) !== -1;
+      },
+    },
   },
   data() {
     return {
@@ -306,6 +316,12 @@ export default {
     };
   },
   computed: {
+    isEditMode() {
+      return this.mode === 'edit';
+    },
+    submitButtonLabel() {
+      return this.isEditMode ? 'Simpan Perubahan' : 'Tambah Agenda';
+    },
     isTypeOffline() {
       return this.form.type === 'offline';
     },
@@ -385,8 +401,8 @@ export default {
         address: this.form.address,
         url: this.form.url,
         date: !this.isDateHasPassed ? formatDate(this.selectedDate, 'yyyy-MM-dd') : '',
-        start_hour: `${this.form.startHour}:00`,
-        end_hour: `${this.form.endHour}:00`,
+        start_hour: `${this.form.startHour}`,
+        end_hour: `${this.form.endHour}`,
         category: this.form.category,
         tags: this.form.tags,
       };
@@ -408,6 +424,24 @@ export default {
       const isToday = daysDifference(this.selectedDate, this.today);
       this.isTodayChecked = !isToday;
     },
+  },
+  async mounted() {
+    if (this.isEditMode) {
+      const { id } = this.$route.params;
+      const response = await agendaRepository.getEventById(id);
+      const { data } = response.data;
+      this.form = {
+        title: data.title,
+        type: data.type,
+        address: data.address,
+        url: data.url,
+        date: data.date,
+        startHour: data.start_hour,
+        endHour: data.end_hour,
+        category: data.category,
+        tags: data.tags.map((tag) => tag.tag_name),
+      };
+    }
   },
   methods: {
     isEmpty(string) {
@@ -463,7 +497,14 @@ export default {
         this.clearAllMessages();
       }
     },
-    async onSubmit() {
+    onSubmit() {
+      if (this.isEditMode) {
+        this.updateEvent();
+      } else {
+        this.createEvent();
+      }
+    },
+    async createEvent() {
       try {
         this.loading = true;
         await agendaRepository.createEvent(this.eventData);
@@ -480,38 +521,56 @@ export default {
         this.loading = false;
       }
     },
+    async updateEvent() {
+      try {
+        this.loading = true;
+        const { id } = this.$route.params;
+        await agendaRepository.updateEvent(id, this.eventData);
+        this.successMessage = {
+          title: 'Simpan Agenda Berhasil',
+          body: 'Agenda yang Anda buat berhasil disimpan.',
+        };
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Simpan Agenda Gagal',
+          body: 'Agenda yang Anda buat gagal disimpan.',
+        };
+      } finally {
+        this.loading = false;
+      }
+    },
   },
 };
 </script>
 
 <style>
-.create-agenda__form .jds-popover,
-.create-agenda__form .jds-date-input {
+.agenda__form .jds-popover,
+.agenda__form .jds-date-input {
   width: 100%;
 }
-.create-agenda__form .jds-form-control-label {
+.agenda__form .jds-form-control-label {
   margin-bottom: 4px !important;
 }
-.create-agenda__form .jds-select,
-.create-agenda__form .jds-popover__activator,
-.create-agenda__form .jds-input-text {
+.agenda__form .jds-select,
+.agenda__form .jds-popover__activator,
+.agenda__form .jds-input-text {
   width: 100% !important;
 }
-.create-agenda__form .jds-text-area__input-wrapper > textarea {
+.agenda__form .jds-text-area__input-wrapper > textarea {
   border: 1px solid #9E9E9E;
 }
-.create-agenda__form .jds-text-area__input-wrapper > textarea:hover {
+.agenda__form .jds-text-area__input-wrapper > textarea:hover {
   border: 1px solid #16a34a;
 }
-.create-agenda__form .jds-popover__content {
+.agenda__form .jds-popover__content {
   background-color: white;
   z-index: 10 !important;
 }
-.create-agenda__form .jds-calendar {
+.agenda__form .jds-calendar {
   max-width: none !important;
 }
-.create-agenda__form .jds-calendar .jds-calendar__list-of-days,
-.create-agenda__form .jds-calendar .jds-calendar__days {
+.agenda__form .jds-calendar .jds-calendar__list-of-days,
+.agenda__form .jds-calendar .jds-calendar__days {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
 }

@@ -20,6 +20,11 @@ export default [
     component: () => import('@/pages/AgendaPage/AgendaDetailPage'),
   },
   {
+    path: '/agenda/detail/:id/ubah',
+    name: 'Ubah Agenda',
+    component: () => import('@/pages/AgendaPage/EditAgendaPage'),
+  },
+  {
     path: '/agenda/tambah',
     name: 'Tambah Agenda Baru',
     component: () => import('@/pages/AgendaPage/CreateAgendaPage'),
