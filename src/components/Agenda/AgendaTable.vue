@@ -15,6 +15,7 @@
         <AgendaTableAction
           :item="item"
           @open-preview="$emit('open-preview', $event)"
+          @delete="$emit('delete', $event)"
         />
       </template>
     </JdsDataTable>

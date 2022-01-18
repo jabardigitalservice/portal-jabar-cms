@@ -159,6 +159,7 @@
         </div>
 
         <div
+          v-if="hasTags"
           ref="agenda-preview-tags"
           class="flex gap-2 col-span-2"
         >
@@ -175,7 +176,15 @@
             <h2 class="text-xs text-blue-gray-200">
               Tags
             </h2>
-            <!-- TODO: Add tags pills -->
+            <div class="min-w-0 flex gap-2 flex-wrap items-center">
+              <span
+                v-for="tag in event.tags"
+                :key="tag.id"
+                class="px-[10px] py-[6px] rounded-full bg-gray-200 text-gray-700 text-sm"
+              >
+                {{ tag.tag_name }}
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -215,6 +224,9 @@ export default {
     },
     date() {
       return this.event?.date ? formatDate(this.event.date, 'EEEE, dd MMM yyyy') : '-';
+    },
+    hasTags() {
+      return this.event?.tags && !!this.event?.tags.length;
     },
   },
 };

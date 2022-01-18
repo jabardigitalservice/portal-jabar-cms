@@ -7,18 +7,21 @@
         <slot />
       </div>
     </div>
+    <Toast />
   </div>
 </template>
 
 <script>
 import Sidebar from '@/components/ui/Sidebar.vue';
 import Header from '@/components/ui/Header.vue';
+import Toast from '@/components/ui/Toast.vue';
 
 export default {
   name: 'AppLayoutDefault',
   components: {
     Sidebar,
     Header,
+    Toast,
   },
 };
 </script>

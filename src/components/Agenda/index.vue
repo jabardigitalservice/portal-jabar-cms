@@ -46,6 +46,7 @@
           :meta="meta"
           @update:pagination="onUpdatePagination($event)"
           @open-preview="handleShowPreview($event)"
+          @delete="handleDeleteAction($event)"
         />
       </div>
     </section>
@@ -54,6 +55,59 @@
       :event="eventDetail"
       @close="togglePreviewModal"
     />
+
+    <!-- Delete Action Prompt -->
+    <BaseModal
+      :open="isDeletePromptOpen"
+      @close="toggleDeletePrompt"
+    >
+      <div class="w-full h-full">
+        <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
+          Hapus Agenda
+        </h1>
+        <p class="font-lato text-sm text-gray-800 mb-2">
+          Apakah Anda yakin akan menghapus agenda ini?
+        </p>
+        <h2 class="font-lato text-md font-bold text-gray-800">
+          {{ eventDetail.title }}
+        </h2>
+      </div>
+      <template #footer>
+        <div class="flex gap-4 justify-end">
+          <BaseButton
+            variant="secondary"
+            @click="closeDeletePrompt"
+          >
+            <p class="text-sm text-green-700">
+              Batal
+            </p>
+          </BaseButton>
+          <BaseButton
+            variant="primary"
+            class="bg-red-500 hover:bg-red-400"
+            :disabled="deleteLoading"
+            @click="deleteEvent(eventDetail.id)"
+          >
+            <p
+              v-if="!deleteLoading"
+              class="text-sm text-white"
+            >
+              Ya, saya yakin
+            </p>
+            <p
+              v-else
+              class="flex gap-2 items-center text-sm text-gray-500"
+            >
+              <JdsSpinner
+                size="16"
+                foreground="#757575"
+              />
+              Loading...
+            </p>
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
@@ -62,6 +116,8 @@ import AgendaTable from './AgendaTable.vue';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 import LinkButton from '@/components/ui/LinkButton.vue';
 import SearchBar from '@/components/ui/SearchBar.vue';
+import BaseModal from '@/components/ui/BaseModal.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
 
 import { AGENDA_STATUS_MAP } from '@/static/data';
 import { formatDate } from '@/lib/date-fns';
@@ -76,6 +132,8 @@ export default {
     AgendaPreview,
     LinkButton,
     SearchBar,
+    BaseButton,
+    BaseModal,
   },
   data() {
     return {
@@ -93,8 +151,10 @@ export default {
         page: 1,
       },
       isPreviewModalOpen: false,
+      isDeletePromptOpen: false,
       eventDetail: {},
       loading: false,
+      deleteLoading: false,
     };
   },
   computed: {
@@ -132,6 +192,23 @@ export default {
         // silent error
       } finally {
         this.loading = false;
+      }
+    },
+
+    /**
+     * Delete event by id
+     * @param {number} id - id of event to delete
+     */
+    async deleteEvent(id) {
+      try {
+        this.deleteLoading = true;
+        await agendaRepository.deleteEvent(id);
+      } catch (error) {
+        // silent error
+      } finally {
+        this.deleteLoading = false;
+        this.closeDeletePrompt();
+        this.fetchEvents();
       }
     },
 
@@ -180,6 +257,10 @@ export default {
       this.eventDetail = { ...event };
     },
 
+    clearEventDetail() {
+      this.eventDetail = {};
+    },
+
     /**
      * Handle data filtering and data mutation
      * when preview button clicked
@@ -191,8 +272,27 @@ export default {
       this.togglePreviewModal();
     },
 
+    /**
+     * Handle delete event when delete button clicked
+     * @param {number} id - id of specific event
+     */
+    handleDeleteAction(id) {
+      const event = this.filterEventsById(id);
+      this.setEventDetail(event);
+      this.toggleDeletePrompt();
+    },
+
     togglePreviewModal() {
       this.isPreviewModalOpen = !this.isPreviewModalOpen;
+    },
+
+    toggleDeletePrompt() {
+      this.isDeletePromptOpen = !this.isDeletePromptOpen;
+    },
+
+    closeDeletePrompt() {
+      this.clearEventDetail();
+      this.toggleDeletePrompt();
     },
   },
 };

@@ -67,4 +67,14 @@ export default {
   updateEvent(id, body) {
     return Repository.put(`${resource}/${id}`, body);
   },
+
+  /**
+   * Delete event by id
+   * @param {string, number} id
+   *
+   * @returns {Promise}
+   */
+  deleteEvent(id = null) {
+    return Repository.delete(`${resource}/${id}`);
+  },
 };
