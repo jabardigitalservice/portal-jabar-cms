@@ -2,7 +2,7 @@
   <button
     ref="base-button"
     v-bind="$attrs"
-    class="h-[38px] px-4 flex items-center rounded-lg border whitespace-nowrap
+    class="h-[38px] px-4 flex items-center rounded-lg border whitespace-nowrap font-bold
     disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-600"
     v-on="$listeners"
   >
