@@ -289,7 +289,7 @@ export default {
         type: 'offline',
         address: '',
         url: '',
-        date: '',
+        date: formatDate(new Date(), 'dd/MM/yyyy'),
         startHour: '',
         endHour: '',
         category: '',
@@ -301,7 +301,7 @@ export default {
       ],
       categories: AGENDA_CATEGORIES,
       tag: '',
-      isTodayChecked: false,
+      isTodayChecked: true,
       loading: false,
       errorMessage: {
         title: '',
@@ -400,9 +400,9 @@ export default {
         type: this.form.type,
         address: this.form.address,
         url: this.form.url,
-        date: !this.isDateHasPassed ? formatDate(this.selectedDate, 'yyyy-MM-dd') : '',
-        start_hour: `${this.form.startHour}`,
-        end_hour: `${this.form.endHour}`,
+        date: formatDate(this.selectedDate, 'yyyy-MM-dd'),
+        start_hour: this.form.startHour,
+        end_hour: this.form.endHour,
         category: this.form.category,
         tags: this.form.tags,
       };
@@ -421,8 +421,8 @@ export default {
       this.setMessageModalVisibility(this.isError);
     },
     'form.date': function () {
-      const isToday = daysDifference(this.selectedDate, this.today);
-      this.isTodayChecked = !isToday;
+      const isToday = daysDifference(this.selectedDate, this.today) === 0;
+      this.isTodayChecked = isToday;
     },
   },
   async mounted() {
@@ -435,7 +435,7 @@ export default {
         type: data.type,
         address: data.address,
         url: data.url,
-        date: data.date,
+        date: formatDate(data.date, 'dd/MM/yyyy'),
         startHour: data.start_hour,
         endHour: data.end_hour,
         category: data.category,
