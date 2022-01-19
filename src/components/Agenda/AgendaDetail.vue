@@ -80,6 +80,51 @@
                   </div>
                 </td>
               </tr>
+              <tr>
+                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                  Tipe Kategori
+                </td>
+                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                  <div
+                    v-if="loading"
+                    class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
+                  />
+                  <div v-else>
+                    {{ event.category || '-' }}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                  Kategori
+                </td>
+                <td class="font-lato text-blue-gray-500 text-sm">
+                  <div
+                    v-if="loading"
+                    class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
+                  />
+                  <div
+                    v-else
+                    class="capitalize"
+                  >
+                    {{ event.published_by || '-' }}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                  Status Agenda
+                </td>
+                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                  <div
+                    v-if="loading"
+                    class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
+                  />
+                  <div v-else>
+                    {{ status }}
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </JdsSimpleTable>
         </div>
@@ -122,54 +167,6 @@
                   />
                   <div v-else>
                     {{ time }}
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </JdsSimpleTable>
-        </div>
-
-        <div class="rounded-lg overflow-hidden border border-gray-200">
-          <JdsSimpleTable class="!table-auto">
-            <thead>
-              <tr>
-                <th
-                  colspan="2"
-                  class="!font-roboto !text-sm"
-                >
-                  Kategori Agenda/Event
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
-                  Tipe Kategori
-                </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
-                  <div
-                    v-if="loading"
-                    class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
-                  />
-                  <div v-else>
-                    {{ event.published_by || '-' }}
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="font-lato text-blue-gray-500 font-bold text-sm">
-                  Kategori
-                </td>
-                <td class="font-lato text-blue-gray-500 text-sm">
-                  <div
-                    v-if="loading"
-                    class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
-                  />
-                  <div
-                    v-else
-                    class="capitalize"
-                  >
-                    {{ event.category || '-' }}
                   </div>
                 </td>
               </tr>
@@ -241,37 +238,6 @@
                     <div class="capitalize">
                       {{ event.address || '-' }}
                     </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </JdsSimpleTable>
-        </div>
-
-        <div class="rounded-lg overflow-hidden border border-gray-200">
-          <JdsSimpleTable class="!table-auto">
-            <thead>
-              <tr>
-                <th
-                  colspan="2"
-                  class="!font-roboto !text-sm"
-                >
-                  Status Agenda/Event
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
-                  Status Agenda
-                </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
-                  <div
-                    v-if="loading"
-                    class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
-                  />
-                  <div v-else>
-                    {{ status }}
                   </div>
                 </td>
               </tr>
