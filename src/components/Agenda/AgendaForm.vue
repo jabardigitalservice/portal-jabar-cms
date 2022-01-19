@@ -133,7 +133,7 @@
                   </label>
                   <input
                     id="start-time"
-                    v-model="form.startHour"
+                    v-model="form.start_hour"
                     type="time"
                     class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   >
@@ -147,7 +147,7 @@
                   </label>
                   <input
                     id="end-time"
-                    v-model="form.endHour"
+                    v-model="form.end_hour"
                     type="time"
                     :disabled="!hasStartHour"
                     class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
@@ -196,11 +196,11 @@
                     class="flex gap-1 flex-wrap"
                   >
                     <div
-                      v-for="(tagName, index) in form.tags"
+                      v-for="(tag, index) in form.tags"
                       :key="index"
                       class="bg-gray-200 text-gray-700 text-sm rounded-3xl px-[10px] py-[6px] flex items-center justify-center gap-1"
                     >
-                      {{ tagName }}
+                      {{ tag.tag_name }}
                       <JdsIcon
                         name="times"
                         size="12px"
@@ -221,7 +221,7 @@
     </form>
     <AgendaPreview
       :open="isPreviewModalOpen"
-      :event="eventData"
+      :event="form"
       @close="togglePreviewModal"
     />
     <BaseModal :open="isMessageModalOpen">
@@ -290,8 +290,8 @@ export default {
         address: '',
         url: '',
         date: '',
-        startHour: '',
-        endHour: '',
+        start_hour: '',
+        end_hour: '',
         category: '',
         tags: [],
       },
@@ -329,10 +329,10 @@ export default {
       return Array.isArray(this.form.tags) && !!this.form.tags.length;
     },
     hasStartHour() {
-      return !!this.form.startHour;
+      return !!this.form.start_hour;
     },
     hasEndHour() {
-      return !!this.form.endHour;
+      return !!this.form.end_hour;
     },
     isInputValid() {
       const hasTitle = !this.isEmpty(this.form.title);
@@ -340,8 +340,8 @@ export default {
       const hasAddress = this.isTypeOffline ? !this.isEmpty(this.form.address) : true;
       const hasUrl = this.isTypeOffline ? true : !this.isEmpty(this.form.url);
       const hasDate = !this.isEmpty(this.form.date);
-      const hasStartHour = !this.isEmpty(this.form.startHour);
-      const hasEndHour = !this.isEmpty(this.form.endHour);
+      const hasStartHour = !this.isEmpty(this.form.start_hour);
+      const hasEndHour = !this.isEmpty(this.form.end_hour);
       const hasCategory = !this.isEmpty(this.form.category);
       const hasTags = Array.isArray(this.form.tags) && !!this.form.tags.length;
 
@@ -386,26 +386,13 @@ export default {
     isTimeHasPassed() {
       if (!this.hasEndHour) return false;
 
-      const startHour = this.form.startHour.split(':');
-      const endHour = this.form.endHour.split(':');
+      const startHour = this.form.start_hour.split(':');
+      const endHour = this.form.end_hour.split(':');
 
       return minutesDifference(new Date().setHours(...startHour), new Date().setHours(...endHour)) >= 0;
     },
     isFormValid() {
       return this.isInputValid && !this.isDateHasPassed && !this.isTimeHasPassed;
-    },
-    eventData() {
-      return {
-        title: this.form.title,
-        type: this.form.type,
-        address: this.form.address,
-        url: this.form.url,
-        date: !this.isDateHasPassed ? formatDate(this.selectedDate, 'yyyy-MM-dd') : '',
-        start_hour: `${this.form.startHour}`,
-        end_hour: `${this.form.endHour}`,
-        category: this.form.category,
-        tags: this.form.tags,
-      };
     },
   },
   watch: {
@@ -435,11 +422,11 @@ export default {
         type: data.type,
         address: data.address,
         url: data.url,
-        date: data.date,
-        startHour: data.start_hour,
-        endHour: data.end_hour,
+        date: formatDate(data.date, 'dd/MM/yyyy'),
+        start_hour: data.start_hour,
+        end_hour: data.end_hour,
         category: data.category,
-        tags: data.tags.map((tag) => tag.tag_name),
+        tags: data.tags,
       };
     }
   },
@@ -451,7 +438,7 @@ export default {
       this.form.type = type;
     },
     setTags(tag) {
-      this.form.tags.push(tag);
+      this.form.tags.push({ tag_name: tag });
     },
     setDate(date) {
       this.form.date = date;
@@ -507,7 +494,12 @@ export default {
     async createEvent() {
       try {
         this.loading = true;
-        await agendaRepository.createEvent(this.eventData);
+        const body = {
+          ...this.form,
+          date: formatDate(this.selectedDate, 'yyyy-MM-dd'),
+          tags: this.form.tags.map((tag) => tag.tag_name),
+        };
+        await agendaRepository.createEvent(body);
         this.successMessage = {
           title: 'Tambah Agenda Berhasil',
           body: 'Agenda yang Anda buat berhasil ditambahkan.',
@@ -524,8 +516,13 @@ export default {
     async updateEvent() {
       try {
         this.loading = true;
+        const body = {
+          ...this.form,
+          date: formatDate(this.selectedDate, 'yyyy-MM-dd'),
+          tags: this.form.tags.map((tag) => tag.tag_name),
+        };
         const { id } = this.$route.params;
-        await agendaRepository.updateEvent(id, this.eventData);
+        await agendaRepository.updateEvent(id, body);
         this.successMessage = {
           title: 'Simpan Agenda Berhasil',
           body: 'Agenda yang Anda buat berhasil disimpan.',
