@@ -254,7 +254,9 @@
 </template>
 
 <script>
-import { daysDifference, formatDate, minutesDifference } from '@/lib/date-fns';
+import {
+  daysDifference, formatDate, isToday, minutesDifference,
+} from '@/lib/date-fns';
 import { AGENDA_CATEGORIES } from '@/static/data';
 import HeaderMenu from '@/components/ui/HeaderMenu.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
@@ -289,7 +291,7 @@ export default {
         type: 'offline',
         address: '',
         url: '',
-        date: '',
+        date: formatDate(new Date(), 'dd/MM/yyyy'),
         start_hour: '',
         end_hour: '',
         category: '',
@@ -301,7 +303,7 @@ export default {
       ],
       categories: AGENDA_CATEGORIES,
       tag: '',
-      isTodayChecked: false,
+      isTodayChecked: true,
       loading: false,
       errorMessage: {
         title: '',
@@ -408,8 +410,7 @@ export default {
       this.setMessageModalVisibility(this.isError);
     },
     'form.date': function () {
-      const isToday = daysDifference(this.selectedDate, this.today);
-      this.isTodayChecked = !isToday;
+      this.isTodayChecked = isToday(this.selectedDate);
     },
   },
   async mounted() {
