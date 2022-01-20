@@ -82,20 +82,28 @@
             <h2 class="font-roboto font-medium text-green-700 mb-3">
               Link Agenda
             </h2>
-            <JdsInputText
-              v-model.trim="form.url"
-              placeholder="Masukkan link kegiatan"
-            >
-              <template #prefix-icon>
-                <img
-                  src="@/assets/icons/link.svg"
-                  width="16"
-                  height="16"
-                  alt="Link"
-                >
-              </template>
-              />
-            </JdsInputText>
+            <div class="flex flex-col gap-1">
+              <JdsInputText
+                v-model.trim="form.url"
+                placeholder="Masukkan link kegiatan"
+              >
+                <template #prefix-icon>
+                  <img
+                    src="@/assets/icons/link.svg"
+                    width="16"
+                    height="16"
+                    alt="Link"
+                  >
+                </template>
+                />
+              </JdsInputText>
+              <p
+                v-show="!isUrlValid"
+                class="text-sm text-red-600"
+              >
+                Link kegiatan tidak valid
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -334,18 +342,25 @@ export default {
     hasEndHour() {
       return !!this.form.end_hour;
     },
+    isUrlValid() {
+      if (this.form.url === '') return true;
+      const url = this.appendUrl(this.form.url);
+      const response = url.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/g);
+
+      return response !== null;
+    },
     isInputValid() {
       const hasTitle = !this.isEmpty(this.form.title);
       const hasType = !this.isEmpty(this.form.type);
       const hasAddress = this.isTypeOffline ? !this.isEmpty(this.form.address) : true;
-      const hasUrl = this.isTypeOffline ? true : !this.isEmpty(this.form.url);
+      const hasValidUrl = this.isTypeOffline ? true : !this.isEmpty(this.form.url) && this.isUrlValid;
       const hasDate = !this.isEmpty(this.form.date);
       const hasStartHour = !this.isEmpty(this.form.start_hour);
       const hasEndHour = !this.isEmpty(this.form.end_hour);
       const hasCategory = !this.isEmpty(this.form.category);
       const hasTags = Array.isArray(this.form.tags) && !!this.form.tags.length;
 
-      return hasTitle && hasType && hasAddress && hasUrl && hasDate && hasStartHour && hasEndHour && hasCategory && hasTags;
+      return hasTitle && hasType && hasAddress && hasValidUrl && hasDate && hasStartHour && hasEndHour && hasCategory && hasTags;
     },
     today() {
       return new Date().setHours(0, 0, 0, 0);
@@ -431,6 +446,11 @@ export default {
     }
   },
   methods: {
+    appendUrl(url) {
+      if (url.startsWith('http') || url.startsWith('https') || url === '') return url;
+
+      return `https://${url}`;
+    },
     isEmpty(string) {
       return string === '';
     },
