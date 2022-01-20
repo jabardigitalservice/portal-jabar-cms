@@ -75,27 +75,22 @@
       <template #footer>
         <div class="flex gap-4 justify-end">
           <BaseButton
-            class="border-green-700 hover:bg-green-50"
+            class="border-green-700 hover:bg-green-50 text-sm text-green-700"
             @click="closeDeletePrompt"
           >
-            <p class="text-sm text-green-700">
-              Batal
-            </p>
+            Batal
           </BaseButton>
           <BaseButton
-            class="bg-red-500 hover:bg-red-400"
+            class="bg-red-500 hover:bg-red-400 text-sm text-white"
             :disabled="deleteLoading"
             @click="deleteEvent(eventDetail.id)"
           >
-            <p
-              v-if="!deleteLoading"
-              class="text-sm text-white"
-            >
+            <p v-if="!deleteLoading">
               Ya, saya yakin
             </p>
             <p
               v-else
-              class="flex gap-2 items-center text-sm text-gray-500"
+              class="flex gap-2 items-center text-gray-500"
             >
               <JdsSpinner
                 size="16"
