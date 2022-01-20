@@ -241,12 +241,12 @@
       </div>
       <template #footer>
         <div class="flex w-full h-full items-center justify-center gap-4 p-2">
-          <JdsButton
-            class="text-sm font-bold h-[38px]"
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
             @click="messageAction"
           >
             Saya Mengerti
-          </JdsButton>
+          </BaseButton>
         </div>
       </template>
     </BaseModal>

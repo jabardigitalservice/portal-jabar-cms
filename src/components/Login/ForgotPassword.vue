@@ -70,31 +70,29 @@
         v-if="!success"
         class="flex w-full h-full items-center justify-end gap-4 p-2"
       >
-        <JdsButton
-          variant="secondary"
-          class="text-sm font-bold h-[38px]"
+        <BaseButton
+          class="border-green-700 hover:bg-green-50 text-sm text-green-700"
           @click="onClose"
         >
           Batal
-        </JdsButton>
-        <JdsButton
-          variant="primary"
-          class="text-sm font-bold h-[38px]"
+        </BaseButton>
+        <BaseButton
+          class="bg-green-700 hover:bg-green-600 text-sm text-white"
           @click="onSubmit"
         >
           Kirim
-        </JdsButton>
+        </BaseButton>
       </div>
       <div
         v-else
         class="flex w-full h-full items-center justify-center gap-4 p-2"
       >
-        <JdsButton
-          class="text-sm font-bold h-[38px]"
+        <BaseButton
+          class="bg-green-700 hover:bg-green-600 text-sm text-white"
           @click="onClose()"
         >
           Saya Mengerti
-        </JdsButton>
+        </BaseButton>
       </div>
     </template>
   </BaseModal>
@@ -102,11 +100,13 @@
 
 <script>
 import BaseModal from '@/components/ui/BaseModal';
+import BaseButton from '@/components/ui/BaseButton';
 
 export default {
   name: 'ForgotPassword',
   components: {
     BaseModal,
+    BaseButton,
   },
   props: {
     open: {

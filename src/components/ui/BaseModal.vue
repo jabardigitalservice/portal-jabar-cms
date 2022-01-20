@@ -28,13 +28,12 @@
         >
           <slot name="footer">
             <div class="w-full h-full flex items-center justify-center">
-              <JdsButton
-                variant="primary"
-                class="font-bold leading-5"
+              <BaseButton
+                class="bg-green-700 hover:bg-green-600 text-sm text-white"
                 @click="$emit('close')"
               >
                 Tutup
-              </JdsButton>
+              </BaseButton>
             </div>
           </slot>
         </div>
@@ -44,8 +43,13 @@
 </template>
 
 <script>
+import BaseButton from '@/components/ui/BaseButton.vue';
+
 export default {
   name: 'BaseModal',
+  components: {
+    BaseButton,
+  },
   props: {
     open: {
       type: Boolean,
