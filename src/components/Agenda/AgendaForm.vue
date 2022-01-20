@@ -485,21 +485,21 @@ export default {
       }
     },
     onSubmit() {
+      const data = {
+        ...this.form,
+        date: formatDate(this.selectedDate, 'yyyy-MM-dd'),
+        tags: this.form.tags.map((tag) => tag.tag_name),
+      };
       if (this.isEditMode) {
-        this.updateEvent();
+        this.updateEvent(data);
       } else {
-        this.createEvent();
+        this.createEvent(data);
       }
     },
-    async createEvent() {
+    async createEvent(data) {
       try {
         this.loading = true;
-        const body = {
-          ...this.form,
-          date: formatDate(this.selectedDate, 'yyyy-MM-dd'),
-          tags: this.form.tags.map((tag) => tag.tag_name),
-        };
-        await agendaRepository.createEvent(body);
+        await agendaRepository.createEvent(data);
         this.successMessage = {
           title: 'Tambah Agenda Berhasil',
           body: 'Agenda yang Anda buat berhasil ditambahkan.',
@@ -513,16 +513,11 @@ export default {
         this.loading = false;
       }
     },
-    async updateEvent() {
+    async updateEvent(data) {
       try {
         this.loading = true;
-        const body = {
-          ...this.form,
-          date: formatDate(this.selectedDate, 'yyyy-MM-dd'),
-          tags: this.form.tags.map((tag) => tag.tag_name),
-        };
         const { id } = this.$route.params;
-        await agendaRepository.updateEvent(id, body);
+        await agendaRepository.updateEvent(id, data);
         this.successMessage = {
           title: 'Simpan Agenda Berhasil',
           body: 'Agenda yang Anda buat berhasil disimpan.',
