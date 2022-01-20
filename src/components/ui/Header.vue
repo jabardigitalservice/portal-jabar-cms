@@ -132,20 +132,18 @@
       </div>
       <template #footer>
         <div class="flex w-full h-full items-center justify-center gap-4">
-          <JdsButton
-            variant="secondary"
-            class="text-sm font-bold h-[38px]"
+          <BaseButton
+            class="border-green-700 hover:bg-green-50 text-sm text-green-700"
             @click="toggleLogoutModal"
           >
             Batal
-          </JdsButton>
-          <JdsButton
-            variant="primary"
-            class="text-sm font-bold h-[38px]"
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
             @click="onLogout"
           >
             Ya, saya yakin
-          </JdsButton>
+          </BaseButton>
         </div>
       </template>
     </BaseModal>
@@ -154,11 +152,13 @@
 
 <script>
 import BaseModal from '@/components/ui/BaseModal';
+import BaseButton from '@/components/ui/BaseButton';
 
 export default {
   name: 'Header',
   components: {
     BaseModal,
+    BaseButton,
   },
   data() {
     return {

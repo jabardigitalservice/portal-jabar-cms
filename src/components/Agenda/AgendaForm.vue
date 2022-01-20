@@ -3,7 +3,7 @@
     <HeaderMenu>
       <div class="flex gap-4">
         <BaseButton
-          class="border-green-700 hover:bg-green-50"
+          class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
           @click="togglePreviewModal"
         >
           <template #icon-left>
@@ -13,13 +13,13 @@
               class="h-4 text-green-700"
             />
           </template>
-          <p class="font-lato font-bold text-sm text-green-700">
+          <p>
             Pratinjau
           </p>
         </BaseButton>
         <BaseButton
           :disabled="!isFormValid"
-          class="bg-green-700 hover:bg-green-600"
+          class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
           @click="onSubmit"
         >
           <img
@@ -28,7 +28,7 @@
             width="20"
             height="20"
           >
-          <p class="font-lato font-bold text-sm text-white">
+          <p>
             {{ submitButtonLabel }}
           </p>
         </BaseButton>
@@ -241,12 +241,12 @@
       </div>
       <template #footer>
         <div class="flex w-full h-full items-center justify-center gap-4 p-2">
-          <JdsButton
-            class="text-sm font-bold h-[38px]"
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
             @click="messageAction"
           >
             Saya Mengerti
-          </JdsButton>
+          </BaseButton>
         </div>
       </template>
     </BaseModal>
