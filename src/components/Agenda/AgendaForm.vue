@@ -3,6 +3,7 @@
     <HeaderMenu>
       <div class="flex gap-4">
         <BaseButton
+          :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
           @click="togglePreviewModal"
         >
@@ -10,7 +11,8 @@
             <JdsIcon
               name="eye"
               size="16px"
-              class="h-4 text-green-700"
+              class="h-4"
+              :class="[!isFormValid ? 'text-gray-600' : 'text-green-700']"
             />
           </template>
           <p>
@@ -27,6 +29,7 @@
             alt="Save"
             width="20"
             height="20"
+            :class="{ 'invert brightness-[60%]': !isFormValid }"
           >
           <p>
             {{ submitButtonLabel }}
