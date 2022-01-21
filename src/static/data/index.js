@@ -45,8 +45,8 @@ export const AGENDA_TABLE_HEADER = [
     sortable: true,
   },
   {
-    key: 'status',
-    text: 'Status',
+    key: 'type',
+    text: 'Tipe Agenda',
     sortable: true,
   },
   {

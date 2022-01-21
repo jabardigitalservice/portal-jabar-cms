@@ -161,6 +161,7 @@ export default {
           date: formatDate(event.date, 'dd/MM/yyyy'),
           time: `${event.start_hour.substring(0, 5)} - ${event.end_hour.substring(0, 5)}`,
           status: this.getEventStatus(event.status),
+          type: event.type,
         }));
 
         return items;
