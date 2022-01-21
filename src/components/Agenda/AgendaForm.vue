@@ -518,6 +518,7 @@ export default {
     onSubmit() {
       const data = {
         ...this.form,
+        url: this.appendUrl(this.form.url),
         date: formatDate(this.selectedDate, 'yyyy-MM-dd'),
         tags: this.form.tags.map((tag) => tag.tag_name),
       };
