@@ -450,7 +450,7 @@ export default {
   },
   methods: {
     appendUrl(url) {
-      if (url.startsWith('http') || url.startsWith('https') || url === '') return url;
+      if (url.startsWith('http') || url === '') return url;
 
       return `https://${url}`;
     },
