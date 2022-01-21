@@ -4,12 +4,10 @@
       <div class="flex gap-3">
         <!-- Delete Button -->
         <BaseButton
-          class="border-red-500 hover:bg-red-50"
+          class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
           @click="toggleDeletePrompt"
         >
-          <p class="font-lato font-bold text-sm text-red-500">
-            Hapus
-          </p>
+          Hapus
         </BaseButton>
         <!-- Edit Button -->
         <!-- TODO: Add edit action on button click -->
@@ -31,7 +29,7 @@
         </LinkButton>
         <!-- Preview Button -->
         <BaseButton
-          class="border-green-700 hover:bg-green-50"
+          class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
           @click="togglePreviewModal"
         >
           <template #icon-left>
@@ -41,7 +39,7 @@
               class="h-4 text-green-700"
             />
           </template>
-          <p class="font-lato font-bold text-sm text-green-700">
+          <p>
             Pratinjau
           </p>
         </BaseButton>
@@ -272,27 +270,22 @@
       <template #footer>
         <div class="flex gap-4 justify-end">
           <BaseButton
-            class="border-green-700 hover:bg-green-50"
+            class="border-green-700 hover:bg-green-50 text-sm text-green-700"
             @click="toggleDeletePrompt"
           >
-            <p class="text-sm text-green-700">
-              Batal
-            </p>
+            Batal
           </BaseButton>
           <BaseButton
-            class="bg-red-500 hover:bg-red-400"
+            class="bg-red-500 hover:bg-red-400 text-sm text-white"
             :disabled="deleteLoading"
             @click="deleteEvent(event.id)"
           >
-            <p
-              v-if="!deleteLoading"
-              class="text-sm text-white"
-            >
+            <p v-if="!deleteLoading">
               Ya, saya yakin
             </p>
             <p
               v-else
-              class="flex gap-2 items-center text-sm text-gray-500"
+              class="flex gap-2 items-center text-gray-500"
             >
               <JdsSpinner
                 size="16"

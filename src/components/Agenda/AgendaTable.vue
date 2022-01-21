@@ -11,6 +11,12 @@
       @page-change="onPaginationChange('page-change', $event)"
     >
       <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.type="{item}">
+        <p class="capitalize">
+          {{ item.type }}
+        </p>
+      </template>
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.action="{item}">
         <AgendaTableAction
           :item="item"

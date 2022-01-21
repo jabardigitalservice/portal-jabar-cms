@@ -1,5 +1,5 @@
 import {
-  differenceInDays, differenceInMinutes, format, isValid,
+  differenceInDays, differenceInMinutes, format, isToday as isTheGivenDateToday, isValid,
 } from 'date-fns';
 import { id } from 'date-fns/locale';
 
@@ -21,6 +21,16 @@ export const formatDate = (date, pattern = 'dd/MM/yyyy') => {
 
   return date;
 };
+
+/**
+ * Is the given date today
+ *
+ * @param {Date} date - date to check
+ * Check out {@link https://date-fns.org/v2.28.0/docs/isToday | date-fns official docs}
+ * for more information
+ * @returns {boolean}
+ */
+export const isToday = (date) => isTheGivenDateToday(new Date(date));
 
 /**
  * Get the number of full day periods between two dates.
