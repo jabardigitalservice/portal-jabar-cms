@@ -262,6 +262,7 @@
 </template>
 
 <script>
+import debounce from 'lodash.debounce';
 import { daysDifference, formatDate, minutesDifference } from '@/lib/date-fns';
 import { AGENDA_CATEGORIES } from '@/static/data';
 import HeaderMenu from '@/components/ui/HeaderMenu.vue';
@@ -303,6 +304,9 @@ export default {
         category: '',
         tags: [],
       },
+      isUrlValid: true,
+      isUrlInputTouched: false,
+      isUrlBeingValidated: false,
       types: [
         { label: 'Offline', value: 'offline' },
         { label: 'Online', value: 'online' },
@@ -342,18 +346,11 @@ export default {
     hasEndHour() {
       return !!this.form.end_hour;
     },
-    isUrlValid() {
-      if (this.form.url === '') return true;
-      const url = this.appendUrl(this.form.url);
-      const response = url.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/g);
-
-      return response !== null;
-    },
     isInputValid() {
       const hasTitle = !this.isEmpty(this.form.title);
       const hasType = !this.isEmpty(this.form.type);
       const hasAddress = this.isTypeOffline ? !this.isEmpty(this.form.address) : true;
-      const hasValidUrl = this.isTypeOffline ? true : !this.isEmpty(this.form.url) && this.isUrlValid;
+      const hasValidUrl = this.isTypeOffline ? true : !this.isEmpty(this.form.url) && this.isUrlValid && !this.isUrlBeingValidated;
       const hasDate = !this.isEmpty(this.form.date);
       const hasStartHour = !this.isEmpty(this.form.start_hour);
       const hasEndHour = !this.isEmpty(this.form.end_hour);
@@ -426,6 +423,12 @@ export default {
       const isToday = daysDifference(this.selectedDate, this.today);
       this.isTodayChecked = !isToday;
     },
+    'form.url': function () {
+      if (this.form.url !== '') {
+        this.isUrlBeingValidated = true;
+        this.validateUrl();
+      }
+    },
   },
   async mounted() {
     if (this.isEditMode) {
@@ -451,6 +454,14 @@ export default {
 
       return `https://${url}`;
     },
+    validateUrl: debounce(function () {
+      const url = this.appendUrl(this.form.url);
+      const response = url.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/g);
+
+      this.isUrlValid = response !== null;
+      this.isUrlInputTouched = true;
+      this.isUrlBeingValidated = false;
+    }, 500),
     isEmpty(string) {
       return string === '';
     },
