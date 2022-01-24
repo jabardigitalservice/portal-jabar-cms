@@ -184,7 +184,10 @@ export default {
         this.events = data;
         this.meta = meta;
       } catch (error) {
-        // silent error
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Agenda, silakan coba beberapa saat lagi',
+        });
       } finally {
         this.loading = false;
       }
@@ -198,8 +201,15 @@ export default {
       try {
         this.deleteLoading = true;
         await agendaRepository.deleteEvent(id);
+        this.$toast({
+          type: 'success',
+          message: 'Data agenda telah berhasil dihapus',
+        });
       } catch (error) {
-        // silent error
+        this.$toast({
+          type: 'error',
+          message: 'Data agenda gagal dihapus',
+        });
       } finally {
         this.deleteLoading = false;
         this.closeDeletePrompt();
