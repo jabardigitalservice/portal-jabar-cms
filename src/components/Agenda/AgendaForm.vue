@@ -352,7 +352,7 @@ export default {
       const hasTitle = !this.isEmpty(this.form.title);
       const hasType = !this.isEmpty(this.form.type);
       const hasAddress = this.isTypeOffline ? !this.isEmpty(this.form.address) : true;
-      const hasValidUrl = this.isTypeOffline ? true : !this.isEmpty(this.form.url) && this.isUrlValid && !this.isUrlBeingValidated;
+      const hasValidUrl = this.isTypeOffline || (!this.isEmpty(this.form.url) && this.isUrlValid && !this.isUrlBeingValidated);
       const hasDate = !this.isEmpty(this.form.date);
       const hasStartHour = !this.isEmpty(this.form.start_hour);
       const hasEndHour = !this.isEmpty(this.form.end_hour);
