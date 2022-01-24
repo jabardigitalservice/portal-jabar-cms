@@ -85,20 +85,28 @@
             <h2 class="font-roboto font-medium text-green-700 mb-3">
               Link Agenda
             </h2>
-            <JdsInputText
-              v-model.trim="form.url"
-              placeholder="Masukkan link kegiatan"
-            >
-              <template #prefix-icon>
-                <img
-                  src="@/assets/icons/link.svg"
-                  width="16"
-                  height="16"
-                  alt="Link"
-                >
-              </template>
-              />
-            </JdsInputText>
+            <div class="flex flex-col gap-1">
+              <JdsInputText
+                v-model.trim="form.url"
+                placeholder="Masukkan link kegiatan"
+              >
+                <template #prefix-icon>
+                  <img
+                    src="@/assets/icons/link.svg"
+                    width="16"
+                    height="16"
+                    alt="Link"
+                  >
+                </template>
+                />
+              </JdsInputText>
+              <p
+                v-show="!isUrlValid"
+                class="text-sm text-red-600"
+              >
+                Link kegiatan tidak valid
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -257,6 +265,7 @@
 </template>
 
 <script>
+import debounce from 'lodash.debounce';
 import {
   daysDifference, formatDate, isToday, minutesDifference,
 } from '@/lib/date-fns';
@@ -300,6 +309,9 @@ export default {
         category: '',
         tags: [],
       },
+      isUrlValid: true,
+      isUrlInputTouched: false,
+      isUrlBeingValidated: false,
       types: [
         { label: 'Offline', value: 'offline' },
         { label: 'Online', value: 'online' },
@@ -343,14 +355,14 @@ export default {
       const hasTitle = !this.isEmpty(this.form.title);
       const hasType = !this.isEmpty(this.form.type);
       const hasAddress = this.isTypeOffline ? !this.isEmpty(this.form.address) : true;
-      const hasUrl = this.isTypeOffline ? true : !this.isEmpty(this.form.url);
+      const hasValidUrl = this.isTypeOffline || (!this.isEmpty(this.form.url) && this.isUrlValid && !this.isUrlBeingValidated);
       const hasDate = !this.isEmpty(this.form.date);
       const hasStartHour = !this.isEmpty(this.form.start_hour);
       const hasEndHour = !this.isEmpty(this.form.end_hour);
       const hasCategory = !this.isEmpty(this.form.category);
       const hasTags = Array.isArray(this.form.tags) && !!this.form.tags.length;
 
-      return hasTitle && hasType && hasAddress && hasUrl && hasDate && hasStartHour && hasEndHour && hasCategory && hasTags;
+      return hasTitle && hasType && hasAddress && hasValidUrl && hasDate && hasStartHour && hasEndHour && hasCategory && hasTags;
     },
     today() {
       return new Date().setHours(0, 0, 0, 0);
@@ -415,6 +427,12 @@ export default {
     'form.date': function () {
       this.isTodayChecked = isToday(this.selectedDate);
     },
+    'form.url': function () {
+      if (this.form.url !== '') {
+        this.isUrlBeingValidated = true;
+        this.validateUrl();
+      }
+    },
   },
   async mounted() {
     if (this.isEditMode) {
@@ -435,6 +453,19 @@ export default {
     }
   },
   methods: {
+    appendUrl(url) {
+      if (url.startsWith('http') || url === '') return url;
+
+      return `https://${url}`;
+    },
+    validateUrl: debounce(function () {
+      const url = this.appendUrl(this.form.url);
+      const response = url.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/g);
+
+      this.isUrlValid = response !== null;
+      this.isUrlInputTouched = true;
+      this.isUrlBeingValidated = false;
+    }, 500),
     isEmpty(string) {
       return string === '';
     },
@@ -491,6 +522,7 @@ export default {
     onSubmit() {
       const data = {
         ...this.form,
+        url: this.appendUrl(this.form.url),
         date: formatDate(this.selectedDate, 'yyyy-MM-dd'),
         tags: this.form.tags.map((tag) => tag.tag_name),
       };
