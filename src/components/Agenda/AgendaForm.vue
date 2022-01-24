@@ -405,7 +405,7 @@ export default {
 
       const startHour = this.form.start_hour.split(':');
       const endHour = this.form.end_hour.split(':');
-      const isStartHourHasPassed = minutesDifference(new Date().setHours(...startHour), new Date()) < 0;
+      const isStartHourHasPassed = isToday(this.selectedDate) && minutesDifference(new Date().setHours(...startHour), new Date()) < 0;
       const isEndHourHasPassed = minutesDifference(new Date().setHours(...startHour), new Date().setHours(...endHour)) >= 0;
 
       return this.isDateHasPassed || isStartHourHasPassed || isEndHourHasPassed;
