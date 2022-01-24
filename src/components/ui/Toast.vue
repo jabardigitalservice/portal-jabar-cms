@@ -2,18 +2,18 @@
   <portal to="alert">
     <transition
       enter-active-class="animate-slide-down"
-      leave-active-class="animate-close-to-right"
+      leave-active-class="animate-close-to-top"
     >
       <div
         v-if="isOpen"
-        class="absolute z-[50] top-[88px] right-0 min-h-[55px] ml-auto mr-8"
+        class="absolute z-[50] top-[88px] w-full flex justify-center min-h-[55px] pointer-events-none"
       >
         <JdsSectionMessage
           :show="isOpen"
           :variant="type"
           :message="message"
           dismissible
-          class="w-fit min-w-[150px] shadow-lg"
+          class="w-fit min-w-[150px] shadow-lg pointer-events-auto"
           @click:close="onClose"
         />
       </div>
