@@ -32,7 +32,7 @@ export default [
   {
     path: '/berita-dan-informasi',
     name: 'Berita dan Informasi',
-    component: () => import('@/pages/HomePage'),
+    component: () => import('@/pages/NewsPage'),
   },
   {
     path: '/pengaturan',
