@@ -198,10 +198,10 @@ export default {
         this.$router.push({ path: '/' });
       } catch (error) {
         if (error.status === 401) {
-          this.error = { message: 'Akun tidak ditemukan' };
+          this.error = { message: 'Email atau kata sandi tidak sesuai' };
           this.loginAttempts += 1;
         } else {
-          this.error = { message: error.message };
+          this.error = { message: 'Terjadi kesalahan pada sistem kami' };
         }
       } finally {
         this.loading = false;
