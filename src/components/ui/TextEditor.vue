@@ -2,7 +2,7 @@
   <form @submit.prevent="onSubmit">
     <Editor
       v-model="content"
-      api-key="no-api-key"
+      :api-key="apiKey"
       cloud-channel="5"
       placeholder="Tulis isi berita di sini"
       :init="{
@@ -41,6 +41,7 @@ export default {
   },
   data() {
     return {
+      apiKey: process.env.VUE_APP_TINY_MCE_API_KEY || 'no-api-key',
       content: '',
     };
   },
