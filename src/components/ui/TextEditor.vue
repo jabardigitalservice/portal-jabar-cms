@@ -2,7 +2,7 @@
   <form @submit.prevent="onSubmit">
     <Editor
       v-model="content"
-      api-key="qqntxcbiwdhx7q119jd9ehaq0wajhtoyldixf54ylroitp5y"
+      api-key="no-api-key"
       cloud-channel="5"
       placeholder="Tulis isi berita di sini"
       :init="{
