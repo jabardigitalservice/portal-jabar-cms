@@ -54,10 +54,9 @@ export default {
         formData.append('file', blobInfo.blob(), blobInfo.filename());
 
         const response = await mediaRepository.uploadMedia(formData);
-        console.log(response.data);
+        const fileUri = response.data?.file_download_uri || null;
 
-        // TODO: Change image url with API response
-        success('http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
+        success(fileUri);
       } catch (error) {
         // Show error message and remove image from the document
         failure('Mohon maaf, gagal mengupload gambar', { remove: true });
