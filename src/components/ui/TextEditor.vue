@@ -4,23 +4,22 @@
       v-model="content"
       api-key="qqntxcbiwdhx7q119jd9ehaq0wajhtoyldixf54ylroitp5y"
       cloud-channel="5"
+      placeholder="Tulis isi berita di sini"
       :init="{
         height: 500,
         skin_url: '/tinymce-skin-ipj/',
         language: 'id',
         menubar: false,
-        /* we override default upload handler to simulate successful upload*/
         plugins: [
-          'advlist autolink lists link image charmap print preview anchor',
+          'advlist autolink lists link image charmap print anchor',
           'searchreplace visualblocks code fullscreen',
           'insertdatetime media table paste code help wordcount'
         ],
         toolbar:
-          'undo redo | formatselect | bold italic bullist numlist blockquote backcolor | \
+          'undo redo | formatselect | bold italic bullist numlist blockquote strikethrough backcolor | \
           alignleft aligncenter alignright alignjustify | \
-          outdent indent | link image media | removeformat | preview | ',
-        images_upload_url: 'https://loremipsum.com',
-        images_upload_handler: onUpload
+          outdent indent | link image media | fullscreen ',
+        images_upload_handler: onImageUpload
       }"
     />
     <button>
@@ -31,6 +30,9 @@
 
 <script>
 import Editor from '@tinymce/tinymce-vue';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const mediaRepository = RepositoryFactory.get('media');
 
 export default {
   name: 'TextEditor',
@@ -46,12 +48,21 @@ export default {
     onSubmit() {
       console.log(this.content);
     },
-    onUpload(blobInfo, success /** ,failure */) {
-      // console.log(blobInfo.blob());
-      setTimeout(() => {
-        // TODO: Create upload function here
+    async onImageUpload(blobInfo, success, failure) {
+      try {
+        const formData = new FormData();
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+        const response = await mediaRepository.uploadMedia(formData);
+        console.log(response.data);
+
+        // TODO: Change image url with API response
         success('http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
-      }, 2000);
+      } catch (error) {
+        // Show error message and remove image from the document
+        failure('Mohon maaf, gagal mengupload gambar', { remove: true });
+        console.log(error);
+      }
     },
   },
 };
