@@ -30,6 +30,7 @@
 
 <script>
 import Editor from '@tinymce/tinymce-vue';
+import Compressor from 'compressorjs';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const mediaRepository = RepositoryFactory.get('media');
@@ -51,17 +52,34 @@ export default {
     },
     async onImageUpload(blobInfo, success, failure) {
       try {
-        const formData = new FormData();
-        formData.append('file', blobInfo.blob(), blobInfo.filename());
+        // Compress image on client before upload
 
-        const response = await mediaRepository.uploadMedia(formData);
-        const fileUri = response.data?.file_download_uri || null;
+        // eslint-disable-next-line no-new
+        new Compressor(blobInfo.blob(), {
+          strict: true,
+          checkOrientation: true,
+          quality: 0.6,
+          maxWidth: 1200,
+          maxHeight: 900,
+          width: 800,
+          height: 600,
+          resize: 'cover',
+          async success(result) {
+            const formData = new FormData();
+            formData.append('file', result, result.name);
 
-        success(fileUri);
+            const response = await mediaRepository.uploadMedia(formData);
+            const fileUri = response.data?.file_download_uri || null;
+
+            success(fileUri);
+          },
+          error(err) {
+            throw new Error(err.message);
+          },
+        });
       } catch (error) {
         // Show error message and remove image from the document
-        failure('Mohon maaf, gagal mengupload gambar', { remove: true });
-        console.log(error);
+        failure(error.message, { remove: true });
       }
     },
   },
