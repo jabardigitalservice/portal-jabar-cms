@@ -122,10 +122,10 @@ export default {
 <script>
 import AgendaTable from '@/components/Agenda/AgendaTable.vue';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
-import LinkButton from '@/components/ui/LinkButton.vue';
-import SearchBar from '@/components/ui/SearchBar.vue';
-import BaseModal from '@/components/ui/BaseModal.vue';
-import BaseButton from '@/components/ui/BaseButton.vue';
+import LinkButton from '@/common/components/LinkButton';
+import SearchBar from '@/common/components/SearchBar';
+import BaseModal from '@/common/components/BaseModal';
+import BaseButton from '@/common/components/BaseButton';
 
 import { AGENDA_STATUS_MAP } from '@/static/data';
 import { formatDate } from '@/lib/date-fns';

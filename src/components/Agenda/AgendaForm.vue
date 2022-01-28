@@ -270,9 +270,9 @@ import {
   daysDifference, formatDate, isToday, minutesDifference,
 } from '@/lib/date-fns';
 import { AGENDA_CATEGORIES } from '@/static/data';
-import HeaderMenu from '@/components/ui/HeaderMenu.vue';
-import BaseButton from '@/components/ui/BaseButton.vue';
-import BaseModal from '@/components/ui/BaseModal';
+import HeaderMenu from '@/common/components/HeaderMenu';
+import BaseButton from '@/common/components/BaseButton';
+import BaseModal from '@/common/components/BaseModal';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 

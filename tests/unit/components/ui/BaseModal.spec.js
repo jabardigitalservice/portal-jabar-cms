@@ -1,5 +1,5 @@
 import { mount /* createLocalVue */ } from '@vue/test-utils';
-import BaseModal from '@/components/ui/BaseModal.vue';
+import BaseModal from '@/common/components/BaseModal';
 
 describe('Component: Header', () => {
   let wrapper;

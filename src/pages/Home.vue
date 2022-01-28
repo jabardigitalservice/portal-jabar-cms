@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Maintenance from '@/components/ui/Maintenance';
+import Maintenance from '@/common/components/Maintenance';
 
 export default {
   name: 'Home',

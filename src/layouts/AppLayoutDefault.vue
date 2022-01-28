@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import Sidebar from '@/components/ui/Sidebar.vue';
-import Header from '@/components/ui/Header.vue';
-import Toast from '@/components/ui/Toast.vue';
+import Sidebar from '@/common/components/Sidebar';
+import Header from '@/common/components/Header';
+import Toast from '@/common/components/Toast';
 
 export default {
   name: 'AppLayoutDefault',

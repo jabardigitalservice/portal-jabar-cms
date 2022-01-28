@@ -301,10 +301,10 @@
 </template>
 
 <script>
-import BaseButton from '@/components/ui/BaseButton.vue';
-import BaseModal from '@/components/ui/BaseModal.vue';
-import LinkButton from '@/components/ui/LinkButton.vue';
-import HeaderMenu from '@/components/ui/HeaderMenu.vue';
+import BaseButton from '@/common/components/BaseButton';
+import BaseModal from '@/common/components/BaseModal';
+import LinkButton from '@/common/components/LinkButton';
+import HeaderMenu from '@/common/components/HeaderMenu';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';

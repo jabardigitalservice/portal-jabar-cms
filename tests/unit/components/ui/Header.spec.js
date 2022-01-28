@@ -2,7 +2,7 @@ import { mount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
 
 // import JdsPopover from '@jabardigitalservice/jds-design-system';
-import Header from '@/components/ui/Header.vue';
+import Header from '@/common/components/Header';
 import HomePage from '@/pages/HomePage.vue';
 
 const routes = [

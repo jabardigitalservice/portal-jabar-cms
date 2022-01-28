@@ -193,7 +193,7 @@
 </template>
 
 <script>
-import BaseModal from '@/components/ui/BaseModal.vue';
+import BaseModal from '@/common/components/BaseModal';
 import { formatDate } from '@/lib/date-fns';
 
 export default {
