@@ -30,7 +30,7 @@
 
 <script>
 import AgendaTableAction from '@/components/Agenda/AgendaTableAction.vue';
-import { AGENDA_TABLE_HEADER } from '@/static/data';
+import { AGENDA_TABLE_HEADER } from '@/common/constants';
 
 export default {
   name: 'AgendaTable',

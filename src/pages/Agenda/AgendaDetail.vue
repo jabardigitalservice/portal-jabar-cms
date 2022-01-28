@@ -309,7 +309,7 @@ import HeaderMenu from '@/common/components/HeaderMenu';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
-import { AGENDA_STATUS_MAP } from '@/static/data';
+import { AGENDA_STATUS_MAP } from '@/common/constants';
 
 const agendaRepository = RepositoryFactory.get('agenda');
 

@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { NAVIGATION_MENU } from '@/static/data';
+import { NAVIGATION_MENU } from '@/common/constants';
 import Sidebar from '@/common/components/Sidebar';
 
 describe('Component: Sidebar', () => {

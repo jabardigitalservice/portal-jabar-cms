@@ -127,7 +127,7 @@ import SearchBar from '@/common/components/SearchBar';
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 
-import { AGENDA_STATUS_MAP } from '@/static/data';
+import { AGENDA_STATUS_MAP } from '@/common/constants';
 import { formatDate } from '@/common/helpers/date';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 

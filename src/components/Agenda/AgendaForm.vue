@@ -269,7 +269,7 @@ import debounce from 'lodash.debounce';
 import {
   daysDifference, formatDate, isToday, minutesDifference,
 } from '@/common/helpers/date';
-import { AGENDA_CATEGORIES } from '@/static/data';
+import { AGENDA_CATEGORIES } from '@/common/constants';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
