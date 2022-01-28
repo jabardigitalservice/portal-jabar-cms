@@ -2,12 +2,12 @@ export default [
   {
     path: '/',
     name: 'Dashboard',
-    component: () => import('@/pages/HomePage'),
+    component: () => import('@/pages/Home'),
   },
   {
     path: '/layanan',
     name: 'Layanan',
-    component: () => import('@/pages/HomePage'),
+    component: () => import('@/pages/Home'),
   },
   {
     path: '/agenda',
@@ -32,12 +32,12 @@ export default [
   {
     path: '/berita-dan-informasi',
     name: 'Berita dan Informasi',
-    component: () => import('@/pages/HomePage'),
+    component: () => import('@/pages/Home'),
   },
   {
     path: '/pengaturan',
     name: 'Pengaturan',
-    component: () => import('@/pages/HomePage'),
+    component: () => import('@/pages/Home'),
   },
   {
     path: '/login',
