@@ -1,18 +1,4 @@
 <template>
-  <Agenda />
-</template>
-
-<script>
-import Agenda from '@/components/Agenda';
-
-export default {
-  name: 'AgendaPage',
-  components: {
-    Agenda,
-  },
-};
-</script>
-<template>
   <main class="w-full pb-20">
     <section class="px-6 py-4 rounded-lg bg-white mb-4">
       <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3">
