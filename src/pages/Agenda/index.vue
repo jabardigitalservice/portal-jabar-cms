@@ -1,4 +1,18 @@
 <template>
+  <Agenda />
+</template>
+
+<script>
+import Agenda from '@/components/Agenda';
+
+export default {
+  name: 'AgendaPage',
+  components: {
+    Agenda,
+  },
+};
+</script>
+<template>
   <main class="w-full pb-20">
     <section class="px-6 py-4 rounded-lg bg-white mb-4">
       <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3">
@@ -106,7 +120,7 @@
 </template>
 
 <script>
-import AgendaTable from './AgendaTable.vue';
+import AgendaTable from '@/components/Agenda/AgendaTable.vue';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 import LinkButton from '@/components/ui/LinkButton.vue';
 import SearchBar from '@/components/ui/SearchBar.vue';

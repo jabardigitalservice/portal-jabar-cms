@@ -12,22 +12,22 @@ export default [
   {
     path: '/agenda',
     name: 'Agenda Jawa Barat',
-    component: () => import('@/pages/AgendaPage'),
+    component: () => import('@/pages/Agenda'),
   },
   {
     path: '/agenda/detail/:id',
     name: 'Agenda Jawa Barat',
-    component: () => import('@/pages/AgendaPage/AgendaDetailPage'),
+    component: () => import('@/pages/Agenda/AgendaDetail'),
   },
   {
     path: '/agenda/detail/:id/ubah',
     name: 'Ubah Agenda',
-    component: () => import('@/pages/AgendaPage/EditAgendaPage'),
+    component: () => import('@/pages/Agenda/EditAgendaPage'),
   },
   {
     path: '/agenda/tambah',
     name: 'Tambah Agenda Baru',
-    component: () => import('@/pages/AgendaPage/CreateAgendaPage'),
+    component: () => import('@/pages/Agenda/CreateAgendaPage'),
   },
   {
     path: '/berita-dan-informasi',
