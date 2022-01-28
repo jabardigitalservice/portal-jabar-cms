@@ -42,7 +42,7 @@ export default [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/pages/LoginPage'),
+    component: () => import('@/pages/Login'),
     meta: {
       public: true,
       layout: 'AppLayoutPublic',
