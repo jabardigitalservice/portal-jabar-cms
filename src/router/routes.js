@@ -22,12 +22,18 @@ export default [
   {
     path: '/agenda/detail/:id/ubah',
     name: 'Ubah Agenda',
-    component: () => import('@/pages/Agenda/EditAgendaPage'),
+    component: () => import('@/pages/Agenda/CreateEditAgenda'),
+    meta: {
+      mode: 'edit',
+    },
   },
   {
     path: '/agenda/tambah',
     name: 'Tambah Agenda Baru',
-    component: () => import('@/pages/Agenda/CreateAgendaPage'),
+    component: () => import('@/pages/Agenda/CreateEditAgenda'),
+    meta: {
+      mode: 'create',
+    },
   },
   {
     path: '/berita-dan-informasi',

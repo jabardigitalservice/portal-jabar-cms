@@ -279,22 +279,12 @@ import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 const agendaRepository = RepositoryFactory.get('agenda');
 
 export default {
-  name: 'AgendaForm',
+  name: 'CreateEditAgenda',
   components: {
     HeaderMenu,
     BaseButton,
     BaseModal,
     AgendaPreview,
-  },
-  props: {
-    mode: {
-      type: String,
-      default: 'create',
-      validator(value) {
-        return ['create', 'edit']
-          .includes(value) !== -1;
-      },
-    },
   },
   data() {
     return {
@@ -333,6 +323,9 @@ export default {
     };
   },
   computed: {
+    mode() {
+      return this.$route.meta?.mode || 'create';
+    },
     isEditMode() {
       return this.mode === 'edit';
     },
