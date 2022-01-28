@@ -128,7 +128,7 @@ import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 
 import { AGENDA_STATUS_MAP } from '@/static/data';
-import { formatDate } from '@/lib/date-fns';
+import { formatDate } from '@/common/helpers/date';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const agendaRepository = RepositoryFactory.get('agenda');

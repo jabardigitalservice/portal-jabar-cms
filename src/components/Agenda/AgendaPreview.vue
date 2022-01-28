@@ -194,7 +194,7 @@
 
 <script>
 import BaseModal from '@/common/components/BaseModal';
-import { formatDate } from '@/lib/date-fns';
+import { formatDate } from '@/common/helpers/date';
 
 export default {
   name: 'AgendaPreview',

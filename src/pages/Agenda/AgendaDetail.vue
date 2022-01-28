@@ -301,6 +301,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/common/helpers/date';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import LinkButton from '@/common/components/LinkButton';
@@ -308,7 +309,6 @@ import HeaderMenu from '@/common/components/HeaderMenu';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
-import { formatDate } from '@/lib/date-fns';
 import { AGENDA_STATUS_MAP } from '@/static/data';
 
 const agendaRepository = RepositoryFactory.get('agenda');
