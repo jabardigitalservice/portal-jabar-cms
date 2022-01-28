@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCookies } from '../lib/js-cookie';
+import { getCookies } from '@/common/helpers/cookies';
 
 const baseDomain = process.env.VUE_APP_API_URL;
 const baseURL = `${baseDomain}/v1`;

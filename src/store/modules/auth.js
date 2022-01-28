@@ -1,5 +1,5 @@
 import { RepositoryFactory } from '../../repositories/RepositoryFactory';
-import { getAllCookies, removeAllCookies, setCookies } from '../../lib/js-cookie';
+import { getAllCookies, removeAllCookies, setCookies } from '@/common/helpers/cookies';
 
 const authRepository = RepositoryFactory.get('auth');
 

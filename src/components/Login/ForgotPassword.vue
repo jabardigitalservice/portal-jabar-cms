@@ -99,8 +99,8 @@
 </template>
 
 <script>
-import BaseModal from '@/components/ui/BaseModal';
-import BaseButton from '@/components/ui/BaseButton';
+import BaseModal from '@/common/components/BaseModal';
+import BaseButton from '@/common/components/BaseButton';
 
 export default {
   name: 'ForgotPassword',

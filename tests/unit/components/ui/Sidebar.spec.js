@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
-import { NAVIGATION_MENU } from '@/static/data';
-import Sidebar from '@/components/ui/Sidebar';
+import { NAVIGATION_MENU } from '@/common/constants';
+import Sidebar from '@/common/components/Sidebar';
 
 describe('Component: Sidebar', () => {
   let wrapper;

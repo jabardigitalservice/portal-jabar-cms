@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import { NAVIGATION_MENU } from '@/static/data';
+import { NAVIGATION_MENU } from '@/common/constants';
 
 export default {
   name: 'Sidebar',

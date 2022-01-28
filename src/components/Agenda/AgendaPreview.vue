@@ -193,8 +193,8 @@
 </template>
 
 <script>
-import BaseModal from '@/components/ui/BaseModal.vue';
-import { formatDate } from '@/lib/date-fns';
+import BaseModal from '@/common/components/BaseModal';
+import { formatDate } from '@/common/helpers/date';
 
 export default {
   name: 'AgendaPreview',

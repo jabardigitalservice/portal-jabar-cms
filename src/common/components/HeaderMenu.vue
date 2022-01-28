@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import BaseButton from '@/components/ui/BaseButton.vue';
+import BaseButton from '@/common/components/BaseButton';
 
 export default {
   name: 'HeaderMenu',
