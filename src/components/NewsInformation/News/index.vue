@@ -6,6 +6,7 @@
         :tabs="tabs"
         :current-tab.sync="currentTab"
       />
+      <!-- TODO: change component dynamically based on current tab -->
       <div class="w-full h-[500px] bg-white" />
     </section>
   </main>
