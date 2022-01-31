@@ -57,9 +57,6 @@ export default {
     onTabChange(index) {
       this.$emit('update:currentTab', this.tabs[index].key);
     },
-    showIcon(index) {
-      return this.tabs[index].icon;
-    },
   },
 };
 </script>
