@@ -47,6 +47,25 @@
         </BaseButton>
       </div>
     </HeaderMenu>
+    <form class="agenda__form grid grid-cols-3 gap-4">
+      <div class="col-span-2">
+        <div class="p-4 rounded-lg bg-white mb-4">
+          <div class="flex flex-col">
+            <h2 class="font-roboto font-medium text-green-700 mb-3">
+              Judul Berita
+            </h2>
+            <JdsInputText
+              v-model.trim="form.title"
+              placeholder="Masukkan judul berita"
+              class="mb-2"
+            />
+            <p class="text-xs text-gray-600">
+              Tersisa {{ availableCharacter }} karakter
+            </p>
+          </div>
+        </div>
+      </div>
+    </form>
   </main>
 </template>
 
@@ -60,6 +79,13 @@ export default {
     HeaderMenu,
     BaseButton,
   },
+  data() {
+    return {
+      form: {
+        title: '',
+      },
+    };
+  },
   computed: {
     mode() {
       return this.$route.meta?.mode || 'create';
@@ -69,6 +95,9 @@ export default {
     },
     submitButtonLabel() {
       return this.isEditMode ? 'Simpan Perubahan' : 'Simpan Berita';
+    },
+    availableCharacter() {
+      return 255 - this.form.title.length;
     },
   },
 };
