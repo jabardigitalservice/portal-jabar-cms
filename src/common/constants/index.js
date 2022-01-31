@@ -83,3 +83,42 @@ export const AGENDA_STATUS_MAP = {
   unpublish: 'Belum Dipublish',
   archive: 'Dibuang',
 };
+
+export const NEWS_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Judul Agenda/Event',
+    sortable: true,
+  },
+  {
+    key: 'category',
+    text: 'Ketegori',
+    sortable: true,
+  },
+  {
+    key: 'author',
+    text: 'Penulis',
+    sortable: true,
+  },
+  {
+    key: 'updated_at',
+    text: 'Terakhir Diupdate',
+    sortable: true,
+  },
+  {
+    key: 'status',
+    text: 'Status',
+    sortable: true,
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+  },
+];
+
+export const NEWS_STATUS_MAP = {
+  PUBLISHED: 'Diterbitkan',
+  DRAFT: 'Tersimpan',
+  ARCHIVE: 'Diarsipkan',
+  REVIEW: 'Menunggu Review',
+};
