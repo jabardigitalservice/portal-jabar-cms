@@ -64,6 +64,55 @@
             </p>
           </div>
         </div>
+        <div class="p-4 rounded-lg bg-white mb-4">
+          <div class="flex flex-col">
+            <h2 class="font-roboto font-medium text-green-700 mb-3">
+              Hero Banner
+            </h2>
+            <div class="grid grid-cols-2 gap-4 max-h-32 overflow-hidden">
+              <div class="bg-gray-50 rounded-md border-2 border-dashed border-gray-200 grid place-content-center">
+                <img
+                  src="@/assets/icons/image.svg"
+                  alt="Gambar hero banner"
+                  width="45"
+                  height="45"
+                >
+              </div>
+              <div>
+                <div class="text-blue-gray-800 mb-3">
+                  <p class="font-roboto font-medium leading-7">
+                    Upload file
+                  </p>
+                  <p class="text-sm leading-6">
+                    Ukuran maksimal 5 Mb, dengan resolusi 1600x900. File yang didukung adalah .jpg dan .png
+                  </p>
+                </div>
+                <div class="flex items-center gap-4">
+                  <label>
+                    <div class="h-[38px] px-4 flex items-center rounded-lg border whitespace-nowrap font-bold bg-green-700 hover:bg-green-600 font-lato text-sm text-white cursor-pointer">
+                      <div class="flex gap-4">
+                        <JdsIcon
+                          name="plus"
+                          size="16px"
+                          class="h-4"
+                        />
+                        <p>Pilih File</p>
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/png, image/jpg"
+                      class="hidden"
+                    >
+                  </label>
+                  <p class="text-blue-gray-800 text-sm">
+                    Belum ada file terpilih
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </form>
   </main>
