@@ -83,3 +83,22 @@ export const AGENDA_STATUS_MAP = {
   unpublish: 'Belum Dipublish',
   archive: 'Dibuang',
 };
+
+export const NEWS_DURATION = [
+  {
+    label: '5 Hari',
+    value: 5,
+  },
+  {
+    label: '1 Minggu',
+    value: 7,
+  },
+  {
+    label: '2 Minggu',
+    value: 14,
+  },
+  {
+    label: 'Tanpa Batas',
+    value: 0,
+  },
+];
