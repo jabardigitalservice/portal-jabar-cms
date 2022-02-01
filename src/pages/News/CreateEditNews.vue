@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="pb-5">
     <HeaderMenu>
       <template
         v-if="isEditMode"
@@ -113,12 +113,33 @@
             </div>
           </div>
         </div>
+        <Editor
+          v-model="content"
+          :api-key="apiKey"
+          cloud-channel="5"
+          placeholder="Tulis isi berita di sini"
+          :init="{
+            height: 500,
+            skin_url: '/tinymce-skin-ipj/',
+            menubar: false,
+            plugins: [
+              'advlist autolink lists link image charmap print anchor',
+              'searchreplace visualblocks code fullscreen',
+              'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar:
+              'undo redo | formatselect | bold italic bullist numlist blockquote strikethrough backcolor | \
+              alignleft aligncenter alignright alignjustify | \
+              outdent indent | link image media | fullscreen ',
+          }"
+        />
       </div>
     </form>
   </main>
 </template>
 
 <script>
+import Editor from '@tinymce/tinymce-vue';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 
@@ -127,12 +148,15 @@ export default {
   components: {
     HeaderMenu,
     BaseButton,
+    Editor,
   },
   data() {
     return {
       form: {
         title: '',
+        content: '',
       },
+      apiKey: '',
     };
   },
   computed: {
