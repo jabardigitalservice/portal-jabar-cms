@@ -87,7 +87,7 @@ export const AGENDA_STATUS_MAP = {
 export const NEWS_TABLE_HEADER = [
   {
     key: 'title',
-    text: 'Judul Agenda/Event',
+    text: 'Judul Berita',
     sortable: true,
   },
   {
