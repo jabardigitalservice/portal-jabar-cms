@@ -68,14 +68,16 @@
             <h2 class="font-roboto font-medium text-green-700 mb-3">
               Hero Banner
             </h2>
-            <div class="grid grid-cols-2 gap-4 max-h-32 overflow-hidden">
-              <div class="bg-gray-50 rounded-md border-2 border-dashed border-gray-200 grid place-content-center">
-                <img
-                  src="@/assets/icons/image.svg"
-                  alt="Gambar hero banner"
-                  width="45"
-                  height="45"
-                >
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-gray-50 rounded-md border-2 border-dashed border-gray-200 aspect-w-16 aspect-h-9">
+                <div class="grid place-content-center">
+                  <img
+                    src="@/assets/icons/image.svg"
+                    alt="Gambar hero banner"
+                    width="45"
+                    height="45"
+                  >
+                </div>
               </div>
               <div>
                 <div class="text-blue-gray-800 mb-3">
