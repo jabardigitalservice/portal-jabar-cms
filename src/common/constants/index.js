@@ -119,6 +119,6 @@ export const NEWS_TABLE_HEADER = [
 export const NEWS_STATUS_MAP = {
   PUBLISHED: 'Diterbitkan',
   DRAFT: 'Tersimpan',
-  ARCHIVE: 'Diarsipkan',
+  ARCHIVED: 'Diarsipkan',
   REVIEW: 'Menunggu Review',
 };
