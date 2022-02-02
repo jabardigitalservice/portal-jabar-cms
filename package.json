@@ -12,6 +12,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "^3.2.8",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "date-fns": "^2.28.0",
