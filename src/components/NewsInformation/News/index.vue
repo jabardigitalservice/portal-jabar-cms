@@ -12,6 +12,7 @@
           :items="items"
           :loading="loading"
           :meta="meta"
+          @update:pagination="onUpdatePagination($event)"
         />
       </section>
     </section>
@@ -124,6 +125,30 @@ export default {
         this.loading = false;
       }
     },
+
+    /**
+     * Set new query params based on argument
+     *
+     * @param {object} data - object containing new params
+     */
+    setParams(data) {
+      const newParams = { ...this.params, ...data };
+      this.params = { ...newParams };
+    },
+
+    /**
+     * Set new params when pagination changes
+     * and fetch events again
+     *
+     * @param {object} data - object cotaining new param based on emit values
+     * @property {string} page
+     * @property {string} per_page
+     */
+    onUpdatePagination(data) {
+      this.setParams(data);
+      this.fetchNews();
+    },
+
     getNewsStatus(status) {
       return NEWS_STATUS_MAP[status] ?? status;
     },
