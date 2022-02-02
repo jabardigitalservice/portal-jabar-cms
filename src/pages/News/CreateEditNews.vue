@@ -139,13 +139,13 @@
           </div>
           <div>
             <div class="flex justify-between items-center mb-1">
-              <p class="text-[15px] text-gray-800">
+              <p class="text-[15px] text-blue-gray-800">
                 Waktu Penayangan
               </p>
             </div>
             <div class="flex items-center gap-4">
               <JdsDateInput v-model="form.start_date" />
-              <p class="text-sm whitespace-nowrap w-full">
+              <p class="text-sm whitespace-nowrap w-full text-blue-gray-800">
                 sampai <span class="font-bold">{{ endDate }}</span>
               </p>
             </div>
@@ -167,7 +167,7 @@
               <div class="flex flex-col gap-2">
                 <label
                   for="tag"
-                  class="text-[15px] text-gray-800"
+                  class="text-[15px] text-blue-gray-800"
                 >
                   Tag (Opsional)
                 </label>
@@ -212,10 +212,12 @@
             </h2>
             <div class="flex flex-col gap-4">
               <div>
-                <p class="text-[15px] mb-1">
+                <p class="text-[15px] mb-1 text-blue-gray-800">
                   Penulis
                 </p>
-                <p>Nasir Abdurachman - DP3AKB</p>
+                <p class="text-sm font-bold text-blue-gray-800">
+                  Nasir Abdurachman - DP3AKB
+                </p>
               </div>
               <JdsSelect
                 label="Lokasi"
@@ -346,5 +348,6 @@ export default {
 }
 .news__form .jds-form-control-label {
   margin-bottom: 4px !important;
+  color: #022B55 !important;
 }
 </style>
