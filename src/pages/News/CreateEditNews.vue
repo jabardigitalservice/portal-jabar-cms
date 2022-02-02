@@ -205,6 +205,26 @@
             </div>
           </div>
         </div>
+        <div class="p-4 rounded-lg bg-white mb-4">
+          <div class="flex flex-col">
+            <h2 class="font-roboto font-medium text-green-700 mb-3">
+              Penulis dan Lokasi
+            </h2>
+            <div class="flex flex-col gap-4">
+              <div>
+                <p class="text-[15px] mb-1">
+                  Penulis
+                </p>
+                <p>Nasir Abdurachman - DP3AKB</p>
+              </div>
+              <JdsSelect
+                label="Lokasi"
+                placeholder="Pilih lokasi"
+                filterable
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </form>
   </main>
@@ -323,5 +343,8 @@ export default {
 .news__form .jds-calendar .jds-calendar__days {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
+}
+.news__form .jds-form-control-label {
+  margin-bottom: 4px !important;
 }
 </style>
