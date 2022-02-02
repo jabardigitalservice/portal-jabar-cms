@@ -102,23 +102,8 @@
         <div class="min-h-[500px]">
           <Editor
             v-model="form.content"
-            :api-key="tinyMceApiKey"
-            cloud-channel="5"
             placeholder="Tulis isi berita di sini"
-            :init="{
-              height: 500,
-              skin_url: '/tinymce-skin-ipj/',
-              menubar: false,
-              plugins: [
-                'advlist autolink lists link image charmap print anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount'
-              ],
-              toolbar:
-                'undo redo | formatselect | bold italic bullist numlist blockquote strikethrough backcolor | \
-                alignleft aligncenter alignright alignjustify | \
-                outdent indent | link image media | fullscreen ',
-            }"
+            v-bind="{...tinyMceConfig}"
           />
         </div>
       </div>
@@ -265,12 +250,26 @@ export default {
       newsCategories: NEWS_CATEGORIES,
       duration: null,
       tag: '',
+      tinyMceConfig: Object.freeze({
+        'api-key': process.env.VUE_APP_TINY_MCE_API_KEY,
+        init: {
+          height: 500,
+          skin_url: '/tinymce-skin-ipj/',
+          menubar: false,
+          plugins: [
+            'advlist autolink lists link image charmap print anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount',
+          ],
+          toolbar:
+            `undo redo | formatselect | bold italic bullist numlist blockquote strikethrough backcolor |
+            alignleft aligncenter alignright alignjustify |
+            outdent indent | link image media | fullscreen `,
+        },
+      }),
     };
   },
   computed: {
-    tinyMceApiKey() {
-      return process.env.VUE_APP_TINY_MCE_API_KEY;
-    },
     mode() {
       return this.$route.meta?.mode || 'create';
     },
