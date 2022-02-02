@@ -51,10 +51,12 @@
             <h2 class="font-roboto font-medium text-green-700 mb-3">
               Judul Berita
             </h2>
-            <JdsInputText
+            <textarea
               v-model.trim="form.title"
               placeholder="Masukkan judul berita"
-              class="mb-2"
+              rows="4"
+              maxlength="250"
+              class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 mb-1 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
             />
             <p class="text-xs text-gray-600">
               Tersisa {{ availableCharacter }} karakter
@@ -262,7 +264,7 @@ export default {
       return this.isEditMode ? 'Simpan Perubahan' : 'Simpan Berita';
     },
     availableCharacter() {
-      return 255 - this.form.title.length;
+      return 250 - this.form.title.length;
     },
     hasTags() {
       return Array.isArray(this.form.tags) && !!this.form.tags.length;
