@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-lg overflow-hidden border border-gray-100">
+  <div class="news-table rounded-lg overflow-hidden border border-gray-100">
     <JdsDataTable
       :headers="tableHeader"
       :items="items"
@@ -11,9 +11,27 @@
       @page-change="onPaginationChange('page-change', $event)"
     >
       <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.title="{item}">
+        <p
+          class="line-clamp-1"
+          :title="item.title"
+        >
+          {{ item.title }}
+        </p>
+      </template>
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.category="{item}">
         <p class="capitalize">
           {{ item.category }}
+        </p>
+      </template>
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.author="{item}">
+        <p
+          class="line-clamp-1"
+          :title="item.author"
+        >
+          {{ item.author }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -121,3 +139,24 @@ export default {
   },
 };
 </script>
+
+<style>
+/**
+ * Override default jds-data-table style
+ */
+.news-table .jds-data-table {
+  table-layout: fixed !important;
+}
+
+.news-table .jds-data-table thead tr th:nth-child(1) {
+  width: 300px !important;
+}
+
+.news-table .jds-data-table thead tr th:nth-child(3) {
+  width: 200px !important;
+}
+
+.news-table .jds-data-table thead tr th:nth-child(4) {
+  width: 200px !important;
+}
+</style>
