@@ -110,26 +110,28 @@
             </div>
           </div>
         </div>
-        <Editor
-          v-model="form.content"
-          :api-key="apiKey"
-          cloud-channel="5"
-          placeholder="Tulis isi berita di sini"
-          :init="{
-            height: 500,
-            skin_url: '/tinymce-skin-ipj/',
-            menubar: false,
-            plugins: [
-              'advlist autolink lists link image charmap print anchor',
-              'searchreplace visualblocks code fullscreen',
-              'insertdatetime media table paste code help wordcount'
-            ],
-            toolbar:
-              'undo redo | formatselect | bold italic bullist numlist blockquote strikethrough backcolor | \
-              alignleft aligncenter alignright alignjustify | \
-              outdent indent | link image media | fullscreen ',
-          }"
-        />
+        <div class="min-h-[500px]">
+          <Editor
+            v-model="form.content"
+            :api-key="tinyMceApiKey"
+            cloud-channel="5"
+            placeholder="Tulis isi berita di sini"
+            :init="{
+              height: 500,
+              skin_url: '/tinymce-skin-ipj/',
+              menubar: false,
+              plugins: [
+                'advlist autolink lists link image charmap print anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+              ],
+              toolbar:
+                'undo redo | formatselect | bold italic bullist numlist blockquote strikethrough backcolor | \
+                alignleft aligncenter alignright alignjustify | \
+                outdent indent | link image media | fullscreen ',
+            }"
+          />
+        </div>
       </div>
       <div>
         <div class="p-4 rounded-lg bg-white mb-4">
@@ -151,13 +153,66 @@
               <p class="text-[15px] text-gray-800">
                 Waktu Penayangan
               </p>
-              <JdsToggle />
             </div>
             <div class="flex items-center gap-4">
               <JdsDateInput v-model="form.start_date" />
-              <p class="text-sm whitespace-nowrap">
+              <p class="text-sm whitespace-nowrap w-full">
                 sampai <span class="font-bold">{{ endDate }}</span>
               </p>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 rounded-lg bg-white mb-4">
+          <div class="flex flex-col">
+            <h2 class="font-roboto font-medium text-green-700 mb-3">
+              Kategori/Topik dan Tag Berita
+            </h2>
+            <div class="flex flex-col gap-4">
+              <JdsSelect
+                v-model="form.category"
+                label="Kategori/Topik"
+                placeholder="Pilih kategori/topik"
+                :options="newsCategories"
+                filterable
+              />
+              <div class="flex flex-col gap-2">
+                <label
+                  for="tag"
+                  class="text-[15px] text-gray-800"
+                >
+                  Tag (Opsional)
+                </label>
+                <input
+                  id="tag"
+                  v-model.trim="tag"
+                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  placeholder="Tambahkan tag lalu tekan 'enter'"
+                  @keyup.enter="onTagInputEnter()"
+                >
+                <div class="border border-gray-500 overflow-y-auto rounded-lg p-2 h-[88px] text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500">
+                  <div
+                    v-if="hasTags"
+                    class="flex gap-1 flex-wrap"
+                  >
+                    <div
+                      v-for="(tag, index) in form.tags"
+                      :key="index"
+                      class="bg-gray-200 text-gray-700 text-sm rounded-3xl px-[10px] py-[6px] flex items-center justify-center gap-1"
+                    >
+                      {{ tag.tag_name }}
+                      <JdsIcon
+                        name="times"
+                        size="12px"
+                        class="pt-[2px] cursor-pointer"
+                        @click="removeTag(index)"
+                      />
+                    </div>
+                  </div>
+                  <p v-else>
+                    Belum ada tag
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -171,7 +226,7 @@ import Editor from '@tinymce/tinymce-vue';
 import { formatDate } from '@/common/helpers/date';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
-import { NEWS_DURATION } from '@/common/constants';
+import { NEWS_CATEGORIES, NEWS_DURATION } from '@/common/constants';
 
 export default {
   name: 'CreateEditNews',
@@ -186,10 +241,14 @@ export default {
         title: '',
         content: '',
         start_date: formatDate(new Date(), 'dd/MM/yyyy'),
+        category: '',
+        tags: [],
       },
       newsDuration: NEWS_DURATION,
+      newsCategories: NEWS_CATEGORIES,
       duration: null,
-      apiKey: '',
+      tag: '',
+      tinyMceApiKey: process.env.VUE_APP_TINY_MCE_API_KEY,
     };
   },
   computed: {
@@ -204,6 +263,9 @@ export default {
     },
     availableCharacter() {
       return 255 - this.form.title.length;
+    },
+    hasTags() {
+      return Array.isArray(this.form.tags) && !!this.form.tags.length;
     },
     endDate() {
       const duration = this.duration || 5;
@@ -221,6 +283,27 @@ export default {
       return new Date(year, month, day);
     },
   },
+  methods: {
+    isEmpty(string) {
+      return string === '';
+    },
+    onTagInputEnter() {
+      const tag = this.tag.trim().split(' ').join('-').toLowerCase();
+      if (!this.isEmpty(tag)) {
+        this.setTags(tag);
+        this.clearTag();
+      }
+    },
+    setTags(tag) {
+      this.form.tags.push({ tag_name: tag });
+    },
+    removeTag(index) {
+      this.form.tags.splice(index, 1);
+    },
+    clearTag() {
+      this.tag = '';
+    },
+  },
 };
 </script>
 
@@ -234,6 +317,9 @@ export default {
 .news__form .jds-popover__content {
   z-index: 10 !important;
   background-color: white !important;
+}
+.news__form .jds-select__options.jds-options--filterable {
+  max-height: 200px !important;
 }
 .news__form .jds-calendar {
   max-width: none !important;
