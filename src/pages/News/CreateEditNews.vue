@@ -265,10 +265,12 @@ export default {
       newsCategories: NEWS_CATEGORIES,
       duration: null,
       tag: '',
-      tinyMceApiKey: process.env.VUE_APP_TINY_MCE_API_KEY,
     };
   },
   computed: {
+    tinyMceApiKey() {
+      return process.env.VUE_APP_TINY_MCE_API_KEY;
+    },
     mode() {
       return this.$route.meta?.mode || 'create';
     },
