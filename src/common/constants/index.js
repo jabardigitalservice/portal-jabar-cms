@@ -92,7 +92,7 @@ export const NEWS_TABLE_HEADER = [
   },
   {
     key: 'category',
-    text: 'Ketegori',
+    text: 'Kategori',
     sortable: true,
   },
   {
