@@ -38,8 +38,6 @@
       <template #item.action="{item}">
         <NewsTableAction
           :item="item"
-          @open-preview="$emit('open-preview', $event)"
-          @delete="$emit('delete', $event)"
         />
       </template>
     </JdsDataTable>
