@@ -7,7 +7,6 @@
         :current-tab.sync="currentTab"
       />
       <section class="w-full bg-white py-6 px-3">
-        <!-- TODO: Handle pagination change -->
         <NewsTable
           :items="items"
           :loading="loading"
