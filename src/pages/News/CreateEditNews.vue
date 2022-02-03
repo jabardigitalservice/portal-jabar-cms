@@ -305,6 +305,9 @@ import { NEWS_CATEGORIES, NEWS_DURATION } from '@/common/constants';
 import ReviewIcon from '@/assets/icons/review.svg?inline';
 import PublishIcon from '@/assets/icons/publish.svg?inline';
 import DraftIcon from '@/assets/icons/draft.svg?inline';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const mediaRepository = RepositoryFactory.get('media');
 
 export default {
   name: 'CreateEditNews',
@@ -346,6 +349,8 @@ export default {
             `undo redo | formatselect | bold italic bullist numlist blockquote strikethrough backcolor |
             alignleft aligncenter alignright alignjustify |
             outdent indent | link image media | fullscreen `,
+          images_upload_handler: this.onContentImageUpload,
+          image_caption: true,
         },
       }),
       loading: false,
@@ -480,6 +485,28 @@ export default {
         } finally {
           this.loading = false;
         }
+      }
+    },
+    async onContentImageUpload(blobInfo, success, failure) {
+      try {
+        const result = await this.compressImage(blobInfo.blob(), {
+          quality: 0.6,
+          maxWidth: 1200,
+          maxHeight: 900,
+          width: 800,
+          height: 600,
+        });
+
+        const formData = new FormData();
+        formData.append('file', result, result.name);
+        const response = await mediaRepository.uploadMedia(formData);
+        const fileUri = response.data?.file_download_uri || null;
+        success(fileUri);
+      } catch (err) {
+        // Show error message and remove image from the document
+        failure(err.message, { remove: true });
+      } finally {
+        this.loading = false;
       }
     },
     setImage(result) {
