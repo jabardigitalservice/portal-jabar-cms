@@ -183,12 +183,25 @@
           <div>
             <div class="flex justify-between items-center mb-1">
               <p class="text-[15px] text-blue-gray-800">
-                Waktu Penayangan
+                Waktu Penayangan <span class="text-gray-500">(Opsional)</span>
               </p>
+              <JdsToggle @change="toggleDateInput" />
             </div>
-            <div class="flex items-center gap-4">
-              <JdsDateInput v-model="form.start_date" />
-              <p class="text-sm whitespace-nowrap w-full text-blue-gray-800">
+            <div class="flex items-center gap-4 relative">
+              <div
+                v-show="!showDateInput"
+                class="bg-transparent absolute top-0 w-full h-full z-[1]"
+              />
+              <div
+                class="w-full flex-grow"
+                :class="{ 'news__date-input--disable': !showDateInput }"
+              >
+                <JdsDateInput v-model="form.start_date" />
+              </div>
+              <p
+                class="text-sm whitespace-nowrap w-full text-blue-gray-800"
+                :class="{ 'text-gray-400': !showDateInput }"
+              >
                 sampai <span class="font-bold">{{ endDate }}</span>
               </p>
             </div>
@@ -330,6 +343,7 @@ export default {
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
       duration: null,
+      showDateInput: false,
       tag: '',
       tinyMceConfig: Object.freeze({
         'api-key': process.env.VUE_APP_TINY_MCE_API_KEY,
@@ -374,7 +388,7 @@ export default {
     endDate() {
       const duration = this.duration || 5;
       const startDate = new Date(this.selectedDate);
-      const endDate = formatDate(startDate.setDate(startDate.getDate() + duration - 1), 'dd-MM-yyyy');
+      const endDate = formatDate(startDate.setDate(startDate.getDate() + duration), 'dd-MM-yyyy');
 
       return this.duration === 0 ? 'tanpa batas' : endDate;
     },
@@ -399,6 +413,9 @@ export default {
   methods: {
     isEmpty(string) {
       return string === '';
+    },
+    toggleDateInput() {
+      this.showDateInput = !this.showDateInput;
     },
     onTagInputEnter() {
       const tag = this.tag.trim().split(' ').join('-').toLowerCase();
@@ -517,5 +534,14 @@ export default {
 .news__form .jds-form-control-label {
   margin-bottom: 4px !important;
   color: #022B55 !important;
+}
+.news__form .jds-date-input {
+  width: 100%;
+}
+.news__form .news__date-input--disable .jds-date-input__input input {
+  color: #BDBDBD !important;
+}
+.news__form .news__date-input--disable .jds-date-input__input svg {
+  fill: #BDBDBD !important;
 }
 </style>
