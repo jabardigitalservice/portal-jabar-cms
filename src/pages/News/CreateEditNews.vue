@@ -185,17 +185,23 @@
               <p class="text-[15px] text-blue-gray-800">
                 Waktu Penayangan <span class="text-gray-500">(Opsional)</span>
               </p>
-              <JdsToggle @change="toggleDateInput" />
+              <div class="relative">
+                <div
+                  v-show="!hasDuration"
+                  class="bg-transparent absolute top-0 w-full h-full z-[1] cursor-not-allowed"
+                />
+                <JdsToggle @change="toggleDateInput" />
+              </div>
             </div>
-            <div class="flex items-center gap-4 relative">
+            <div class="flex items-center gap-4">
               <div
-                v-show="!showDateInput"
-                class="bg-transparent absolute top-0 w-full h-full z-[1]"
-              />
-              <div
-                class="w-full flex-grow"
+                class="w-full flex-grow relative"
                 :class="{ 'news__date-input--disable': !showDateInput }"
               >
+                <div
+                  v-show="!showDateInput"
+                  class="bg-transparent absolute top-0 w-full h-full z-[1] cursor-not-allowed"
+                />
                 <JdsDateInput v-model="form.start_date" />
               </div>
               <p
@@ -342,7 +348,7 @@ export default {
       },
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
-      duration: null,
+      duration: '',
       showDateInput: false,
       tag: '',
       tinyMceConfig: Object.freeze({
@@ -385,12 +391,15 @@ export default {
     hasTags() {
       return Array.isArray(this.form.tags) && !!this.form.tags.length;
     },
+    hasDuration() {
+      return this.duration !== '';
+    },
     endDate() {
       const duration = this.duration || 5;
       const startDate = new Date(this.selectedDate);
       const endDate = formatDate(startDate.setDate(startDate.getDate() + duration), 'dd-MM-yyyy');
 
-      return this.duration === 0 ? 'tanpa batas' : endDate;
+      return this.duration === null ? 'tanpa batas' : endDate;
     },
     selectedDate() {
       const date = this.form.start_date.split('/');

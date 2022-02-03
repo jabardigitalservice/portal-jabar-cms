@@ -138,7 +138,7 @@ export const NEWS_DURATION = [
   },
   {
     label: 'Tanpa Batas',
-    value: 0,
+    value: null,
   },
 ];
 
