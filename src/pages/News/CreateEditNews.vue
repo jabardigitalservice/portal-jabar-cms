@@ -54,9 +54,25 @@
               Hero Banner
             </h2>
             <div class="grid grid-cols-2 gap-4">
-              <div class="bg-gray-50 rounded-md border-2 border-dashed border-gray-200 aspect-w-16 aspect-h-9">
+              <div
+                v-if="hasImagePreview"
+                class="rounded-md aspect-w-16 aspect-h-9"
+              >
                 <div class="grid place-content-center">
+                  <img :src="imagePreview">
+                </div>
+              </div>
+              <div
+                v-else
+                class="bg-gray-50 rounded-md border-2 border-dashed border-gray-200 aspect-w-16 aspect-h-9"
+              >
+                <div class="grid place-content-center">
+                  <JdsSpinner
+                    v-if="loading"
+                    size="45"
+                  />
                   <img
+                    v-else
                     src="@/assets/icons/image.svg"
                     alt="Gambar hero banner"
                     width="45"
@@ -70,10 +86,50 @@
                     Upload file
                   </p>
                   <p class="text-sm leading-6">
-                    Ukuran maksimal 5 Mb, dengan resolusi 1600x900. File yang didukung adalah .jpg dan .png
+                    Ukuran maksimal 5 MB, dengan resolusi 1600x900. File yang didukung adalah .jpg dan .png
                   </p>
                 </div>
-                <div class="flex items-center gap-4">
+                <div
+                  v-if="hasImagePreview"
+                  class="flex items-center gap-4"
+                >
+                  <BaseButton
+                    class="text-red-500 font-lato text-sm !border-none"
+                    @click="removeImage"
+                  >
+                    <template #icon-left>
+                      <JdsIcon
+                        name="trash"
+                        size="16px"
+                      />
+                    </template>
+                    <p>
+                      Hapus
+                    </p>
+                  </BaseButton>
+                  <label>
+                    <div class="h-[38px] px-4 flex items-center rounded-lg border whitespace-nowrap font-bold bg-white hover:bg-green-50 text-green-700 border border-green-700 font-lato text-sm text-white cursor-pointer">
+                      <div class="flex gap-4">
+                        <JdsIcon
+                          name="pencil"
+                          size="16px"
+                        />
+                        <p>Ubah</p>
+                      </div>
+                    </div>
+                    <input
+                      :value="form.image.filename"
+                      type="file"
+                      accept="image/png, image/jpg"
+                      class="hidden"
+                      @change="onImageUpload"
+                    >
+                  </label>
+                </div>
+                <div
+                  v-else
+                  class="flex items-center gap-4"
+                >
                   <label>
                     <div class="h-[38px] px-4 flex items-center rounded-lg border whitespace-nowrap font-bold bg-green-700 hover:bg-green-600 font-lato text-sm text-white cursor-pointer">
                       <div class="flex gap-4">
@@ -86,9 +142,11 @@
                       </div>
                     </div>
                     <input
+                      :value="form.image.filename"
                       type="file"
                       accept="image/png, image/jpg"
                       class="hidden"
+                      @change="onImageUpload"
                     >
                   </label>
                   <p class="text-blue-gray-800 text-sm">
@@ -214,14 +272,35 @@
         </div>
       </div>
     </form>
+    <BaseModal
+      :open="isError"
+      @close="clearError"
+    >
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          {{ error.title }}
+        </h1>
+        <div class="flex items-center gap-4">
+          <JdsIcon
+            name="warning"
+            class="text-red-600"
+          />
+          <p class="text-sm leading-6 to-blue-gray-800">
+            {{ error.message }}
+          </p>
+        </div>
+      </div>
+    </BaseModal>
   </main>
 </template>
 
 <script>
 import Editor from '@tinymce/tinymce-vue';
+import Compressor from 'compressorjs';
 import { formatDate } from '@/common/helpers/date';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
+import BaseModal from '@/common/components/BaseModal';
 import { NEWS_CATEGORIES, NEWS_DURATION } from '@/common/constants';
 import ReviewIcon from '@/assets/icons/review.svg?inline';
 import PublishIcon from '@/assets/icons/publish.svg?inline';
@@ -232,6 +311,7 @@ export default {
   components: {
     HeaderMenu,
     BaseButton,
+    BaseModal,
     Editor,
     ReviewIcon,
     PublishIcon,
@@ -241,6 +321,7 @@ export default {
     return {
       form: {
         title: '',
+        image: '',
         content: '',
         start_date: formatDate(new Date(), 'dd/MM/yyyy'),
         category: '',
@@ -267,6 +348,11 @@ export default {
             outdent indent | link image media | fullscreen `,
         },
       }),
+      loading: false,
+      error: {
+        title: '',
+        message: '',
+      },
     };
   },
   computed: {
@@ -300,6 +386,15 @@ export default {
 
       return new Date(year, month, day);
     },
+    imagePreview() {
+      return this.form.image ? URL.createObjectURL(this.form.image) : null;
+    },
+    hasImagePreview() {
+      return !!this.imagePreview;
+    },
+    isError() {
+      return !!this.error.title && !!this.error.message;
+    },
   },
   methods: {
     isEmpty(string) {
@@ -320,6 +415,78 @@ export default {
     },
     clearTag() {
       this.tag = '';
+    },
+    clearError() {
+      this.error.title = '';
+      this.error.message = '';
+    },
+    compressImage(file, config) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line no-new
+        new Compressor(file, {
+          strict: true,
+          checkOrientation: true,
+          quality: config.quality,
+          maxWidth: config.maxWidth,
+          maxHeight: config.maxWidth,
+          width: config.width,
+          height: config.height,
+          resize: 'cover',
+          success(result) {
+            resolve(result);
+          },
+          error: (error) => {
+            reject(error);
+          },
+        });
+      });
+    },
+    async onImageUpload(event) {
+      const [file] = event.target.files;
+      const MAX_SIZE = 5000000; // 5 MB
+      const MAX_WIDTH = 1600;
+      const MAX_HEIGHT = 900;
+
+      // validate file size
+      if (file.size > MAX_SIZE) {
+        this.error.title = 'Gagal memilih file';
+        this.error.message = 'Ukuran file yang Anda pilih melebihi 5 MB';
+      }
+
+      // validate file resolution
+      const image = new Image();
+      image.src = URL.createObjectURL(file);
+      image.onload = () => {
+        if (image.width > MAX_WIDTH || image.height > MAX_HEIGHT) {
+          this.error.title = 'Gagal memilih file';
+          this.error.message = 'Resolusi file yang Anda pilih melebihi 1600x900';
+        }
+      };
+
+      if (!this.isError) {
+        this.loading = true;
+        try {
+          const result = await this.compressImage(file, {
+            quality: 0.6,
+            maxWidth: 1600,
+            maxHeight: 900,
+            width: 1600,
+            height: 900,
+          });
+          this.setImage(result);
+        } catch (err) {
+          this.error.title = 'Gagal memilih file';
+          this.error.message = 'Terjadi kesalahan dalam memilih gambar';
+        } finally {
+          this.loading = false;
+        }
+      }
+    },
+    setImage(result) {
+      this.form.image = result;
+    },
+    removeImage() {
+      this.form.image = '';
     },
   },
 };
