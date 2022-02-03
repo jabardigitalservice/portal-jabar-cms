@@ -86,7 +86,7 @@
                     Upload file
                   </p>
                   <p class="text-sm leading-6">
-                    Ukuran maksimal 5 Mb, dengan resolusi 1600x900. File yang didukung adalah .jpg dan .png
+                    Ukuran maksimal 5 MB, dengan resolusi 1600x900. File yang didukung adalah .jpg dan .png
                   </p>
                 </div>
                 <div
@@ -443,14 +443,14 @@ export default {
     },
     async onImageUpload(event) {
       const [file] = event.target.files;
-      const MAX_SIZE = 5000000; // 5 Mb
+      const MAX_SIZE = 5000000; // 5 MB
       const MAX_WIDTH = 1600;
       const MAX_HEIGHT = 900;
 
       // validate file size
       if (file.size > MAX_SIZE) {
         this.error.title = 'Gagal memilih file';
-        this.error.message = 'Ukuran file yang Anda pilih melebihi 5 Mb';
+        this.error.message = 'Ukuran file yang Anda pilih melebihi 5 MB';
       }
 
       // validate file resolution
