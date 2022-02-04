@@ -489,7 +489,7 @@ export default {
     },
     async onContentImageUpload(blobInfo, success, failure) {
       try {
-        const result = await this.compressImage(blobInfo.blob(), {
+        const compressedImage = await this.compressImage(blobInfo.blob(), {
           quality: 0.6,
           maxWidth: 1200,
           maxHeight: 900,
@@ -498,7 +498,7 @@ export default {
         });
 
         const formData = new FormData();
-        formData.append('file', result, result.name);
+        formData.append('file', compressedImage, compressedImage.name);
         const response = await mediaRepository.uploadMedia(formData);
         const fileUri = response.data?.file_download_uri || null;
         success(fileUri);
