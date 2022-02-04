@@ -183,13 +183,38 @@
           <div>
             <div class="flex justify-between items-center mb-1">
               <p class="text-[15px] text-blue-gray-800">
-                Waktu Penayangan
+                Waktu Penayangan <span class="text-gray-500">(Opsional)</span>
               </p>
+              <div class="relative">
+                <div
+                  v-show="!hasDuration"
+                  class="bg-transparent absolute top-0 w-full h-full z-[1] cursor-not-allowed"
+                />
+                <JdsToggle @change="toggleDateInput" />
+              </div>
             </div>
-            <div class="flex items-center gap-4">
-              <JdsDateInput v-model="form.start_date" />
-              <p class="text-sm whitespace-nowrap w-full text-blue-gray-800">
-                sampai <span class="font-bold">{{ endDate }}</span>
+            <div class="grid grid-cols-2 items-center gap-x-4 gap-y-1">
+              <div
+                class="w-full flex-grow relative"
+                :class="{ 'news__date-input--disable': !showDateInput }"
+              >
+                <div
+                  v-show="!showDateInput"
+                  class="bg-transparent absolute top-0 w-full h-full z-[1] cursor-not-allowed"
+                />
+                <JdsDateInput v-model="form.start_date" />
+              </div>
+              <p
+                class="text-sm whitespace-nowrap w-full text-blue-gray-800"
+                :class="{ 'text-gray-400': !showDateInput }"
+              >
+                sampai <span class="font-bold">{{ form.end_date || 'tanpa batas' }}</span>
+              </p>
+              <p
+                v-show="isDateHasPassed"
+                class="text-sm text-red-600 col-span-2"
+              >
+                Tanggal tidak valid
               </p>
             </div>
           </div>
@@ -297,7 +322,7 @@
 <script>
 import Editor from '@tinymce/tinymce-vue';
 import Compressor from 'compressorjs';
-import { formatDate } from '@/common/helpers/date';
+import { daysDifference, formatDate } from '@/common/helpers/date';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
@@ -327,12 +352,14 @@ export default {
         image: '',
         content: '',
         start_date: formatDate(new Date(), 'dd/MM/yyyy'),
+        end_date: formatDate(new Date().setDate(new Date().getDate() + 5), 'dd/MM/yyyy'),
         category: '',
         tags: [],
       },
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
-      duration: null,
+      duration: '',
+      showDateInput: false,
       tag: '',
       tinyMceConfig: Object.freeze({
         'api-key': process.env.VUE_APP_TINY_MCE_API_KEY,
@@ -376,12 +403,11 @@ export default {
     hasTags() {
       return Array.isArray(this.form.tags) && !!this.form.tags.length;
     },
-    endDate() {
-      const duration = this.duration || 5;
-      const startDate = new Date(this.selectedDate);
-      const endDate = formatDate(startDate.setDate(startDate.getDate() + duration - 1), 'dd-MM-yyyy');
-
-      return this.duration === 0 ? 'tanpa batas' : endDate;
+    hasDuration() {
+      return this.duration !== '';
+    },
+    isDateHasPassed() {
+      return this.showDateInput && daysDifference(this.selectedDate, new Date()) < 0;
     },
     selectedDate() {
       const date = this.form.start_date.split('/');
@@ -401,9 +427,26 @@ export default {
       return !!this.error.title && !!this.error.message;
     },
   },
+  watch: {
+    duration() {
+      this.setEndDate();
+    },
+    selectedDate() {
+      this.setEndDate();
+    },
+  },
   methods: {
     isEmpty(string) {
       return string === '';
+    },
+    setEndDate() {
+      const startDate = new Date(this.selectedDate);
+      const endDate = this.duration === null ? '' : formatDate(startDate.setDate(startDate.getDate() + this.duration), 'dd/MM/yyyy');
+
+      this.form.end_date = endDate;
+    },
+    toggleDateInput() {
+      this.showDateInput = !this.showDateInput;
     },
     onTagInputEnter() {
       const tag = this.tag.trim().split(' ').join('-').toLowerCase();
@@ -542,5 +585,14 @@ export default {
 .news__form .jds-form-control-label {
   margin-bottom: 4px !important;
   color: #022B55 !important;
+}
+.news__form .jds-date-input {
+  width: 100%;
+}
+.news__form .news__date-input--disable .jds-date-input__input input {
+  color: #BDBDBD !important;
+}
+.news__form .news__date-input--disable .jds-date-input__input svg {
+  fill: #BDBDBD !important;
 }
 </style>
