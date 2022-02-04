@@ -493,8 +493,6 @@ export default {
           quality: 0.6,
           maxWidth: 1200,
           maxHeight: 900,
-          width: 800,
-          height: 600,
         });
 
         const formData = new FormData();
