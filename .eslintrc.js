@@ -18,7 +18,8 @@ module.exports = {
     'import/no-unresolved': 'off',
     'max-len': 'off',
     'no-param-reassign': 'off',
-    'no-underscore-dangle': 'off'
+    'no-underscore-dangle': 'off',
+    'object-curly-newline': 'off'
   },
   overrides: [
     {

@@ -7,22 +7,31 @@
         </p>
       </template>
       <div class="flex gap-4">
-        <BaseButton class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700">
+        <BaseButton
+          :disabled="!isFormValid"
+          class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+        >
           <template #icon-left>
-            <ReviewIcon class="fill-green-700" />
+            <ReviewIcon :class="[isFormValid ? 'fill-green-700' : 'fill-gray-700']" />
           </template>
           <p>
             Pratinjau
           </p>
         </BaseButton>
-        <BaseButton class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700">
-          <PublishIcon class="fill-green-700" />
+        <BaseButton
+          :disabled="!isFormValid"
+          class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+        >
+          <PublishIcon :class="[isFormValid ? 'fill-green-700' : 'fill-gray-700']" />
           <p>
             Ajukan untuk Diterbitkan
           </p>
         </BaseButton>
-        <BaseButton class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white">
-          <DraftIcon class="fill-white" />
+        <BaseButton
+          :disabled="!isFormDirty"
+          class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+        >
+          <DraftIcon :class="[isFormDirty ? 'fill-white' : 'fill-gray-700']" />
           <p>
             {{ submitButtonLabel }}
           </p>
@@ -37,7 +46,7 @@
               Judul Berita
             </h2>
             <textarea
-              v-model.trim="form.title"
+              v-model="form.title"
               placeholder="Masukkan judul berita"
               rows="4"
               maxlength="250"
@@ -288,6 +297,7 @@
                 </p>
               </div>
               <JdsSelect
+                v-model="form.location"
                 label="Lokasi"
                 placeholder="Pilih lokasi"
                 filterable
@@ -355,6 +365,7 @@ export default {
         end_date: formatDate(new Date().setDate(new Date().getDate() + 5), 'dd/MM/yyyy'),
         category: '',
         tags: [],
+        location: '',
       },
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
@@ -425,6 +436,18 @@ export default {
     },
     isError() {
       return !!this.error.title && !!this.error.message;
+    },
+    requiredFields() {
+      const { duration, form: { image, content, category } } = this;
+      const title = this.form.title.trim();
+
+      return [title, image, content, duration, category];
+    },
+    isFormDirty() {
+      return this.requiredFields.some((field) => !this.isEmpty(field));
+    },
+    isFormValid() {
+      return this.requiredFields.every((field) => !this.isEmpty(field));
     },
   },
   watch: {
@@ -504,31 +527,27 @@ export default {
       // validate file resolution
       const image = new Image();
       image.src = URL.createObjectURL(file);
-      image.onload = () => {
+      image.onload = async () => {
         if (image.width > MAX_WIDTH || image.height > MAX_HEIGHT) {
           this.error.title = 'Gagal memilih file';
           this.error.message = 'Resolusi file yang Anda pilih melebihi 1600x900';
+        } else {
+          this.loading = true;
+          try {
+            const compressedImage = await this.compressImage(file, {
+              quality: 0.6,
+              width: 1600,
+              height: 900,
+            });
+            this.setImage(compressedImage);
+          } catch (err) {
+            this.error.title = 'Gagal memilih file';
+            this.error.message = 'Terjadi kesalahan dalam memilih gambar';
+          } finally {
+            this.loading = false;
+          }
         }
       };
-
-      if (!this.isError) {
-        this.loading = true;
-        try {
-          const result = await this.compressImage(file, {
-            quality: 0.6,
-            maxWidth: 1600,
-            maxHeight: 900,
-            width: 1600,
-            height: 900,
-          });
-          this.setImage(result);
-        } catch (err) {
-          this.error.title = 'Gagal memilih file';
-          this.error.message = 'Terjadi kesalahan dalam memilih gambar';
-        } finally {
-          this.loading = false;
-        }
-      }
     },
     async onContentImageUpload(blobInfo, success, failure) {
       try {
