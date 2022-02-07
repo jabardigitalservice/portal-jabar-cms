@@ -90,8 +90,12 @@ export const NEWS_CATEGORIES = [
     label: 'Ekonomi',
   },
   {
-    value: 'politik',
-    label: 'Politik',
+    value: 'kesehatan',
+    label: 'Kesehatan',
+  },
+  {
+    value: 'pendidikan',
+    label: 'Pendidikan',
   },
   {
     value: 'pemerintahan',
@@ -106,20 +110,8 @@ export const NEWS_CATEGORIES = [
     label: 'Sosial',
   },
   {
-    value: 'kesehatan',
-    label: 'Kesehatan',
-  },
-  {
-    value: 'pendidikan',
-    label: 'Pendidikan',
-  },
-  {
-    value: 'pariwisata',
-    label: 'Pariwisata',
-  },
-  {
-    value: 'lainnya',
-    label: 'Lainnya',
+    value: 'teknologi',
+    label: 'Teknologi',
   },
 ];
 
