@@ -84,6 +84,64 @@ export const AGENDA_STATUS_MAP = {
   archive: 'Dibuang',
 };
 
+export const NEWS_CATEGORIES = [
+  {
+    value: 'ekonomi',
+    label: 'Ekonomi',
+  },
+  {
+    value: 'politik',
+    label: 'Politik',
+  },
+  {
+    value: 'pemerintahan',
+    label: 'Pemerintahan',
+  },
+  {
+    value: 'infrastruktur',
+    label: 'Infrastruktur',
+  },
+  {
+    value: 'sosial',
+    label: 'Sosial',
+  },
+  {
+    value: 'kesehatan',
+    label: 'Kesehatan',
+  },
+  {
+    value: 'pendidikan',
+    label: 'Pendidikan',
+  },
+  {
+    value: 'pariwisata',
+    label: 'Pariwisata',
+  },
+  {
+    value: 'lainnya',
+    label: 'Lainnya',
+  },
+];
+
+export const NEWS_DURATION = [
+  {
+    label: '5 Hari',
+    value: 5,
+  },
+  {
+    label: '1 Minggu',
+    value: 7,
+  },
+  {
+    label: '2 Minggu',
+    value: 14,
+  },
+  {
+    label: 'Tanpa Batas',
+    value: null,
+  },
+];
+
 export const NEWS_TABLE_HEADER = [
   {
     key: 'title',

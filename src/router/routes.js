@@ -41,6 +41,14 @@ export default [
     component: () => import('@/pages/News'),
   },
   {
+    path: '/berita-dan-informasi/tambah',
+    name: 'Buat Berita Baru',
+    component: () => import('@/pages/News/CreateEditNews'),
+    meta: {
+      mode: 'create',
+    },
+  },
+  {
     path: '/pengaturan',
     name: 'Pengaturan',
     component: () => import('@/pages/Home'),
