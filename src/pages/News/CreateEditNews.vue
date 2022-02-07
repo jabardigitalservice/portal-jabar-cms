@@ -473,8 +473,8 @@ export default {
     },
     getTagSuggestions: debounce(async function () {
       try {
-        const response = await tagRepository.getTagSuggestions({ keyword: this.tag, per_page: 5 });
-        const tagSuggestions = response.data.map((item) => item.name);
+        const response = await tagRepository.getTagSuggestions({ q: this.tag });
+        const tagSuggestions = response.data.map((tag) => tag.name);
         this.setTagSuggestions(tagSuggestions);
       } catch (error) {
         this.clearTagSuggestions();
