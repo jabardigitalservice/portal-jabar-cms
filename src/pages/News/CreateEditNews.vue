@@ -237,7 +237,7 @@
                   for="tag"
                   class="text-[15px] text-blue-gray-800"
                 >
-                  Tag (Opsional)
+                  Tag <span class="text-gray-500">(Opsional)</span>
                 </label>
                 <input
                   id="tag"
