@@ -536,8 +536,6 @@ export default {
           try {
             const compressedImage = await this.compressImage(file, {
               quality: 0.6,
-              maxWidth: 1600,
-              maxHeight: 900,
               width: 1600,
               height: 900,
             });
