@@ -474,7 +474,7 @@ export default {
     getTagSuggestions: debounce(async function () {
       try {
         const response = await tagRepository.getTagSuggestions({ q: this.tag });
-        const tagSuggestions = response.data.map((tag) => tag.name);
+        const tagSuggestions = response.data.map((tag) => tag.name).slice(0, 5);
         this.setTagSuggestions(tagSuggestions);
       } catch (error) {
         this.clearTagSuggestions();
