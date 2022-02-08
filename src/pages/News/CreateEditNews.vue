@@ -303,7 +303,7 @@
                   Penulis
                 </p>
                 <p class="text-sm font-bold text-blue-gray-800">
-                  Nasir Abdurachman - DP3AKB
+                  {{ author }}
                 </p>
               </div>
               <JdsSelect
@@ -506,6 +506,11 @@ export default {
     },
     isFormValid() {
       return this.requiredFields.every((field) => !this.isEmpty(field));
+    },
+    author() {
+      const { name, unit } = this.$store.getters['auth/user'];
+
+      return `${name} - ${unit.name}`;
     },
   },
   watch: {
