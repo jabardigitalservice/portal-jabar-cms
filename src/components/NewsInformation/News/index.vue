@@ -7,6 +7,26 @@
         :current-tab.sync="currentTab"
       />
       <section class="w-full bg-white py-6 px-3">
+        <div class="w-full flex justify-between mb-5 items-center">
+          <NewsMonthFilter @update-month-filter="onUpdateMonthFilter($event)" />
+          <LinkButton
+            href="berita-dan-informasi/tambah"
+            title="Tambah Berita Baru"
+            class="ml-auto"
+          >
+            <template #icon-left>
+              <JdsIcon
+                name="plus"
+                size="14px"
+                fill="#fff"
+                class="h-[14px] w-[14px]"
+              />
+            </template>
+            <p class="font-lato font-bold text-sm text-white leading-none">
+              Tambah Berita Baru
+            </p>
+          </LinkButton>
+        </div>
         <NewsTable
           :items="items"
           :loading="loading"
@@ -21,6 +41,8 @@
 <script>
 import NewsTabBar from '@/components/NewsInformation/News/NewsTabBar';
 import NewsTable from '@/components/NewsInformation/News/NewsTable';
+import NewsMonthFilter from '@/components/NewsInformation/News/NewsMonthFilter';
+import LinkButton from '@/common/components/LinkButton';
 import { formatDate } from '@/common/helpers/date';
 import { NEWS_STATUS_MAP } from '@/common/constants';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
@@ -32,6 +54,8 @@ export default {
   components: {
     NewsTabBar,
     NewsTable,
+    NewsMonthFilter,
+    LinkButton,
   },
   data() {
     return {
@@ -77,8 +101,8 @@ export default {
         per_page: 10,
       },
       params: {
-        start_date: null,
-        end_date: null,
+        start_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), 1), 'yyyy/MM/dd'), // first date of today's month
+        end_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 'yyyy/MM/dd'), // last date of today's month
         per_page: 10,
         page: 1,
       },
@@ -145,6 +169,19 @@ export default {
      */
     onUpdatePagination(data) {
       this.setParams(data);
+      this.fetchNews();
+    },
+
+    /**
+     * Set new params and reset pagination page to 1
+     * when month filter changes
+     *
+     * @param {object} data - object cotaining new param based on emit values
+     * @property {string} start_date
+     * @property {string} end_date
+     */
+    onUpdateMonthFilter(data) {
+      this.setParams({ ...data, page: 1 });
       this.fetchNews();
     },
 
