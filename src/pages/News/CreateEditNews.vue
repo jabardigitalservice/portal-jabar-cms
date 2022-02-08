@@ -241,12 +241,12 @@
                 :options="newsCategories"
                 filterable
               />
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2 relative">
                 <label
                   for="tag"
                   class="text-[15px] text-blue-gray-800"
                 >
-                  Tag (Opsional)
+                  Tag <span class="text-gray-500">(Opsional)</span>
                 </label>
                 <input
                   id="tag"
@@ -255,6 +255,16 @@
                   placeholder="Tambahkan tag lalu tekan 'enter'"
                   @keyup.enter="onTagInputEnter()"
                 >
+                <div
+                  v-show="hasTagSuggestions"
+                  class="absolute w-full mt-[72px] z-20"
+                >
+                  <JdsOptions
+                    class="w-full"
+                    :options="tagSuggestions"
+                    @click:option="onTagSuggestionsClick"
+                  />
+                </div>
                 <div class="border border-gray-500 overflow-y-auto rounded-lg p-2 h-[88px] text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500">
                   <div
                     v-if="hasTags"
@@ -332,6 +342,7 @@
 <script>
 import Editor from '@tinymce/tinymce-vue';
 import Compressor from 'compressorjs';
+import debounce from 'lodash.debounce';
 import { daysDifference, formatDate } from '@/common/helpers/date';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
@@ -343,6 +354,7 @@ import DraftIcon from '@/assets/icons/draft.svg?inline';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const mediaRepository = RepositoryFactory.get('media');
+const tagRepository = RepositoryFactory.get('tag');
 
 export default {
   name: 'CreateEditNews',
@@ -372,6 +384,7 @@ export default {
       duration: '',
       showDateInput: false,
       tag: '',
+      tagSuggestions: [],
       tinyMceConfig: Object.freeze({
         'api-key': process.env.VUE_APP_TINY_MCE_API_KEY,
         init: {
@@ -434,6 +447,9 @@ export default {
     hasImagePreview() {
       return !!this.imagePreview;
     },
+    hasTagSuggestions() {
+      return this.tagSuggestions.length > 0;
+    },
     isError() {
       return !!this.error.title && !!this.error.message;
     },
@@ -457,6 +473,13 @@ export default {
     selectedDate() {
       this.setEndDate();
     },
+    tag() {
+      if (this.tag) {
+        this.getTagSuggestions();
+      } else {
+        this.tagSuggestions = [];
+      }
+    },
   },
   methods: {
     isEmpty(string) {
@@ -471,6 +494,20 @@ export default {
     toggleDateInput() {
       this.showDateInput = !this.showDateInput;
     },
+    getTagSuggestions: debounce(async function () {
+      try {
+        const response = await tagRepository.getTagSuggestions({ q: this.tag });
+        const tagSuggestions = response.data.map((tag) => tag.name).slice(0, 5);
+        this.setTagSuggestions(tagSuggestions);
+      } catch (error) {
+        this.clearTagSuggestions();
+      }
+    }, 500),
+    onTagSuggestionsClick(tag) {
+      this.setTags(tag);
+      this.clearTag();
+      this.clearTagSuggestions();
+    },
     onTagInputEnter() {
       const tag = this.tag.trim().split(' ').join('-').toLowerCase();
       if (!this.isEmpty(tag)) {
@@ -481,11 +518,17 @@ export default {
     setTags(tag) {
       this.form.tags.push({ tag_name: tag });
     },
+    setTagSuggestions(tagSuggestions) {
+      this.tagSuggestions = tagSuggestions;
+    },
     removeTag(index) {
       this.form.tags.splice(index, 1);
     },
     clearTag() {
       this.tag = '';
+    },
+    clearTagSuggestions() {
+      this.tagSuggestions = [];
     },
     clearError() {
       this.error.title = '';
