@@ -35,7 +35,7 @@
           </p>
         </div>
       </div>
-      <div class="relative z-20 max-w-screen-xl w-full mx-auto mt-[42px]">
+      <div class="relative z-20 max-w-screen-xl w-full mx-auto mt-[42px] pb-16">
         <h1 class="font-lora font-medium text-[34px] leading-[48px] text-white mb-6 max-w-3xl">
           {{ title }}
         </h1>
