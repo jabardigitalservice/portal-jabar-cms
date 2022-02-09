@@ -26,7 +26,11 @@
         </label>
         <div class="border border-gray-500 rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700">
           <div class="bg-gray-100 p-2 border-r border-gray-200 flex justify-center items-center">
-            <img src="@/assets/icons/mail.svg">
+            <MailIcon
+              width="16"
+              height="16"
+              class="fill-gray-700"
+            />
           </div>
           <input
             id="email"
@@ -49,7 +53,11 @@
         </label>
         <div class="border border-gray-500 rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700">
           <div class="bg-gray-100 p-2 border-r border-gray-200 flex justify-center items-center">
-            <img src="@/assets/icons/key.svg">
+            <KeyIcon
+              width="16"
+              height="16"
+              class="fill-gray-700"
+            />
           </div>
           <input
             id="password"
@@ -115,11 +123,15 @@
 
 <script>
 import ForgotPassword from '@/components/Login/ForgotPassword';
+import MailIcon from '@/assets/icons/mail.svg?inline';
+import KeyIcon from '@/assets/icons/key.svg?inline';
 
 export default {
   name: 'LoginForm',
   components: {
     ForgotPassword,
+    MailIcon,
+    KeyIcon,
   },
   data() {
     return {
