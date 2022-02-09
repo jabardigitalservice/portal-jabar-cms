@@ -13,7 +13,8 @@
         <div class="max-w-screen-xl w-full mx-auto flex">
           <BaseButton
             class="text-sm text-white"
-            @click="refreshPage"
+            title="Perbaharui Berita"
+            @click="onUpdateButtonClicked"
           >
             <template #icon-left>
               <ReloadIcon
@@ -450,8 +451,8 @@ export default {
     this.newsData = data;
   },
   methods: {
-    refreshPage() {
-      this.$router.go(this.$router.currentRoute);
+    onUpdateButtonClicked() {
+      this.$router.push(`/berita-dan-informasi/${this.$router.params.id}/ubah`);
     },
     getViewsText(number) {
       return new Intl.NumberFormat('id-ID', {
