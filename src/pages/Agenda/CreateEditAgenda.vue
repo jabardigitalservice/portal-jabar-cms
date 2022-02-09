@@ -261,6 +261,34 @@
         </div>
       </template>
     </BaseModal>
+    <BaseModal :open="isConfirmationModalOpen">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Simpan Agenda
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda ingin menyimpan agenda ini terlebih dahulu?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="onCancel"
+          >
+            Tidak perlu simpan
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="onConfirm"
+          >
+            Ya, simpan agenda
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
@@ -285,6 +313,16 @@ export default {
     BaseButton,
     BaseModal,
     AgendaPreview,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.targetRoute = to;
+
+    if (!this.isInputValid || this.isFormSubmitted || this.isConfirmToLeave) {
+      next();
+    } else {
+      this.isConfirmationModalOpen = true;
+      next(false);
+    }
   },
   data() {
     return {
@@ -320,6 +358,10 @@ export default {
       },
       isMessageModalOpen: false,
       isPreviewModalOpen: false,
+      isConfirmationModalOpen: false,
+      isConfirmToLeave: false,
+      isFormSubmitted: false,
+      targetRoute: null,
     };
   },
   computed: {
@@ -560,6 +602,20 @@ export default {
         };
       } finally {
         this.loading = false;
+      }
+    },
+    onCancel() {
+      this.isConfirmationModalOpen = false;
+      this.isConfirmToLeave = true;
+      this.$router.push(this.targetRoute);
+    },
+    async onConfirm() {
+      this.isConfirmationModalOpen = false;
+      try {
+        await this.onSubmit();
+        this.isFormSubmitted = true;
+      } catch (error) {
+        this.isFormSubmitted = false;
       }
     },
   },

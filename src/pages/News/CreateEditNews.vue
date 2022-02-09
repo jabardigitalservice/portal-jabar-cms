@@ -336,6 +336,34 @@
         </div>
       </div>
     </BaseModal>
+    <BaseModal :open="isConfirmationModalOpen">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Simpan Berita
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda ingin menyimpan berita ini terlebih dahulu?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="onCancel"
+          >
+            Tidak
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="onConfirm"
+          >
+            Ya, simpan berita
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
@@ -366,6 +394,16 @@ export default {
     ReviewIcon,
     PublishIcon,
     DraftIcon,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.targetRoute = to;
+
+    if (!this.isFormDirty || this.isFormSubmitted || this.isConfirmToLeave) {
+      next();
+    } else {
+      this.isConfirmationModalOpen = true;
+      next(false);
+    }
   },
   data() {
     return {
@@ -409,6 +447,10 @@ export default {
         title: '',
         message: '',
       },
+      isConfirmationModalOpen: false,
+      isConfirmToLeave: false,
+      isFormSubmitted: false,
+      targetRoute: null,
     };
   },
   computed: {
@@ -617,6 +659,14 @@ export default {
     },
     removeImage() {
       this.form.image = '';
+    },
+    onCancel() {
+      this.isConfirmationModalOpen = false;
+      this.isConfirmToLeave = true;
+      this.$router.push(this.targetRoute);
+    },
+    onConfirm() {
+      // TODO: submit the form
     },
   },
 };
