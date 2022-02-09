@@ -306,12 +306,20 @@
                   {{ author }}
                 </p>
               </div>
-              <JdsSelect
-                v-model="form.location"
-                label="Lokasi"
-                placeholder="Pilih lokasi"
-                filterable
-              />
+              <div class="flex flex-col gap-1 relative">
+                <JdsInputText
+                  v-model="location"
+                  placeholder="Cari lokasi"
+                  label="Lokasi"
+                  @input="onLocationChange"
+                />
+                <JdsOptions
+                  v-show="hasLocationOptions"
+                  :options="locationOptions"
+                  class="absolute top-[72px] w-full max-h-44"
+                  @click:option="onLocationOptionsClick"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -381,6 +389,7 @@ import PublishIcon from '@/assets/icons/publish.svg?inline';
 import DraftIcon from '@/assets/icons/draft.svg?inline';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
+const areaRepository = RepositoryFactory.get('area');
 const mediaRepository = RepositoryFactory.get('media');
 const tagRepository = RepositoryFactory.get('tag');
 
@@ -415,12 +424,13 @@ export default {
         end_date: formatDate(new Date().setDate(new Date().getDate() + 5), 'dd/MM/yyyy'),
         category: '',
         tags: [],
-        location: '',
       },
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
       duration: '',
       showDateInput: false,
+      location: '',
+      locationOptions: [],
       tag: '',
       tagSuggestions: [],
       tinyMceConfig: Object.freeze({
@@ -491,6 +501,9 @@ export default {
     },
     hasTagSuggestions() {
       return this.tagSuggestions.length > 0;
+    },
+    hasLocationOptions() {
+      return this.locationOptions.length > 0 && this.location !== '';
     },
     isError() {
       return !!this.error.title && !!this.error.message;
@@ -665,6 +678,39 @@ export default {
     removeImage() {
       this.form.image = '';
     },
+    onLocationChange(location) {
+      this.clearLocationOptions();
+      this.getLocationOptions(location);
+    },
+    onLocationOptionsClick(location) {
+      this.setLocation(location.label);
+      this.clearLocationOptions();
+    },
+    setLocation(location) {
+      this.location = location;
+    },
+    setLocationOptions(options) {
+      this.locationOptions = options;
+    },
+    clearLocationOptions() {
+      this.locationOptions = [];
+    },
+    getLocationOptions: debounce(async function (location) {
+      const params = {
+        depth: 2,
+        parent_code_kemendagri: 32,
+        per_page: 10,
+        q: location,
+      };
+
+      try {
+        const response = await areaRepository.getAreas(params);
+        const options = response.data.data.map((area) => ({ label: area.name, value: area.code_kemendagri }));
+        this.setLocationOptions(options);
+      } catch (error) {
+        this.clearLocationOptions();
+      }
+    }, 500),
     onCancel() {
       this.isConfirmationModalOpen = false;
       this.isConfirmToLeave = true;
