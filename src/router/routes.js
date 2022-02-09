@@ -49,6 +49,14 @@ export default [
     },
   },
   {
+    path: '/berita-dan-informasi/:id/pratinjau',
+    name: 'Pratinjau Berita',
+    component: () => import('@/pages/News/NewsPreview'),
+    meta: {
+      layout: 'AppLayoutPublic',
+    },
+  },
+  {
     path: '/pengaturan',
     name: 'Pengaturan',
     component: () => import('@/pages/Home'),
