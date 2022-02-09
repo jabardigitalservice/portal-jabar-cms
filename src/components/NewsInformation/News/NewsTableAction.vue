@@ -24,7 +24,6 @@
 
     <div class="bg-white p-[18px] rounded-lg border border-gray-200 shadow-xl">
       <ul class="flex flex-col gap-4">
-        <!-- TODO: Add action on preview clicked -->
         <li>
           <a
             class="font-lato text-sm leading-4 text-gray-800"
