@@ -42,7 +42,11 @@
               :class="[isError ? 'border-red-500' : 'border-gray-500']"
             >
               <div class="bg-gray-100 p-2 border-r border-gray-200 flex justify-center items-center">
-                <img src="@/assets/icons/mail.svg">
+                <MailIcon
+                  width="16"
+                  height="16"
+                  class="fill-red-700"
+                />
               </div>
               <input
                 id="email"
@@ -101,12 +105,14 @@
 <script>
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
+import MailIcon from '@/assets/icons/mail.svg?inline';
 
 export default {
   name: 'ForgotPassword',
   components: {
     BaseModal,
     BaseButton,
+    MailIcon,
   },
   props: {
     open: {
