@@ -45,7 +45,7 @@
                 <MailIcon
                   width="16"
                   height="16"
-                  class="fill-red-700"
+                  class="fill-gray-700"
                 />
               </div>
               <input
