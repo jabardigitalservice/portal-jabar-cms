@@ -22,4 +22,14 @@ export default {
   getNews(params = {}) {
     return Repository.get(`${resource}`, { params });
   },
+
+  /**
+   * Get News data by ID
+   * @param {string, number} id
+   *
+   * @returns {Promise}
+   */
+  getNewsById(id = null) {
+    return Repository.get(`${resource}/${id}`);
+  },
 };
