@@ -1,7 +1,10 @@
 <template>
   <main class="pb-5">
     <HeaderMenu>
-      <template #info>
+      <template
+        v-if="isEditMode"
+        #info
+      >
         <p class="ml-4 text-gray-600 text-sm">
           Terakhir disimpan pada: 12/01/2022 - 15:00
         </p>
