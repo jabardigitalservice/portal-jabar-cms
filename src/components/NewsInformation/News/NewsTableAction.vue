@@ -26,11 +26,14 @@
       <ul class="flex flex-col gap-4">
         <!-- TODO: Add action on preview clicked -->
         <li>
-          <button
+          <a
             class="font-lato text-sm leading-4 text-gray-800"
+            :href="`berita-dan-informasi/${item.id}/pratinjau`"
+            target="_blank"
+            rel="noopener"
           >
             Pratinjau
-          </button>
+          </a>
         </li>
         <!-- TODO: Add action on publish clicked -->
         <li>
