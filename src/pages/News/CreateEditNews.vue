@@ -28,10 +28,10 @@
           </p>
         </BaseButton>
         <BaseButton
-          :disabled="!isFormDirty"
+          :disabled="!hasTitle"
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
         >
-          <DraftIcon :class="[isFormDirty ? 'fill-white' : 'fill-gray-700']" />
+          <DraftIcon :class="[hasTitle ? 'fill-white' : 'fill-gray-700']" />
           <p>
             {{ submitButtonLabel }}
           </p>
@@ -401,7 +401,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     this.targetRoute = to;
 
-    if (!this.isFormDirty || this.isFormSubmitted || this.isConfirmToLeave) {
+    if (!this.hasTitle || this.isFormSubmitted || this.isConfirmToLeave) {
       next();
     } else {
       this.isConfirmationModalOpen = true;
@@ -505,8 +505,8 @@ export default {
 
       return [title, image, content, duration, category];
     },
-    isFormDirty() {
-      return this.requiredFields.some((field) => !this.isEmpty(field));
+    hasTitle() {
+      return this.form.title !== '';
     },
     isFormValid() {
       return this.requiredFields.every((field) => !this.isEmpty(field));
