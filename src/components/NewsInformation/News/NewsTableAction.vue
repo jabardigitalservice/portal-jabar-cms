@@ -96,6 +96,13 @@ export default {
           },
         ],
       },
+      // Map allowed actions based on news status
+      allowedActions: Object.freeze({
+        PUBLISHED: ['preview', 'archive'],
+        DRAFT: ['preview', 'edit'],
+        REVIEW: ['preview', 'publish', 'edit'],
+        ARCHIVED: ['preview', 'delete'],
+      }),
     };
   },
   computed: {
@@ -107,15 +114,7 @@ export default {
           return false;
         }
 
-        // Map allowed actions based on news status
-        const ALLOWED_ACTIONS = {
-          PUBLISHED: ['preview', 'archive'],
-          DRAFT: ['preview', 'edit'],
-          REVIEW: ['preview', 'publish', 'edit'],
-          ARCHIVED: ['preview', 'delete'],
-        };
-
-        return ALLOWED_ACTIONS[status].includes(action);
+        return this.allowedActions[status].includes(action);
       };
     },
   },
