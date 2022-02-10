@@ -303,14 +303,16 @@
                   Penulis
                 </p>
                 <p class="text-sm font-bold text-blue-gray-800">
-                  Nasir Abdurachman - DP3AKB
+                  {{ author }}
                 </p>
               </div>
               <JdsSelect
-                v-model="form.location"
+                v-model="form.area_id"
                 label="Lokasi"
                 placeholder="Pilih lokasi"
                 filterable
+                filter-type="contain"
+                :options="locationOptions"
               />
             </div>
           </div>
@@ -381,6 +383,7 @@ import PublishIcon from '@/assets/icons/publish.svg?inline';
 import DraftIcon from '@/assets/icons/draft.svg?inline';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
+const areaRepository = RepositoryFactory.get('area');
 const mediaRepository = RepositoryFactory.get('media');
 const tagRepository = RepositoryFactory.get('tag');
 
@@ -415,12 +418,13 @@ export default {
         end_date: formatDate(new Date().setDate(new Date().getDate() + 5), 'dd/MM/yyyy'),
         category: '',
         tags: [],
-        location: '',
+        area_id: '',
       },
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
       duration: '',
       showDateInput: false,
+      locationOptions: [],
       tag: '',
       tagSuggestions: [],
       tinyMceConfig: Object.freeze({
@@ -507,6 +511,11 @@ export default {
     isFormValid() {
       return this.requiredFields.every((field) => !this.isEmpty(field));
     },
+    author() {
+      const { name, unit } = this.$store.getters['auth/user'];
+
+      return `${name} - ${unit.name}`;
+    },
   },
   watch: {
     duration() {
@@ -522,6 +531,9 @@ export default {
         this.tagSuggestions = [];
       }
     },
+  },
+  mounted() {
+    this.getLocationOptions();
   },
   methods: {
     isEmpty(string) {
@@ -571,6 +583,9 @@ export default {
     },
     clearTagSuggestions() {
       this.tagSuggestions = [];
+    },
+    setLocationOptions(options) {
+      this.locationOptions = options;
     },
     clearError() {
       this.error.title = '';
@@ -659,6 +674,21 @@ export default {
     },
     removeImage() {
       this.form.image = '';
+    },
+    async getLocationOptions() {
+      const params = {
+        depth: 2,
+        parent_code_kemendagri: 32,
+        per_page: 30,
+      };
+
+      try {
+        const response = await areaRepository.getAreas(params);
+        const options = response.data?.data.map((area) => ({ label: area.name, value: area.code_kemendagri }));
+        this.setLocationOptions(options);
+      } catch (error) {
+        this.setLocationOptions([]);
+      }
     },
     onCancel() {
       this.isConfirmationModalOpen = false;
