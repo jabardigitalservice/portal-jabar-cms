@@ -99,7 +99,7 @@ export default {
       // Map allowed actions based on news status
       allowedActions: Object.freeze({
         PUBLISHED: ['preview', 'archive'],
-        DRAFT: ['preview', 'edit'],
+        DRAFT: ['preview', 'edit', 'delete'],
         REVIEW: ['preview', 'publish', 'edit'],
         ARCHIVED: ['preview', 'delete'],
       }),
