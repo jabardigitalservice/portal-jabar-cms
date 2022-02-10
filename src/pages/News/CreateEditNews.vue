@@ -306,20 +306,14 @@
                   {{ author }}
                 </p>
               </div>
-              <div class="flex flex-col gap-1 relative">
-                <JdsInputText
-                  v-model="location"
-                  placeholder="Cari lokasi"
-                  label="Lokasi"
-                  @input="onLocationChange"
-                />
-                <JdsOptions
-                  v-show="hasLocationOptions"
-                  :options="locationOptions"
-                  class="absolute top-[72px] w-full max-h-44"
-                  @click:option="onLocationOptionsClick"
-                />
-              </div>
+              <JdsSelect
+                v-model="form.area_id"
+                label="Lokasi"
+                placeholder="Pilih lokasi"
+                filterable
+                filter-type="contain"
+                :options="locationOptions"
+              />
             </div>
           </div>
         </div>
@@ -424,12 +418,12 @@ export default {
         end_date: formatDate(new Date().setDate(new Date().getDate() + 5), 'dd/MM/yyyy'),
         category: '',
         tags: [],
+        area_id: '',
       },
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
       duration: '',
       showDateInput: false,
-      location: '',
       locationOptions: [],
       tag: '',
       tagSuggestions: [],
@@ -502,9 +496,6 @@ export default {
     hasTagSuggestions() {
       return this.tagSuggestions.length > 0;
     },
-    hasLocationOptions() {
-      return this.locationOptions.length > 0 && this.location !== '';
-    },
     isError() {
       return !!this.error.title && !!this.error.message;
     },
@@ -540,6 +531,9 @@ export default {
         this.tagSuggestions = [];
       }
     },
+  },
+  mounted() {
+    this.getLocationOptions();
   },
   methods: {
     isEmpty(string) {
@@ -589,6 +583,9 @@ export default {
     },
     clearTagSuggestions() {
       this.tagSuggestions = [];
+    },
+    setLocationOptions(options) {
+      this.locationOptions = options;
     },
     clearError() {
       this.error.title = '';
@@ -678,29 +675,11 @@ export default {
     removeImage() {
       this.form.image = '';
     },
-    onLocationChange(location) {
-      this.clearLocationOptions();
-      this.getLocationOptions(location);
-    },
-    onLocationOptionsClick(location) {
-      this.setLocation(location.label);
-      this.clearLocationOptions();
-    },
-    setLocation(location) {
-      this.location = location;
-    },
-    setLocationOptions(options) {
-      this.locationOptions = options;
-    },
-    clearLocationOptions() {
-      this.locationOptions = [];
-    },
-    getLocationOptions: debounce(async function (location) {
+    async getLocationOptions() {
       const params = {
         depth: 2,
         parent_code_kemendagri: 32,
-        per_page: 10,
-        q: location,
+        per_page: 30,
       };
 
       try {
@@ -708,9 +687,9 @@ export default {
         const options = response.data.data.map((area) => ({ label: area.name, value: area.code_kemendagri }));
         this.setLocationOptions(options);
       } catch (error) {
-        this.clearLocationOptions();
+        this.setLocationOptions([]);
       }
-    }, 500),
+    },
     onCancel() {
       this.isConfirmationModalOpen = false;
       this.isConfirmToLeave = true;
