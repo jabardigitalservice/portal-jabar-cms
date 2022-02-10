@@ -24,7 +24,7 @@
 
     <div class="bg-white p-[18px] rounded-lg border border-gray-200 shadow-xl">
       <ul class="flex flex-col gap-4">
-        <li>
+        <li v-if="shouldShowAction('preview')">
           <a
             class="font-lato text-sm leading-4 text-gray-800"
             :href="`berita-dan-informasi/${item.id}/pratinjau`"
@@ -35,7 +35,7 @@
           </a>
         </li>
         <!-- TODO: Add action on publish clicked -->
-        <li>
+        <li v-if="shouldShowAction('publish')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
           >
@@ -43,7 +43,7 @@
           </button>
         </li>
         <!-- TODO: Add action on edit clicked -->
-        <li>
+        <li v-if="shouldShowAction('edit')">
           <router-link
             to="#"
             class="font-lato text-sm leading-4 text-gray-800"
@@ -52,7 +52,7 @@
           </router-link>
         </li>
         <!-- TODO: Add action on archive clicked -->
-        <li>
+        <li v-if="shouldShowAction('archive')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
           >
@@ -60,7 +60,7 @@
           </button>
         </li>
         <!-- TODO: Add action on delete clicked -->
-        <li>
+        <li v-if="shouldShowAction('delete')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
           >
@@ -96,7 +96,27 @@ export default {
           },
         ],
       },
+      // Map allowed actions based on news status
+      allowedActions: Object.freeze({
+        PUBLISHED: ['preview', 'archive'],
+        DRAFT: ['preview', 'edit', 'delete'],
+        REVIEW: ['preview', 'publish', 'edit'],
+        ARCHIVED: ['preview', 'delete'],
+      }),
     };
+  },
+  computed: {
+    shouldShowAction() {
+      return (action) => {
+        const { status } = this.item;
+
+        if (!status) {
+          return false;
+        }
+
+        return this.allowedActions[status].includes(action);
+      };
+    },
   },
   methods: {
     toggleDropdown() {

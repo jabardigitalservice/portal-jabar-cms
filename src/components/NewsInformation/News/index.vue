@@ -44,7 +44,6 @@ import NewsTable from '@/components/NewsInformation/News/NewsTable';
 import NewsMonthFilter from '@/components/NewsInformation/News/NewsMonthFilter';
 import LinkButton from '@/common/components/LinkButton';
 import { formatDate } from '@/common/helpers/date';
-import { NEWS_STATUS_MAP } from '@/common/constants';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const newsRepository = RepositoryFactory.get('news');
@@ -117,7 +116,7 @@ export default {
           category: news.category,
           author: news.author?.unit_name || '-',
           updated_at: formatDate(news.updated_at, 'dd/MM/yyyy'),
-          status: this.getNewsStatus(news.status),
+          status: news.status,
         }));
 
         return items;
@@ -183,10 +182,6 @@ export default {
     onUpdateMonthFilter(data) {
       this.setParams({ ...data, page: 1 });
       this.fetchNews();
-    },
-
-    getNewsStatus(status) {
-      return NEWS_STATUS_MAP[status] ?? status;
     },
   },
 };

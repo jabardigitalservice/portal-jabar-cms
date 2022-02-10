@@ -35,6 +35,12 @@
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.status="{item}">
+        <p class="capitalize">
+          {{ getNewsStatus(item.status) }}
+        </p>
+      </template>
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.action="{item}">
         <NewsTableAction
           :item="item"
@@ -46,7 +52,7 @@
 
 <script>
 import NewsTableAction from '@/components/NewsInformation/News/NewsTableAction.vue';
-import { NEWS_TABLE_HEADER } from '@/common/constants';
+import { NEWS_TABLE_HEADER, NEWS_STATUS_MAP } from '@/common/constants';
 
 export default {
   name: 'NewsTable',
@@ -133,6 +139,10 @@ export default {
         page: this.pagination.currentPage,
         per_page: this.pagination.itemsPerPage,
       });
+    },
+
+    getNewsStatus(status) {
+      return NEWS_STATUS_MAP[status] ?? status;
     },
   },
 };
