@@ -8,6 +8,7 @@
       </template>
       <div class="flex gap-4">
         <BaseButton
+          type="button"
           :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
         >
@@ -19,6 +20,7 @@
           </p>
         </BaseButton>
         <BaseButton
+          type="button"
           :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
         >
@@ -28,6 +30,7 @@
           </p>
         </BaseButton>
         <BaseButton
+          type="button"
           :disabled="!hasTitle"
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
         >
@@ -103,6 +106,7 @@
                   class="flex items-center gap-4"
                 >
                   <BaseButton
+                    type="button"
                     class="text-red-500 font-lato text-sm !border-none"
                     @click="removeImage"
                   >
@@ -253,7 +257,7 @@
                   v-model.trim="tag"
                   class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   placeholder="Tambahkan tag lalu tekan 'enter'"
-                  @keyup.enter="onTagInputEnter()"
+                  @keyup.enter="onTagInputEnter"
                 >
                 <div
                   v-show="hasTagSuggestions"
@@ -352,12 +356,14 @@
       <template #footer>
         <div class="flex w-full h-full items-center justify-end gap-4 p-2">
           <BaseButton
+            type="button"
             class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
             @click="onCancel"
           >
             Tidak
           </BaseButton>
           <BaseButton
+            type="button"
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
             @click="onConfirm"
           >
