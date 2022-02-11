@@ -5,6 +5,7 @@
       <NewsTabBar
         :tabs="tabs"
         :current-tab.sync="currentTab"
+        @update:currentTab="filterNewsByStatus"
       />
       <section class="w-full bg-white py-6 px-3">
         <div class="w-full flex justify-between mb-5 items-center">
@@ -105,6 +106,7 @@ export default {
         end_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 'yyyy/MM/dd'), // last date of today's month
         per_page: 10,
         page: 1,
+        status: null,
       },
     };
   },
@@ -175,6 +177,16 @@ export default {
           message: 'Gagal mendapatkan data Total Berita, silakan coba beberapa saat lagi',
         });
       }
+    },
+
+    filterNewsByStatus(status) {
+      if (status === 'ALL') {
+        this.setParams({ status: null });
+      } else {
+        this.setParams({ status });
+      }
+
+      this.fetchNews();
     },
 
     /**
