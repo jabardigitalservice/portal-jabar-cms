@@ -536,6 +536,12 @@ export default {
     this.getLocationOptions();
   },
   methods: {
+    sanitizeHTML(html) {
+      const container = document.createElement('div');
+      container.insertAdjacentHTML('beforeend', html);
+
+      return container.textContent;
+    },
     isEmpty(string) {
       return string === '';
     },
