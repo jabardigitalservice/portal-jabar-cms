@@ -61,37 +61,37 @@ export default {
     return {
       tabs: [
         {
-          key: 'all',
+          key: 'ALL',
           label: 'Semua Berita',
           icon: 'DocumentIcon',
-          count: 80,
+          count: 0,
         },
         {
-          key: 'published',
+          key: 'PUBLISHED',
           label: 'Diterbitkan',
           icon: 'PublishIcon',
-          count: 20,
+          count: 0,
         },
         {
-          key: 'draft',
+          key: 'DRAFT',
           label: 'Tersimpan',
           icon: 'DraftIcon',
-          count: 15,
+          count: 0,
         },
         {
-          key: 'review',
+          key: 'REVIEW',
           label: 'Menunggu Review',
           icon: 'ReviewIcon',
-          count: 10,
+          count: 0,
         },
         {
-          key: 'archive',
+          key: 'ARCHIVED',
           label: 'Diarsipkan',
           icon: 'ArchiveIcon',
-          count: 10,
+          count: 0,
         },
       ],
-      currentTab: 'all',
+      currentTab: 'ALL',
       loading: false,
       news: [],
       meta: {
@@ -128,6 +128,7 @@ export default {
   },
   mounted() {
     this.fetchNews();
+    this.fetchStatusCounter();
   },
   methods: {
     async fetchNews() {
@@ -146,6 +147,33 @@ export default {
         });
       } finally {
         this.loading = false;
+      }
+    },
+
+    async fetchStatusCounter() {
+      try {
+        const response = await newsRepository.getStatusCounter();
+        const { data } = response.data;
+
+        const newTabs = [];
+
+        this.tabs.forEach((tab) => {
+          const object = data.find((item) => item.status === tab.key);
+          newTabs.push({ ...tab, ...object });
+        });
+
+        // Get total news off all status
+        const totalCount = data.map((item) => item.count).reduce((a, b) => a + b, 0);
+
+        // Mutate the first index (object with the key of `ALL`) count property
+        newTabs[0].count = totalCount;
+
+        this.tabs = [...newTabs];
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Total Berita, silakan coba beberapa saat lagi',
+        });
       }
     },
 
