@@ -517,10 +517,13 @@ export default {
       return !!this.error.title && !!this.error.message;
     },
     requiredFields() {
-      const { duration, form: { image, content, category } } = this;
+      // eslint-disable-next-line camelcase
+      const { duration, form: { image, category, area_id } } = this;
       const title = this.form.title.trim();
+      const content = this.sanitizeHTML(this.form.content).slice(0, 160).trim();
 
-      return [title, image, content, duration, category];
+      // eslint-disable-next-line camelcase
+      return [title, image, content, duration, category, area_id];
     },
     hasTitle() {
       return this.form.title !== '';
