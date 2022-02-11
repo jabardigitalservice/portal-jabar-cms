@@ -221,7 +221,7 @@
                 class="text-sm whitespace-nowrap w-full text-blue-gray-800"
                 :class="{ 'text-gray-400': !showDateInput }"
               >
-                sampai <span class="font-bold">{{ form.end_date || 'tanpa batas' }}</span>
+                sampai <span class="font-bold">{{ endOfDuration }}</span>
               </p>
               <p
                 v-show="isDateHasPassed"
@@ -421,7 +421,7 @@ export default {
         image: '',
         content: '',
         start_date: formatDate(new Date(), 'dd/MM/yyyy'),
-        end_date: formatDate(new Date().setDate(new Date().getDate() + 5), 'dd/MM/yyyy'),
+        end_date: null,
         category: '',
         tags: [],
         area_id: '',
@@ -496,6 +496,9 @@ export default {
     imagePreview() {
       return this.form.image ? URL.createObjectURL(this.form.image) : null;
     },
+    endOfDuration() {
+      return this.form.end_date ? formatDate(this.form.end_date, 'dd/MM/yyyy') : 'tanpa batas';
+    },
     hasImagePreview() {
       return !!this.imagePreview;
     },
@@ -553,7 +556,7 @@ export default {
     },
     setEndDate() {
       const startDate = new Date(this.selectedDate);
-      const endDate = this.duration ? formatDate(startDate.setDate(startDate.getDate() + this.duration), 'dd/MM/yyyy') : null;
+      const endDate = this.duration ? startDate.setDate(startDate.getDate() + this.duration) : null;
 
       this.form.end_date = endDate;
     },
