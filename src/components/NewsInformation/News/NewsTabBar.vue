@@ -24,7 +24,13 @@
         >
           {{ tab.label }}
         </p>
+        <div
+          v-if="tab.count === null"
+          class="col-start-2 w-[65px] h-[28px] rounded-lg animate-pulse"
+          :class="currentTab === tab.key ? 'bg-gray-200' : 'bg-green-800'"
+        />
         <p
+          v-else
           class="col-start-2 font-roboto font-medium text-xl"
           :class="currentTab === tab.key ? 'text-blue-gray-800' : 'text-white'"
         >
