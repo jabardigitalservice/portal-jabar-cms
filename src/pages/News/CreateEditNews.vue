@@ -494,7 +494,15 @@ export default {
       return new Date(year, month, day);
     },
     imagePreview() {
-      return this.form.image ? URL.createObjectURL(this.form.image) : null;
+      if (!this.form.image) return null;
+
+      // create object url if the image is a blob
+      if (typeof this.form.image === 'object') {
+        return URL.createObjectURL(this.form.image);
+      }
+
+      // return the image if the image is not a blob
+      return this.form.image;
     },
     endOfDuration() {
       return this.form.end_date ? formatDate(this.form.end_date, 'dd/MM/yyyy') : 'tanpa batas';
