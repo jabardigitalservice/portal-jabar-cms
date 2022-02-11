@@ -668,15 +668,11 @@ export default {
           maxWidth: 1200,
           maxHeight: 900,
         });
-
-        const formData = new FormData();
-        formData.append('file', compressedImage, compressedImage.name);
-        const response = await mediaRepository.uploadMedia(formData);
-        const fileUri = response.data?.file_download_uri || null;
+        const fileUri = await this.uploadMedia(compressedImage);
         success(fileUri);
       } catch (err) {
         // Show error message and remove image from the document
-        failure(err.message, { remove: true });
+        failure('Gagal menambahkan gambar', { remove: true });
       } finally {
         this.loading = false;
       }
@@ -686,6 +682,13 @@ export default {
     },
     removeImage() {
       this.form.image = '';
+    },
+    async uploadMedia(image) {
+      const formData = new FormData();
+      formData.append('file', image, image.name);
+      const response = await mediaRepository.uploadMedia(formData);
+      const fileUri = response.data?.file_download_uri || null;
+      return fileUri;
     },
     async getLocationOptions() {
       const params = {
