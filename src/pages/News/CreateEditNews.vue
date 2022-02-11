@@ -696,7 +696,7 @@ export default {
 
       try {
         const response = await areaRepository.getAreas(params);
-        const options = response.data?.data.map((area) => ({ label: area.name, value: area.code_kemendagri }));
+        const options = response.data?.data.map((area) => ({ label: area.name, value: area.id }));
         this.setLocationOptions(options);
       } catch (error) {
         this.setLocationOptions([]);
