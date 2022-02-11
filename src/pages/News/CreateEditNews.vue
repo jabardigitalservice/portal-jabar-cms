@@ -215,7 +215,7 @@
                   v-show="!showDateInput"
                   class="bg-transparent absolute top-0 w-full h-full z-[1] cursor-not-allowed"
                 />
-                <JdsDateInput v-model="form.start_date" />
+                <JdsDateInput v-model="form.startDate" />
               </div>
               <p
                 class="text-sm whitespace-nowrap w-full text-blue-gray-800"
@@ -311,7 +311,7 @@
                 </p>
               </div>
               <JdsSelect
-                v-model="form.area_id"
+                v-model="form.areaId"
                 label="Lokasi"
                 placeholder="Pilih lokasi"
                 filterable
@@ -420,11 +420,11 @@ export default {
         title: '',
         image: '',
         content: '',
-        start_date: formatDate(new Date(), 'dd/MM/yyyy'),
-        end_date: null,
+        startDate: formatDate(new Date(), 'dd/MM/yyyy'),
+        endDate: null,
         category: '',
         tags: [],
-        area_id: '',
+        areaId: '',
       },
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
@@ -486,7 +486,7 @@ export default {
       return this.showDateInput && daysDifference(this.selectedDate, new Date()) < 0;
     },
     selectedDate() {
-      const date = this.form.start_date.split('/');
+      const date = this.form.startDate.split('/');
       const year = date[2];
       const month = date[1] - 1;
       const day = date[0];
@@ -505,7 +505,7 @@ export default {
       return this.form.image;
     },
     endOfDuration() {
-      return this.form.end_date ? formatDate(this.form.end_date, 'dd/MM/yyyy') : 'tanpa batas';
+      return this.form.endDate ? formatDate(this.form.endDate, 'dd/MM/yyyy') : 'tanpa batas';
     },
     hasImagePreview() {
       return !!this.imagePreview;
@@ -517,13 +517,11 @@ export default {
       return !!this.error.title && !!this.error.message;
     },
     requiredFields() {
-      // eslint-disable-next-line camelcase
-      const { duration, form: { image, category, area_id } } = this;
+      const { duration, form: { image, category, areaId } } = this;
       const title = this.form.title.trim();
       const content = this.sanitizeHTML(this.form.content).slice(0, 160).trim();
 
-      // eslint-disable-next-line camelcase
-      return [title, image, content, duration, category, area_id];
+      return [title, image, content, duration, category, areaId];
     },
     hasTitle() {
       return this.form.title !== '';
@@ -569,7 +567,7 @@ export default {
       const startDate = new Date(this.selectedDate);
       const endDate = this.duration ? startDate.setDate(startDate.getDate() + this.duration) : null;
 
-      this.form.end_date = endDate;
+      this.form.endDate = endDate;
     },
     toggleDateInput() {
       this.showDateInput = !this.showDateInput;
