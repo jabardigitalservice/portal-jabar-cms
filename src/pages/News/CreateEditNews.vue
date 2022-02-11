@@ -553,7 +553,7 @@ export default {
     },
     setEndDate() {
       const startDate = new Date(this.selectedDate);
-      const endDate = this.duration === null ? '' : formatDate(startDate.setDate(startDate.getDate() + this.duration), 'dd/MM/yyyy');
+      const endDate = this.duration ? formatDate(startDate.setDate(startDate.getDate() + this.duration), 'dd/MM/yyyy') : null;
 
       this.form.end_date = endDate;
     },
