@@ -5,6 +5,7 @@
       <NewsTabBar
         :tabs="tabs"
         :current-tab.sync="currentTab"
+        @update:currentTab="filterNewsByStatus"
       />
       <section class="w-full bg-white py-6 px-3">
         <div class="w-full flex justify-between mb-5 items-center">
@@ -60,37 +61,37 @@ export default {
     return {
       tabs: [
         {
-          key: 'all',
+          key: 'ALL',
           label: 'Semua Berita',
           icon: 'DocumentIcon',
-          count: 80,
+          count: null,
         },
         {
-          key: 'published',
+          key: 'PUBLISHED',
           label: 'Diterbitkan',
           icon: 'PublishIcon',
-          count: 20,
+          count: null,
         },
         {
-          key: 'draft',
+          key: 'DRAFT',
           label: 'Tersimpan',
           icon: 'DraftIcon',
-          count: 15,
+          count: null,
         },
         {
-          key: 'review',
+          key: 'REVIEW',
           label: 'Menunggu Review',
           icon: 'ReviewIcon',
-          count: 10,
+          count: null,
         },
         {
-          key: 'archive',
+          key: 'ARCHIVED',
           label: 'Diarsipkan',
           icon: 'ArchiveIcon',
-          count: 10,
+          count: null,
         },
       ],
-      currentTab: 'all',
+      currentTab: 'ALL',
       loading: false,
       news: [],
       meta: {
@@ -104,6 +105,7 @@ export default {
         end_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 'yyyy/MM/dd'), // last date of today's month
         per_page: 10,
         page: 1,
+        status: null,
       },
     };
   },
@@ -127,6 +129,7 @@ export default {
   },
   mounted() {
     this.fetchNews();
+    this.fetchStatusCounter();
   },
   methods: {
     async fetchNews() {
@@ -146,6 +149,43 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+    async fetchStatusCounter() {
+      try {
+        const response = await newsRepository.getStatusCounter();
+        const { data = [] } = response.data || {};
+
+        const newTabs = [];
+
+        this.tabs.forEach((tab) => {
+          const object = data.find((item) => item.status === tab.key);
+          newTabs.push({ ...tab, ...object });
+        });
+
+        // Get total news off all status
+        const totalCount = data.map((item) => item.count).reduce((a, b) => a + b, 0);
+
+        // Mutate the first index (object with the key of `ALL`) count property
+        newTabs[0].count = totalCount;
+
+        this.tabs = [...newTabs];
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Total Berita, silakan coba beberapa saat lagi',
+        });
+      }
+    },
+
+    filterNewsByStatus(status) {
+      if (status === 'ALL') {
+        this.setParams({ status: null });
+      } else {
+        this.setParams({ status });
+      }
+
+      this.fetchNews();
     },
 
     /**

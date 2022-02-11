@@ -3,7 +3,7 @@
     <li
       v-for="(tab, index) in tabs"
       :key="tab.key"
-      class="w-[180px] min-h-[70px] px-[14px] py-[10px] rounded-t-lg cursor-pointer"
+      class="w-[180px] min-h-[84px] px-[14px] py-[10px] rounded-t-lg cursor-pointer"
       :class="currentTab === tab.key ? 'bg-white' : 'bg-green-700'"
       :title="tab.label"
       @click="onTabChange(index)"
@@ -24,7 +24,13 @@
         >
           {{ tab.label }}
         </p>
+        <div
+          v-if="tab.count === null"
+          class="col-start-2 w-[70px] h-[24px] rounded-md animate-pulse"
+          :class="currentTab === tab.key ? 'bg-gray-200' : 'bg-green-800'"
+        />
         <p
+          v-else
           class="col-start-2 font-roboto font-medium text-xl"
           :class="currentTab === tab.key ? 'text-blue-gray-800' : 'text-white'"
         >

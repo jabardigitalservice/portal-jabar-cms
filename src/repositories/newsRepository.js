@@ -32,4 +32,12 @@ export default {
   getNewsById(id = null) {
     return Repository.get(`${resource}/${id}`);
   },
+
+  /**
+   * Get news status counter
+   * @returns {Promise}
+   */
+  getStatusCounter() {
+    return Repository.get(`${resource}/tabs`);
+  },
 };
