@@ -187,7 +187,7 @@
                 placeholder="Pilih kategori"
                 :options="categories"
               />
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2 relative">
                 <label
                   for="tag"
                   class="text-[15px] text-gray-800"
@@ -201,6 +201,16 @@
                   placeholder="Ketikkan tag disini lalu tekan enter"
                   @keyup.enter="onTagInputEnter()"
                 >
+                <div
+                  v-show="hasTagSuggestions"
+                  class="absolute w-full mt-[72px] z-20"
+                >
+                  <JdsOptions
+                    class="w-full"
+                    :options="tagSuggestions"
+                    @click:option="onTagSuggestionsClick"
+                  />
+                </div>
                 <div class="border border-gray-500 overflow-y-auto rounded-lg p-2 h-[88px] text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500">
                   <div
                     v-if="hasTags"
@@ -305,6 +315,7 @@ import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const agendaRepository = RepositoryFactory.get('agenda');
+const tagRepository = RepositoryFactory.get('tag');
 
 export default {
   name: 'CreateEditAgenda',
@@ -346,6 +357,7 @@ export default {
       ],
       categories: AGENDA_CATEGORIES,
       tag: '',
+      tagSuggestions: [],
       isTodayChecked: true,
       loading: false,
       errorMessage: {
@@ -379,6 +391,9 @@ export default {
     },
     hasTags() {
       return Array.isArray(this.form.tags) && !!this.form.tags.length;
+    },
+    hasTagSuggestions() {
+      return this.tagSuggestions.length > 0;
     },
     hasStartHour() {
       return !!this.form.start_hour;
@@ -469,6 +484,13 @@ export default {
         this.validateUrl();
       }
     },
+    tag() {
+      if (this.tag) {
+        this.getTagSuggestions();
+      } else {
+        this.clearTagSuggestions();
+      }
+    },
   },
   async mounted() {
     if (this.isEditMode) {
@@ -507,6 +529,26 @@ export default {
     },
     setType(type) {
       this.form.type = type;
+    },
+    getTagSuggestions: debounce(async function () {
+      try {
+        const response = await tagRepository.getTagSuggestions({ q: this.tag });
+        const tagSuggestions = response.data.map((tag) => tag.name).slice(0, 5);
+        this.setTagSuggestions(tagSuggestions);
+      } catch (error) {
+        this.clearTagSuggestions();
+      }
+    }, 500),
+    onTagSuggestionsClick(tag) {
+      this.setTags(tag);
+      this.clearTag();
+      this.clearTagSuggestions();
+    },
+    setTagSuggestions(tagSuggestions) {
+      this.tagSuggestions = tagSuggestions;
+    },
+    clearTagSuggestions() {
+      this.tagSuggestions = [];
     },
     setTags(tag) {
       this.form.tags.push({ tag_name: tag });
