@@ -218,6 +218,7 @@
                 <JdsDateInput v-model="form.startDate" />
               </div>
               <p
+                v-show="hasDuration"
                 class="text-sm whitespace-nowrap w-full text-blue-gray-800"
                 :class="{ 'text-gray-400': !showDateInput }"
               >
@@ -420,7 +421,7 @@ export default {
         title: '',
         image: '',
         content: '',
-        startDate: formatDate(new Date(), 'dd/MM/yyyy'),
+        startDate: null,
         endDate: null,
         category: '',
         tags: [],
@@ -486,6 +487,8 @@ export default {
       return this.showDateInput && daysDifference(this.selectedDate, new Date()) < 0;
     },
     selectedDate() {
+      if (!this.form.startDate) return null;
+
       const date = this.form.startDate.split('/');
       const year = date[2];
       const month = date[1] - 1;
@@ -537,6 +540,9 @@ export default {
   },
   watch: {
     duration() {
+      if (!this.form.startDate) {
+        this.setStartDate();
+      }
       this.setEndDate();
     },
     selectedDate() {
@@ -562,6 +568,9 @@ export default {
     },
     isEmpty(string) {
       return string === '';
+    },
+    setStartDate() {
+      this.form.startDate = formatDate(new Date(), 'dd/MM/yyyy');
     },
     setEndDate() {
       const startDate = new Date(this.selectedDate);
