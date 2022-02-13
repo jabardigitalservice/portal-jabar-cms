@@ -425,7 +425,7 @@ export default {
         endDate: null,
         category: '',
         tags: [],
-        areaId: '',
+        areaId: null,
       },
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
