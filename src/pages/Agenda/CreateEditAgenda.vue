@@ -192,7 +192,7 @@
                   for="tag"
                   class="text-[15px] text-gray-800"
                 >
-                  Tag
+                  Tag <span class="text-gray-500">(Opsional)</span>
                 </label>
                 <input
                   id="tag"
@@ -395,9 +395,8 @@ export default {
       const hasStartHour = !this.isEmpty(this.form.start_hour);
       const hasEndHour = !this.isEmpty(this.form.end_hour);
       const hasCategory = !this.isEmpty(this.form.category);
-      const hasTags = Array.isArray(this.form.tags) && !!this.form.tags.length;
 
-      return hasTitle && hasType && hasAddress && hasValidUrl && hasDate && hasStartHour && hasEndHour && hasCategory && hasTags;
+      return hasTitle && hasType && hasAddress && hasValidUrl && hasDate && hasStartHour && hasEndHour && hasCategory;
     },
     today() {
       return new Date().setHours(0, 0, 0, 0);
