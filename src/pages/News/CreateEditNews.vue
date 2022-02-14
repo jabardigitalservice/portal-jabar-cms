@@ -366,7 +366,7 @@
           <BaseButton
             type="button"
             class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
-            @click="onCancel"
+            @click="onCancel('LEAVE')"
           >
             {{ confirmationModalDetail.cancelButtonLabel }}
           </BaseButton>
@@ -812,8 +812,6 @@ export default {
     },
     async onConfirm(type) {
       this.closeConfirmationModal();
-
-      console.log({ type });
 
       if (type === 'LEAVE') {
         try {
