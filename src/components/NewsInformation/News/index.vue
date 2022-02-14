@@ -64,7 +64,7 @@
           </BaseButton>
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            :class="{'bg-red-500': promptDetail.action === 'delete'}"
+            :class="{'bg-red-500 hover:bg-red-400': promptDetail.action === 'delete'}"
             :disabled="promptDetail.loading"
             @click="promptDetail.buttonClick"
           >
