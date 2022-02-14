@@ -40,4 +40,16 @@ export default {
   getStatusCounter() {
     return Repository.get(`${resource}/tabs`);
   },
+
+  /**
+   * Update news status
+   * @param {string, number} id
+   * @param {Object} status
+   *
+   * @property {string} status - news status containing one of these values ['PUBLISHED', 'REVIEW', 'DRAFT', 'ARCHIVED']
+   * @returns {Promise}
+   */
+  updateNewsStatus(id, status) {
+    return Repository.patch(`${resource}/${id}/status`, status);
+  },
 };
