@@ -419,7 +419,6 @@ export default {
     if (!this.hasTitle || this.isFormSubmitted || this.isConfirmToLeave) {
       next();
     } else {
-      // this.isConfirmationModalOpen = true;
       this.setConfirmationModalDetail('LEAVE');
       next(false);
     }
@@ -684,12 +683,9 @@ export default {
     resetConfirmationModalDetail() {
       this.confirmationModalDetail = {};
     },
-    toggleConfirmationModal() {
-      this.isConfirmationModalOpen = !this.isConfirmationModalOpen;
-    },
     closeConfirmationModal() {
       this.resetConfirmationModalDetail();
-      this.toggleConfirmationModal();
+      this.isConfirmationModalOpen = false;
     },
     closeMessageModal() {
       this.setMessageModalVisibility(false);
