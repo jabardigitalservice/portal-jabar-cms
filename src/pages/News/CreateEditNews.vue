@@ -589,8 +589,8 @@ export default {
 
       return container.textContent;
     },
-    isEmpty(string) {
-      return string === '';
+    isEmpty(data) {
+      return data === '' || data === null;
     },
     setStartDate() {
       this.form.startDate = formatDate(new Date(), 'dd/MM/yyyy');
@@ -812,6 +812,8 @@ export default {
     },
     async onConfirm(type) {
       this.closeConfirmationModal();
+
+      console.log({ type });
 
       if (type === 'LEAVE') {
         try {
