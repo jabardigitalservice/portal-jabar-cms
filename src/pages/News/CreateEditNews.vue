@@ -34,7 +34,7 @@
           type="button"
           :disabled="!hasTitle"
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
-          @click="onSaveButtonClick"
+          @click="onSubmit('DRAFT')"
         >
           <DraftIcon :class="[hasTitle ? 'fill-white' : 'fill-gray-700']" />
           <p>
@@ -819,7 +819,7 @@ export default {
         // TODO: submit the news
       }
     },
-    async onSaveButtonClick() {
+    async onSubmit(status) {
       const { title, content, category, tags, endDate, areaId } = this.form;
       let { image } = this.form;
 
@@ -843,6 +843,7 @@ export default {
         category,
         tags,
         area_id: areaId,
+        status,
       };
 
       if (this.isEditMode) {
@@ -856,7 +857,7 @@ export default {
 
       try {
         this.loading = true;
-        await newsRepository.createNews({ ...data, status: 'DRAFT' });
+        await newsRepository.createNews(data);
         this.setMessage('SUCCESS', 'Simpan Berita Berhasil', 'Berita yang Anda buat berhasil disimpan.');
         this.isFormSubmitted = true;
       } catch (error) {
