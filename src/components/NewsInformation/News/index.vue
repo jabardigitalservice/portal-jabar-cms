@@ -38,7 +38,7 @@
       </section>
     </section>
 
-    <!-- Publish Action Prompt -->
+    <!-- Action Prompt -->
     <BaseModal
       :open="isActionPromptOpen"
       @close="toggleActionPrompt"
