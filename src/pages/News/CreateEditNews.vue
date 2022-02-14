@@ -810,9 +810,16 @@ export default {
         this.$router.push(this.targetRoute);
       }
     },
-    onConfirm(type) {
+    async onConfirm(type) {
+      this.closeConfirmationModal();
+
       if (type === 'LEAVE') {
-        // TODO: save the news
+        try {
+          await this.onSubmit('DRAFT');
+          this.isFormSubmitted = true;
+        } catch (error) {
+          this.isFormSubmitted = false;
+        }
       }
 
       if (type === 'SUBMISSION') {
