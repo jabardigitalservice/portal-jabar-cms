@@ -366,7 +366,7 @@
           <BaseButton
             type="button"
             class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
-            @click="onCancel('LEAVE')"
+            @click="onCancel(confirmationModalDetail.type)"
           >
             {{ confirmationModalDetail.cancelButtonLabel }}
           </BaseButton>
@@ -670,8 +670,8 @@ export default {
 
       if (type === 'SUBMISSION') {
         this.confirmationModalDetail = {
-          title: 'Terbitkan Berita',
           type,
+          title: 'Terbitkan Berita',
           subtitle: 'Apakah Anda yakin ingin menerbitkan berita ini?',
           message: this.form.title,
           cancelButtonLabel: 'Batal',
@@ -804,7 +804,6 @@ export default {
     },
     onCancel(type) {
       this.closeConfirmationModal();
-
       if (type === 'LEAVE') {
         this.isConfirmToLeave = true;
         this.$router.push(this.targetRoute);
