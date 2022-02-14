@@ -827,6 +827,8 @@ export default {
       }
     },
     async onSubmit(status) {
+      if (!this.isFormValid) return;
+
       const { title, content, category, tags, endDate, areaId } = this.form;
       let { image } = this.form;
 
