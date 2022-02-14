@@ -33,10 +33,11 @@
           type="button"
           :disabled="!hasTitle"
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+          @click="onSaveButtonClick"
         >
           <DraftIcon :class="[hasTitle ? 'fill-white' : 'fill-gray-700']" />
           <p>
-            {{ submitButtonLabel }}
+            {{ saveButtonLabel }}
           </p>
         </BaseButton>
       </div>
@@ -325,20 +326,20 @@
       </div>
     </form>
     <BaseModal
-      :open="isError"
-      @close="clearError"
+      :open="isMessageModalOpen"
+      @close="messageAction"
     >
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
-          {{ error.title }}
+          {{ message.title }}
         </h1>
         <div class="flex items-center gap-4">
           <JdsIcon
-            name="warning"
-            class="text-red-600"
+            :name="messageIconName"
+            :class="messageIconClassName"
           />
           <p class="text-sm leading-6 to-blue-gray-800">
-            {{ error.message }}
+            {{ message.body }}
           </p>
         </div>
       </div>
@@ -392,6 +393,7 @@ import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const areaRepository = RepositoryFactory.get('area');
 const mediaRepository = RepositoryFactory.get('media');
+const newsRepository = RepositoryFactory.get('news');
 const tagRepository = RepositoryFactory.get('tag');
 
 export default {
@@ -454,10 +456,8 @@ export default {
         },
       }),
       loading: false,
-      error: {
-        title: '',
-        message: '',
-      },
+      message: { type: '', title: '', body: '' },
+      isMessageModalOpen: false,
       isConfirmationModalOpen: false,
       isConfirmToLeave: false,
       isFormSubmitted: false,
@@ -471,7 +471,7 @@ export default {
     isEditMode() {
       return this.mode === 'edit';
     },
-    submitButtonLabel() {
+    saveButtonLabel() {
       return this.isEditMode ? 'Simpan Perubahan' : 'Simpan Berita';
     },
     availableCharacter() {
@@ -516,8 +516,17 @@ export default {
     hasTagSuggestions() {
       return this.tagSuggestions.length > 0;
     },
+    isSuccess() {
+      return this.message.type === 'SUCCESS';
+    },
     isError() {
-      return !!this.error.title && !!this.error.message;
+      return this.message.type === 'ERROR';
+    },
+    messageIconName() {
+      return this.isSuccess ? 'check-mark-circle' : 'warning';
+    },
+    messageIconClassName() {
+      return this.isSuccess ? 'text-green-600' : 'text-red-600';
     },
     requiredFields() {
       const { duration, form: { image, category, areaId } } = this;
@@ -554,6 +563,12 @@ export default {
       } else {
         this.tagSuggestions = [];
       }
+    },
+    isSuccess() {
+      this.setMessageModalVisibility(this.isSuccess);
+    },
+    isError() {
+      this.setMessageModalVisibility(this.isError);
     },
   },
   mounted() {
@@ -620,9 +635,30 @@ export default {
     setLocationOptions(options) {
       this.locationOptions = options;
     },
-    clearError() {
-      this.error.title = '';
-      this.error.message = '';
+    setMessageModalVisibility(value) {
+      this.isMessageModalOpen = value;
+    },
+    setMessage(type, title, body) {
+      this.message.type = type;
+      this.message.title = title;
+      this.message.body = body;
+    },
+    clearMessage() {
+      this.message.type = '';
+      this.message.title = '';
+      this.message.body = '';
+    },
+    closeModal() {
+      this.setMessageModalVisibility(false);
+    },
+    messageAction() {
+      if (this.isSuccess) {
+        this.$router.push('/berita-dan-informasi');
+        this.clearMessage();
+      } else {
+        this.closeModal();
+        this.clearMessage();
+      }
     },
     compressImage(file, config) {
       return new Promise((resolve, reject) => {
@@ -653,8 +689,7 @@ export default {
 
       // validate file size
       if (file.size > MAX_SIZE) {
-        this.error.title = 'Gagal memilih file';
-        this.error.message = 'Ukuran file yang Anda pilih melebihi 5 MB';
+        this.setMessage('ERROR', 'Gagal memilih file', 'Ukuran file yang Anda pilih melebihi 5 MB');
       }
 
       // validate file resolution
@@ -662,8 +697,7 @@ export default {
       image.src = URL.createObjectURL(file);
       image.onload = async () => {
         if (image.width > MAX_WIDTH || image.height > MAX_HEIGHT) {
-          this.error.title = 'Gagal memilih file';
-          this.error.message = 'Resolusi file yang Anda pilih melebihi 1600x900';
+          this.setMessage('ERROR', 'Gagal memilih file', 'Resolusi file yang Anda pilih melebihi 1600x900');
         } else {
           this.loading = true;
           try {
@@ -674,8 +708,7 @@ export default {
             });
             this.setImage(compressedImage);
           } catch (err) {
-            this.error.title = 'Gagal memilih file';
-            this.error.message = 'Terjadi kesalahan dalam memilih gambar';
+            this.setMessage('ERROR', 'Gagal memilih file', 'Terjadi kesalahan dalam memilih gambar');
           } finally {
             this.loading = false;
           }
@@ -733,6 +766,52 @@ export default {
     },
     onConfirm() {
       // TODO: submit the form
+    },
+    async onSaveButtonClick() {
+      const { title, content, category, tags, endDate, areaId } = this.form;
+      let { image } = this.form;
+
+      // upload the image first before submitting the form
+      // if the image is a blob
+      if (image && typeof image === 'object') {
+        try {
+          image = await this.uploadMedia(image);
+        } catch (error) {
+          this.setMessage('ERROR', 'Gagal menyimpan berita', 'Terjadi kesalahan dalam menyimpan berita');
+        }
+      }
+
+      const data = {
+        title,
+        excerpt: this.sanitizeHTML(content).slice(0, 160),
+        image,
+        content,
+        start_date: this.selectedDate ? formatDate(this.selectedDate, 'yyyy-MM-dd') : null,
+        end_date: endDate ? formatDate(endDate, 'yyyy-MM-dd') : null,
+        category,
+        tags,
+        area_id: areaId,
+      };
+
+      if (this.isEditMode) {
+        // TODO: update the news
+      } else {
+        this.saveNews(data);
+      }
+    },
+    async saveNews(data) {
+      if (this.isError) return;
+
+      try {
+        this.loading = true;
+        await newsRepository.createNews({ ...data, status: 'DRAFT' });
+        this.setMessage('SUCCESS', 'Simpan Berita Berhasil', 'Berita yang Anda buat berhasil disimpan.');
+        this.isFormSubmitted = true;
+      } catch (error) {
+        this.setMessage('ERROR', 'Simpan Berita Gagal', 'Berita yang Anda buat gagal disimpan.');
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };
