@@ -23,6 +23,7 @@
           type="button"
           :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+          @click="setConfirmationModalDetail('SUBMISSION')"
         >
           <PublishIcon :class="[isFormValid ? 'fill-green-700' : 'fill-gray-700']" />
           <p>
@@ -347,12 +348,17 @@
     <BaseModal :open="isConfirmationModalOpen">
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
-          Simpan Berita
+          {{ confirmationModalDetail.title }}
         </h1>
-        <div class="flex items-center gap-4">
-          <p class="text-sm leading-6 to-blue-gray-800">
-            Apakah Anda ingin menyimpan berita ini terlebih dahulu?
-          </p>
+        <div class="flex items-center">
+          <div class="flex flex-col gap-1">
+            <p class="text-sm leading-6 text-blue-gray-800">
+              {{ confirmationModalDetail.subtitle }}
+            </p>
+            <p class="font-bold text-blue-gray-800">
+              {{ confirmationModalDetail.message }}
+            </p>
+          </div>
         </div>
       </div>
       <template #footer>
@@ -362,14 +368,14 @@
             class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
             @click="onCancel"
           >
-            Tidak
+            {{ confirmationModalDetail.cancelButtonLabel }}
           </BaseButton>
           <BaseButton
             type="button"
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            @click="onConfirm"
+            @click="onConfirm(confirmationModalDetail.type)"
           >
-            Ya, simpan berita
+            {{ confirmationModalDetail.confirmButtonLabel }}
           </BaseButton>
         </div>
       </template>
@@ -413,7 +419,8 @@ export default {
     if (!this.hasTitle || this.isFormSubmitted || this.isConfirmToLeave) {
       next();
     } else {
-      this.isConfirmationModalOpen = true;
+      // this.isConfirmationModalOpen = true;
+      this.setConfirmationModalDetail('LEAVE');
       next(false);
     }
   },
@@ -459,6 +466,7 @@ export default {
       message: { type: '', title: '', body: '' },
       isMessageModalOpen: false,
       isConfirmationModalOpen: false,
+      confirmationModalDetail: {},
       isConfirmToLeave: false,
       isFormSubmitted: false,
       targetRoute: null,
@@ -648,7 +656,42 @@ export default {
       this.message.title = '';
       this.message.body = '';
     },
-    closeModal() {
+    setConfirmationModalDetail(type) {
+      if (type === 'LEAVE') {
+        this.confirmationModalDetail = {
+          type,
+          title: 'Simpan Berita',
+          subtitle: 'Apakah Anda ingin menyimpan berita ini terlebih dahulu?',
+          message: '',
+          cancelButtonLabel: 'Tidak',
+          confirmButtonLabel: 'Ya, simpan berita',
+        };
+      }
+
+      if (type === 'SUBMISSION') {
+        this.confirmationModalDetail = {
+          title: 'Terbitkan Berita',
+          type,
+          subtitle: 'Apakah Anda yakin ingin menerbitkan berita ini?',
+          message: this.form.title,
+          cancelButtonLabel: 'Batal',
+          confirmButtonLabel: 'Ya, terbitkan berita',
+        };
+      }
+
+      this.isConfirmationModalOpen = true;
+    },
+    resetConfirmationModalDetail() {
+      this.confirmationModalDetail = {};
+    },
+    toggleConfirmationModal() {
+      this.isConfirmationModalOpen = !this.isConfirmationModalOpen;
+    },
+    closeConfirmationModal() {
+      this.resetConfirmationModalDetail();
+      this.toggleConfirmationModal();
+    },
+    closeMessageModal() {
       this.setMessageModalVisibility(false);
     },
     messageAction() {
@@ -656,7 +699,7 @@ export default {
         this.$router.push('/berita-dan-informasi');
         this.clearMessage();
       } else {
-        this.closeModal();
+        this.closeMessageModal();
         this.clearMessage();
       }
     },
@@ -759,13 +802,22 @@ export default {
         this.setLocationOptions([]);
       }
     },
-    onCancel() {
-      this.isConfirmationModalOpen = false;
-      this.isConfirmToLeave = true;
-      this.$router.push(this.targetRoute);
+    onCancel(type) {
+      this.closeConfirmationModal();
+
+      if (type === 'LEAVE') {
+        this.isConfirmToLeave = true;
+        this.$router.push(this.targetRoute);
+      }
     },
-    onConfirm() {
-      // TODO: submit the form
+    onConfirm(type) {
+      if (type === 'LEAVE') {
+        // TODO: save the news
+      }
+
+      if (type === 'SUBMISSION') {
+        // TODO: submit the news
+      }
     },
     async onSaveButtonClick() {
       const { title, content, category, tags, endDate, areaId } = this.form;
