@@ -34,6 +34,7 @@
           :meta="meta"
           @update:pagination="onUpdatePagination($event)"
           @publish="setupPromptDetail('publish', $event)"
+          @archive="setupPromptDetail('archive', $event)"
         />
       </section>
     </section>
@@ -65,7 +66,7 @@
           <BaseButton
             class="text-sm text-white"
             :class="{
-              'bg-green-700 hover:bg-green-600': promptDetail.action === 'publish',
+              'bg-green-700 hover:bg-green-600': promptDetail.action === 'publish' || promptDetail.action === 'archive',
               'bg-red-500': promptDetail.action === 'delete'
             }"
             :disabled="promptDetail.loading"
@@ -251,6 +252,21 @@ export default {
       }
     },
 
+    async archiveNews(id) {
+      try {
+        this.promptDetail.loading = true;
+
+        await newsRepository.updateNewsStatus(id, { status: 'ARCHIVED' });
+
+        this.$toast({ type: 'success', message: 'Berita telah berhasil diarsipkan' });
+      } catch (error) {
+        this.$toast({ type: 'error', message: 'Mohon maaf, gagal mengarsipkan berita!' });
+      } finally {
+        this.closeActionPrompt();
+        this.fetchNews();
+      }
+    },
+
     filterNewsByStatus(status) {
       if (status === 'ALL') {
         this.setParams({ status: null });
@@ -305,6 +321,12 @@ export default {
       this.fetchNews();
     },
 
+    /**
+     * Setup prompt detail based on action
+     *
+     * @param {string} action - type of action
+     * @param id - news id
+     */
     setupPromptDetail(action, id) {
       const news = this.filterNewsById(id);
 
@@ -315,6 +337,19 @@ export default {
           subtitle: 'Apakah Anda yakin akan menerbitkan berita ini?',
           buttonLabel: 'Ya, terbitkan berita',
           buttonClick: () => this.publishNews(news.id),
+          newsTitle: news.title,
+          newsId: news.id,
+          loading: false,
+        };
+      }
+
+      if (action === 'archive') {
+        this.promptDetail = {
+          action: 'archive',
+          title: 'Arsipkan Berita',
+          subtitle: 'Apakah Anda yakin akan mengarsipkan berita ini?',
+          buttonLabel: 'Ya, arsipkan berita',
+          buttonClick: () => this.archiveNews(news.id),
           newsTitle: news.title,
           newsId: news.id,
           loading: false,
