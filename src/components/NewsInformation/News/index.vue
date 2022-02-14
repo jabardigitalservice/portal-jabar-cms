@@ -63,11 +63,8 @@
             Batal
           </BaseButton>
           <BaseButton
-            class="text-sm text-white"
-            :class="{
-              'bg-green-700 hover:bg-green-600': promptDetail.action === 'publish' || promptDetail.action === 'archive',
-              'bg-red-500': promptDetail.action === 'delete'
-            }"
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            :class="{'bg-red-500': promptDetail.action === 'delete'}"
             :disabled="promptDetail.loading"
             @click="promptDetail.buttonClick"
           >
