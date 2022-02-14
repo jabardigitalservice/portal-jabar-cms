@@ -1,7 +1,6 @@
 <template>
   <main class="w-full pb-20">
     <section class="w-full border-2 border-green-600 bg-green-600 rounded-lg overflow-hidden">
-      <!-- TODO: change tab data count with real data -->
       <NewsTabBar
         :tabs="tabs"
         :current-tab.sync="currentTab"
