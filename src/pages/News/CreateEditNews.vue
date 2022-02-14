@@ -8,6 +8,7 @@
       </template>
       <div class="flex gap-4">
         <BaseButton
+          type="button"
           :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
         >
@@ -19,6 +20,7 @@
           </p>
         </BaseButton>
         <BaseButton
+          type="button"
           :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
         >
@@ -28,6 +30,7 @@
           </p>
         </BaseButton>
         <BaseButton
+          type="button"
           :disabled="!hasTitle"
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
         >
@@ -103,6 +106,7 @@
                   class="flex items-center gap-4"
                 >
                   <BaseButton
+                    type="button"
                     class="text-red-500 font-lato text-sm !border-none"
                     @click="removeImage"
                   >
@@ -211,13 +215,14 @@
                   v-show="!showDateInput"
                   class="bg-transparent absolute top-0 w-full h-full z-[1] cursor-not-allowed"
                 />
-                <JdsDateInput v-model="form.start_date" />
+                <JdsDateInput v-model="form.startDate" />
               </div>
               <p
+                v-show="hasDuration"
                 class="text-sm whitespace-nowrap w-full text-blue-gray-800"
                 :class="{ 'text-gray-400': !showDateInput }"
               >
-                sampai <span class="font-bold">{{ form.end_date || 'tanpa batas' }}</span>
+                sampai <span class="font-bold">{{ endOfDuration }}</span>
               </p>
               <p
                 v-show="isDateHasPassed"
@@ -253,7 +258,7 @@
                   v-model.trim="tag"
                   class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   placeholder="Tambahkan tag lalu tekan 'enter'"
-                  @keyup.enter="onTagInputEnter()"
+                  @keyup.enter="onTagInputEnter"
                 >
                 <div
                   v-show="hasTagSuggestions"
@@ -307,7 +312,7 @@
                 </p>
               </div>
               <JdsSelect
-                v-model="form.area_id"
+                v-model="form.areaId"
                 label="Lokasi"
                 placeholder="Pilih lokasi"
                 filterable
@@ -352,12 +357,14 @@
       <template #footer>
         <div class="flex w-full h-full items-center justify-end gap-4 p-2">
           <BaseButton
+            type="button"
             class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
             @click="onCancel"
           >
             Tidak
           </BaseButton>
           <BaseButton
+            type="button"
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
             @click="onConfirm"
           >
@@ -414,11 +421,11 @@ export default {
         title: '',
         image: '',
         content: '',
-        start_date: formatDate(new Date(), 'dd/MM/yyyy'),
-        end_date: formatDate(new Date().setDate(new Date().getDate() + 5), 'dd/MM/yyyy'),
+        startDate: null,
+        endDate: null,
         category: '',
         tags: [],
-        area_id: '',
+        areaId: null,
       },
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
@@ -480,7 +487,9 @@ export default {
       return this.showDateInput && daysDifference(this.selectedDate, new Date()) < 0;
     },
     selectedDate() {
-      const date = this.form.start_date.split('/');
+      if (!this.form.startDate) return null;
+
+      const date = this.form.startDate.split('/');
       const year = date[2];
       const month = date[1] - 1;
       const day = date[0];
@@ -488,7 +497,18 @@ export default {
       return new Date(year, month, day);
     },
     imagePreview() {
-      return this.form.image ? URL.createObjectURL(this.form.image) : null;
+      if (!this.form.image) return null;
+
+      // create object url if the image is a blob
+      if (typeof this.form.image === 'object') {
+        return URL.createObjectURL(this.form.image);
+      }
+
+      // return the image if the image is not a blob
+      return this.form.image;
+    },
+    endOfDuration() {
+      return this.form.endDate ? formatDate(this.form.endDate, 'dd/MM/yyyy') : 'tanpa batas';
     },
     hasImagePreview() {
       return !!this.imagePreview;
@@ -500,10 +520,11 @@ export default {
       return !!this.error.title && !!this.error.message;
     },
     requiredFields() {
-      const { duration, form: { image, content, category } } = this;
+      const { duration, form: { image, category, areaId } } = this;
       const title = this.form.title.trim();
+      const content = this.sanitizeHTML(this.form.content).slice(0, 160).trim();
 
-      return [title, image, content, duration, category];
+      return [title, image, content, duration, category, areaId];
     },
     hasTitle() {
       return this.form.title !== '';
@@ -519,6 +540,9 @@ export default {
   },
   watch: {
     duration() {
+      if (!this.form.startDate) {
+        this.setStartDate();
+      }
       this.setEndDate();
     },
     selectedDate() {
@@ -536,14 +560,23 @@ export default {
     this.getLocationOptions();
   },
   methods: {
+    sanitizeHTML(html) {
+      const container = document.createElement('div');
+      container.insertAdjacentHTML('beforeend', html);
+
+      return container.textContent;
+    },
     isEmpty(string) {
       return string === '';
     },
+    setStartDate() {
+      this.form.startDate = formatDate(new Date(), 'dd/MM/yyyy');
+    },
     setEndDate() {
       const startDate = new Date(this.selectedDate);
-      const endDate = this.duration === null ? '' : formatDate(startDate.setDate(startDate.getDate() + this.duration), 'dd/MM/yyyy');
+      const endDate = this.duration ? startDate.setDate(startDate.getDate() + this.duration) : null;
 
-      this.form.end_date = endDate;
+      this.form.endDate = endDate;
     },
     toggleDateInput() {
       this.showDateInput = !this.showDateInput;
@@ -656,15 +689,11 @@ export default {
           maxWidth: 1200,
           maxHeight: 900,
         });
-
-        const formData = new FormData();
-        formData.append('file', compressedImage, compressedImage.name);
-        const response = await mediaRepository.uploadMedia(formData);
-        const fileUri = response.data?.file_download_uri || null;
+        const fileUri = await this.uploadMedia(compressedImage);
         success(fileUri);
       } catch (err) {
         // Show error message and remove image from the document
-        failure(err.message, { remove: true });
+        failure('Gagal menambahkan gambar', { remove: true });
       } finally {
         this.loading = false;
       }
@@ -675,6 +704,13 @@ export default {
     removeImage() {
       this.form.image = '';
     },
+    async uploadMedia(image) {
+      const formData = new FormData();
+      formData.append('file', image, image.name);
+      const response = await mediaRepository.uploadMedia(formData);
+      const fileUri = response.data?.file_download_uri || null;
+      return fileUri;
+    },
     async getLocationOptions() {
       const params = {
         depth: 2,
@@ -684,7 +720,7 @@ export default {
 
       try {
         const response = await areaRepository.getAreas(params);
-        const options = response.data?.data.map((area) => ({ label: area.name, value: area.code_kemendagri }));
+        const options = response.data?.data.map((area) => ({ label: area.name, value: area.id }));
         this.setLocationOptions(options);
       } catch (error) {
         this.setLocationOptions([]);
