@@ -154,8 +154,8 @@ export default {
         per_page: 10,
       },
       params: {
-        start_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), 1), 'yyyy/MM/dd'), // first date of today's month
-        end_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 'yyyy/MM/dd'), // last date of today's month
+        start_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), 1), 'yyyy-MM-dd'), // first date of today's month
+        end_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 'yyyy-MM-dd'), // last date of today's month
         per_page: 10,
         page: 1,
         status: null,
