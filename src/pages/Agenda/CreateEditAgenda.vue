@@ -577,6 +577,7 @@ export default {
           title: 'Tambah Agenda Berhasil',
           body: 'Agenda yang Anda buat berhasil ditambahkan.',
         };
+        this.isFormSubmitted = true;
       } catch (error) {
         this.errorMessage = {
           title: 'Tambah Agenda Gagal',
@@ -595,6 +596,7 @@ export default {
           title: 'Simpan Agenda Berhasil',
           body: 'Agenda yang Anda buat berhasil disimpan.',
         };
+        this.isFormSubmitted = true;
       } catch (error) {
         this.errorMessage = {
           title: 'Simpan Agenda Gagal',
