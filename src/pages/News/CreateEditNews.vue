@@ -326,6 +326,10 @@
         </div>
       </div>
     </form>
+    <ProgressModal
+      :open="loading"
+      :value="progress"
+    />
     <BaseModal
       :open="isMessageModalOpen"
       @close="messageAction"
@@ -344,22 +348,6 @@
           </p>
         </div>
       </div>
-    </BaseModal>
-    <BaseModal :open="loading">
-      <div class="w-full h-full px-2 pb-4">
-        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
-          Sedang diproses
-        </h1>
-        <p class="text-sm leading-6 text-blue-gray-800 text-center">
-          Mohon tunggu, sedang diproses
-        </p>
-      </div>
-      <template #footer>
-        <progress
-          max="100"
-          :value="progressBar"
-        />
-      </template>
     </BaseModal>
     <BaseModal :open="isConfirmationModalOpen">
       <div class="w-full h-full px-2 pb-4">
@@ -407,6 +395,7 @@ import { daysDifference, formatDate } from '@/common/helpers/date';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import ProgressModal from '@/common/components/ProgressModal';
 import { NEWS_CATEGORIES, NEWS_DURATION } from '@/common/constants';
 import ReviewIcon from '@/assets/icons/review.svg?inline';
 import PublishIcon from '@/assets/icons/publish.svg?inline';
@@ -424,6 +413,7 @@ export default {
     HeaderMenu,
     BaseButton,
     BaseModal,
+    ProgressModal,
     Editor,
     ReviewIcon,
     PublishIcon,
@@ -478,7 +468,7 @@ export default {
         },
       }),
       loading: false,
-      progressBar: 0,
+      progress: 0,
       message: { type: '', title: '', body: '' },
       isMessageModalOpen: false,
       isConfirmationModalOpen: false,
@@ -843,7 +833,7 @@ export default {
     async onSubmit(status) {
       if (!this.isFormValid && status !== 'DRAFT') return;
       this.loading = true;
-      this.progressBar = 20;
+      this.progress = 20;
 
       const { title, content, category, tags, endDate, areaId } = this.form;
       let { image } = this.form;
@@ -856,7 +846,7 @@ export default {
         } catch (error) {
           this.setMessage('ERROR', 'Gagal menyimpan berita', 'Terjadi kesalahan dalam menyimpan berita');
         } finally {
-          this.progressBar = 50;
+          this.progress = 50;
         }
       }
 
@@ -881,7 +871,7 @@ export default {
     },
     async saveNews(data) {
       if (this.isError) return;
-      this.progressBar = 100;
+      this.progress = 100;
 
       try {
         await newsRepository.createNews(data);
@@ -935,24 +925,5 @@ export default {
 }
 .news__form .news__date-input--disable .jds-date-input__input svg {
   fill: #BDBDBD !important;
-}
-progress {
-  width: 100%;
-}
-progress::-webkit-progress-bar {
-  background-color: #F5F5F5;
-  border-radius: 4px;
-}
-progress::-moz-progress-bar {
-  background-color: #F5F5F5;
-  border-radius: 4px;
-}
-progress::-webkit-progress-value {
-  background-color: #069550;
-  border-radius: 4px;
-  -webkit-transition : width 0.2s ease;
-  -moz-transition : width 0.2s ease;
-  -o-transition : width 0.2s ease;
-  transition : width 0.2s ease;
 }
 </style>
