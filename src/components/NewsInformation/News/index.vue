@@ -1,7 +1,6 @@
 <template>
   <main class="w-full pb-20">
     <section class="w-full border-2 border-green-600 bg-green-600 rounded-lg overflow-hidden">
-      <!-- TODO: change tab data count with real data -->
       <NewsTabBar
         :tabs="tabs"
         :current-tab.sync="currentTab"
@@ -33,9 +32,59 @@
           :loading="loading"
           :meta="meta"
           @update:pagination="onUpdatePagination($event)"
+          @publish="setupPromptDetail('publish', $event)"
+          @archive="setupPromptDetail('archive', $event)"
         />
       </section>
     </section>
+
+    <!-- Action Prompt -->
+    <BaseModal
+      :open="isActionPromptOpen"
+      @close="toggleActionPrompt"
+    >
+      <div class="w-full h-full">
+        <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
+          {{ promptDetail.title }}
+        </h1>
+        <p class="font-lato text-sm text-gray-800 mb-2">
+          {{ promptDetail.subtitle }}
+        </p>
+        <h2 class="font-lato text-md font-bold text-gray-800">
+          {{ promptDetail.newsTitle }}
+        </h2>
+      </div>
+      <template #footer>
+        <div class="flex gap-4 justify-end">
+          <BaseButton
+            class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="toggleActionPrompt"
+          >
+            Batal
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            :class="{'bg-red-500 hover:bg-red-400': promptDetail.action === 'delete'}"
+            :disabled="promptDetail.loading"
+            @click="promptDetail.buttonClick"
+          >
+            <p v-if="!promptDetail.loading">
+              {{ promptDetail.buttonLabel }}
+            </p>
+            <p
+              v-else
+              class="flex gap-2 items-center text-gray-500"
+            >
+              <JdsSpinner
+                size="16"
+                foreground="#757575"
+              />
+              Loading...
+            </p>
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
@@ -44,6 +93,8 @@ import NewsTabBar from '@/components/NewsInformation/News/NewsTabBar';
 import NewsTable from '@/components/NewsInformation/News/NewsTable';
 import NewsMonthFilter from '@/components/NewsInformation/News/NewsMonthFilter';
 import LinkButton from '@/common/components/LinkButton';
+import BaseButton from '@/common/components/BaseButton';
+import BaseModal from '@/common/components/BaseModal';
 import { formatDate } from '@/common/helpers/date';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
@@ -56,6 +107,8 @@ export default {
     NewsTable,
     NewsMonthFilter,
     LinkButton,
+    BaseButton,
+    BaseModal,
   },
   data() {
     return {
@@ -107,6 +160,8 @@ export default {
         page: 1,
         status: null,
       },
+      isActionPromptOpen: false,
+      promptDetail: {},
     };
   },
   computed: {
@@ -178,6 +233,36 @@ export default {
       }
     },
 
+    async publishNews(id) {
+      try {
+        this.promptDetail.loading = true;
+
+        await newsRepository.updateNewsStatus(id, { status: 'PUBLISHED' });
+
+        this.$toast({ type: 'success', message: 'Berita telah berhasil diterbitkan' });
+      } catch (error) {
+        this.$toast({ type: 'error', message: 'Mohon maaf, gagal menerbitkan berita!' });
+      } finally {
+        this.closeActionPrompt();
+        this.fetchNews();
+      }
+    },
+
+    async archiveNews(id) {
+      try {
+        this.promptDetail.loading = true;
+
+        await newsRepository.updateNewsStatus(id, { status: 'ARCHIVED' });
+
+        this.$toast({ type: 'success', message: 'Berita telah berhasil diarsipkan' });
+      } catch (error) {
+        this.$toast({ type: 'error', message: 'Mohon maaf, gagal mengarsipkan berita!' });
+      } finally {
+        this.closeActionPrompt();
+        this.fetchNews();
+      }
+    },
+
     filterNewsByStatus(status) {
       if (status === 'ALL') {
         this.setParams({ status: null });
@@ -186,6 +271,14 @@ export default {
       }
 
       this.fetchNews();
+    },
+
+    filterNewsById(id) {
+      if (Array.isArray(this.news) && this.news.length) {
+        return this.news.find((item) => item.id === id);
+      }
+
+      return {};
     },
 
     /**
@@ -222,6 +315,57 @@ export default {
     onUpdateMonthFilter(data) {
       this.setParams({ ...data, page: 1 });
       this.fetchNews();
+    },
+
+    /**
+     * Setup prompt detail based on action
+     *
+     * @param {string} action - type of action
+     * @param id - news id
+     */
+    setupPromptDetail(action, id) {
+      const news = this.filterNewsById(id);
+
+      if (action === 'publish') {
+        this.promptDetail = {
+          action: 'publish',
+          title: 'Terbitkan Berita',
+          subtitle: 'Apakah Anda yakin akan menerbitkan berita ini?',
+          buttonLabel: 'Ya, terbitkan berita',
+          buttonClick: () => this.publishNews(news.id),
+          newsTitle: news.title,
+          newsId: news.id,
+          loading: false,
+        };
+      }
+
+      if (action === 'archive') {
+        this.promptDetail = {
+          action: 'archive',
+          title: 'Arsipkan Berita',
+          subtitle: 'Apakah Anda yakin akan mengarsipkan berita ini?',
+          buttonLabel: 'Ya, arsipkan berita',
+          buttonClick: () => this.archiveNews(news.id),
+          newsTitle: news.title,
+          newsId: news.id,
+          loading: false,
+        };
+      }
+
+      this.isActionPromptOpen = true;
+    },
+
+    resetPromptDetail() {
+      this.promptDetail = {};
+    },
+
+    closeActionPrompt() {
+      this.resetPromptDetail();
+      this.toggleActionPrompt();
+    },
+
+    toggleActionPrompt() {
+      this.isActionPromptOpen = !this.isActionPromptOpen;
     },
   },
 };

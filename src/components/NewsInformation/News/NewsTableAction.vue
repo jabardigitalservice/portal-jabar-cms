@@ -38,6 +38,7 @@
         <li v-if="shouldShowAction('publish')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            @click="$emit('publish', item.id)"
           >
             Terbitkan
           </button>
@@ -55,6 +56,7 @@
         <li v-if="shouldShowAction('archive')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            @click="$emit('archive', item.id)"
           >
             Arsipkan
           </button>
@@ -63,6 +65,7 @@
         <li v-if="shouldShowAction('delete')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            @click="$emit('delete', item.id)"
           >
             Hapus
           </button>

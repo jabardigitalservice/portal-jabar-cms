@@ -44,6 +44,9 @@
       <template #item.action="{item}">
         <NewsTableAction
           :item="item"
+          @publish="$emit('publish', $event)"
+          @archive="$emit('archive', $event)"
+          @delete="$emit('delete', $event)"
         />
       </template>
     </JdsDataTable>
