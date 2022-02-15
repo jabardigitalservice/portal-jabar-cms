@@ -937,24 +937,22 @@ export default {
   fill: #BDBDBD !important;
 }
 progress {
-  /* style rules */
   width: 100%;
 }
 progress::-webkit-progress-bar {
-  /* style rules */
+  background-color: #F5F5F5;
+  border-radius: 4px;
+}
+progress::-moz-progress-bar {
   background-color: #F5F5F5;
   border-radius: 4px;
 }
 progress::-webkit-progress-value {
-  /* style rules */
   background-color: #069550;
   border-radius: 4px;
-    -webkit-transition : width 0.2s ease;
-   -moz-transition : width 0.2s ease;
-     -o-transition : width 0.2s ease;
-        transition : width 0.2s ease;
-}
-progress::-moz-progress-bar {
-  /* style rules */
+  -webkit-transition : width 0.2s ease;
+  -moz-transition : width 0.2s ease;
+  -o-transition : width 0.2s ease;
+  transition : width 0.2s ease;
 }
 </style>
