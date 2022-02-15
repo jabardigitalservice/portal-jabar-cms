@@ -43,11 +43,11 @@ export default {
   computed: {
     firstDate() {
       const firstDate = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
-      return formatDate(firstDate, 'yyyy/MM/dd');
+      return formatDate(firstDate, 'yyyy-MM-dd');
     },
     lastDate() {
       const lastDate = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0);
-      return formatDate(lastDate, 'yyyy/MM/dd');
+      return formatDate(lastDate, 'yyyy-MM-dd');
     },
     month() {
       return formatDate(this.date, 'MMMM');
