@@ -543,17 +543,17 @@ export default {
       return this.isSuccess ? 'text-green-600' : 'text-red-600';
     },
     requiredFields() {
-      const { duration, form: { image, category, areaId } } = this;
+      const { form: { image, category, areaId } } = this;
       const title = this.form.title.trim();
       const content = this.sanitizeHTML(this.form.content).slice(0, 160).trim();
 
-      return [title, image, content, duration, category, areaId];
+      return [title, image, content, category, areaId];
     },
     hasTitle() {
       return this.form.title !== '';
     },
     isFormValid() {
-      return this.requiredFields.every((field) => !this.isEmpty(field));
+      return this.hasDuration && this.requiredFields.every((field) => !this.isEmpty(field));
     },
     author() {
       const { name, unit } = this.$store.getters['auth/user'];
