@@ -345,6 +345,22 @@
         </div>
       </div>
     </BaseModal>
+    <BaseModal :open="loading">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Sedang diproses
+        </h1>
+        <p class="text-sm leading-6 text-blue-gray-800 text-center">
+          Mohon tunggu, sedang diproses
+        </p>
+      </div>
+      <template #footer>
+        <progress
+          max="100"
+          :value="progressBar"
+        />
+      </template>
+    </BaseModal>
     <BaseModal :open="isConfirmationModalOpen">
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
@@ -462,6 +478,7 @@ export default {
         },
       }),
       loading: false,
+      progressBar: 0,
       message: { type: '', title: '', body: '' },
       isMessageModalOpen: false,
       isConfirmationModalOpen: false,
@@ -738,7 +755,6 @@ export default {
         if (image.width > MAX_WIDTH || image.height > MAX_HEIGHT) {
           this.setMessage('ERROR', 'Gagal memilih file', 'Resolusi file yang Anda pilih melebihi 1600x900');
         } else {
-          this.loading = true;
           try {
             const compressedImage = await this.compressImage(file, {
               quality: 0.6,
@@ -749,7 +765,7 @@ export default {
           } catch (err) {
             this.setMessage('ERROR', 'Gagal memilih file', 'Terjadi kesalahan dalam memilih gambar');
           } finally {
-            this.loading = false;
+            // this.loading = false;
           }
         }
       };
@@ -766,8 +782,6 @@ export default {
       } catch (err) {
         // Show error message and remove image from the document
         failure('Gagal menambahkan gambar', { remove: true });
-      } finally {
-        this.loading = false;
       }
     },
     setImage(result) {
@@ -828,6 +842,8 @@ export default {
     },
     async onSubmit(status) {
       if (!this.isFormValid && status !== 'DRAFT') return;
+      this.loading = true;
+      this.progressBar = 20;
 
       const { title, content, category, tags, endDate, areaId } = this.form;
       let { image } = this.form;
@@ -839,6 +855,8 @@ export default {
           image = await this.uploadMedia(image);
         } catch (error) {
           this.setMessage('ERROR', 'Gagal menyimpan berita', 'Terjadi kesalahan dalam menyimpan berita');
+        } finally {
+          this.progressBar = 50;
         }
       }
 
@@ -863,9 +881,9 @@ export default {
     },
     async saveNews(data) {
       if (this.isError) return;
+      this.progressBar = 100;
 
       try {
-        this.loading = true;
         await newsRepository.createNews(data);
         const messageTitle = data.status === 'DRAFT' ? 'Simpan Berita Berhasil' : 'Ajukan Berita Berhasil';
         const messageBody = data.status === 'DRAFT' ? 'Berita yang Anda buat berhasil disimpan.' : 'Berita yang Anda buat sedang menunggu untuk direview.';
@@ -917,5 +935,26 @@ export default {
 }
 .news__form .news__date-input--disable .jds-date-input__input svg {
   fill: #BDBDBD !important;
+}
+progress {
+  /* style rules */
+  width: 100%;
+}
+progress::-webkit-progress-bar {
+  /* style rules */
+  background-color: #F5F5F5;
+  border-radius: 4px;
+}
+progress::-webkit-progress-value {
+  /* style rules */
+  background-color: #069550;
+  border-radius: 4px;
+    -webkit-transition : width 0.2s ease;
+   -moz-transition : width 0.2s ease;
+     -o-transition : width 0.2s ease;
+        transition : width 0.2s ease;
+}
+progress::-moz-progress-bar {
+  /* style rules */
 }
 </style>
