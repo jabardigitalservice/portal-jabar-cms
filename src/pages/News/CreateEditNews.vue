@@ -754,8 +754,6 @@ export default {
             this.setImage(compressedImage);
           } catch (err) {
             this.setMessage('ERROR', 'Gagal memilih file', 'Terjadi kesalahan dalam memilih gambar');
-          } finally {
-            // this.loading = false;
           }
         }
       };
