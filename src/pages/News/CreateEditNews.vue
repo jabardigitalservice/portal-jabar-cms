@@ -818,7 +818,12 @@ export default {
       }
 
       if (type === 'SUBMISSION') {
-        // TODO: submit the news
+        try {
+          await this.onSubmit('REVIEW');
+          this.isFormSubmitted = true;
+        } catch (error) {
+          this.isFormSubmitted = false;
+        }
       }
     },
     async onSubmit(status) {
@@ -862,10 +867,14 @@ export default {
       try {
         this.loading = true;
         await newsRepository.createNews(data);
-        this.setMessage('SUCCESS', 'Simpan Berita Berhasil', 'Berita yang Anda buat berhasil disimpan.');
+        const messageTitle = data.status === 'DRAFT' ? 'Simpan Berita Berhasil' : 'Ajukan Berita Berhasil';
+        const messageBody = data.status === 'DRAFT' ? 'Berita yang Anda buat berhasil disimpan.' : 'Berita yang Anda buat sedang menunggu untuk direview.';
+        this.setMessage('SUCCESS', messageTitle, messageBody);
         this.isFormSubmitted = true;
       } catch (error) {
-        this.setMessage('ERROR', 'Simpan Berita Gagal', 'Berita yang Anda buat gagal disimpan.');
+        const messageTitle = data.status === 'DRAFT' ? 'Simpan Berita Gagal' : 'Ajukan Berita Gagal';
+        const messageBody = data.status === 'DRAFT' ? 'Berita yang Anda buat gagal disimpan.' : 'Berita yang Anda buat gagal diajukan.';
+        this.setMessage('ERROR', messageTitle, messageBody);
       } finally {
         this.loading = false;
       }
