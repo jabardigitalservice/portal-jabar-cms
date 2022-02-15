@@ -326,6 +326,10 @@
         </div>
       </div>
     </form>
+    <ProgressModal
+      :open="loading"
+      :value="progress"
+    />
     <BaseModal
       :open="isMessageModalOpen"
       @close="messageAction"
@@ -391,6 +395,7 @@ import { daysDifference, formatDate } from '@/common/helpers/date';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import ProgressModal from '@/common/components/ProgressModal';
 import { NEWS_CATEGORIES, NEWS_DURATION } from '@/common/constants';
 import ReviewIcon from '@/assets/icons/review.svg?inline';
 import PublishIcon from '@/assets/icons/publish.svg?inline';
@@ -408,6 +413,7 @@ export default {
     HeaderMenu,
     BaseButton,
     BaseModal,
+    ProgressModal,
     Editor,
     ReviewIcon,
     PublishIcon,
@@ -462,6 +468,7 @@ export default {
         },
       }),
       loading: false,
+      progress: 0,
       message: { type: '', title: '', body: '' },
       isMessageModalOpen: false,
       isConfirmationModalOpen: false,
@@ -738,7 +745,6 @@ export default {
         if (image.width > MAX_WIDTH || image.height > MAX_HEIGHT) {
           this.setMessage('ERROR', 'Gagal memilih file', 'Resolusi file yang Anda pilih melebihi 1600x900');
         } else {
-          this.loading = true;
           try {
             const compressedImage = await this.compressImage(file, {
               quality: 0.6,
@@ -748,8 +754,6 @@ export default {
             this.setImage(compressedImage);
           } catch (err) {
             this.setMessage('ERROR', 'Gagal memilih file', 'Terjadi kesalahan dalam memilih gambar');
-          } finally {
-            this.loading = false;
           }
         }
       };
@@ -766,8 +770,6 @@ export default {
       } catch (err) {
         // Show error message and remove image from the document
         failure('Gagal menambahkan gambar', { remove: true });
-      } finally {
-        this.loading = false;
       }
     },
     setImage(result) {
@@ -818,11 +820,18 @@ export default {
       }
 
       if (type === 'SUBMISSION') {
-        // TODO: submit the news
+        try {
+          await this.onSubmit('REVIEW');
+          this.isFormSubmitted = true;
+        } catch (error) {
+          this.isFormSubmitted = false;
+        }
       }
     },
     async onSubmit(status) {
       if (!this.isFormValid && status !== 'DRAFT') return;
+      this.loading = true;
+      this.progress = 20;
 
       const { title, content, category, tags, endDate, areaId } = this.form;
       let { image } = this.form;
@@ -834,6 +843,8 @@ export default {
           image = await this.uploadMedia(image);
         } catch (error) {
           this.setMessage('ERROR', 'Gagal menyimpan berita', 'Terjadi kesalahan dalam menyimpan berita');
+        } finally {
+          this.progress = 50;
         }
       }
 
@@ -858,14 +869,18 @@ export default {
     },
     async saveNews(data) {
       if (this.isError) return;
+      this.progress = 100;
 
       try {
-        this.loading = true;
         await newsRepository.createNews(data);
-        this.setMessage('SUCCESS', 'Simpan Berita Berhasil', 'Berita yang Anda buat berhasil disimpan.');
+        const messageTitle = data.status === 'DRAFT' ? 'Simpan Berita Berhasil' : 'Ajukan Berita Berhasil';
+        const messageBody = data.status === 'DRAFT' ? 'Berita yang Anda buat berhasil disimpan.' : 'Berita yang Anda buat sedang menunggu untuk direview.';
+        this.setMessage('SUCCESS', messageTitle, messageBody);
         this.isFormSubmitted = true;
       } catch (error) {
-        this.setMessage('ERROR', 'Simpan Berita Gagal', 'Berita yang Anda buat gagal disimpan.');
+        const messageTitle = data.status === 'DRAFT' ? 'Simpan Berita Gagal' : 'Ajukan Berita Gagal';
+        const messageBody = data.status === 'DRAFT' ? 'Berita yang Anda buat gagal disimpan.' : 'Berita yang Anda buat gagal diajukan.';
+        this.setMessage('ERROR', messageTitle, messageBody);
       } finally {
         this.loading = false;
       }
