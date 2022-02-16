@@ -47,6 +47,7 @@
           @update:pagination="onUpdatePagination($event)"
           @open-preview="handleShowPreview($event)"
           @delete="handleDeleteAction($event)"
+          @change:sort="onChangeSort($event)"
         />
       </div>
     </section>
@@ -143,6 +144,8 @@ export default {
         end_date: null,
         per_page: 10,
         page: 1,
+        sort_by: null,
+        sort_order: null,
       },
       isPreviewModalOpen: false,
       isDeletePromptOpen: false,
@@ -237,6 +240,27 @@ export default {
      */
     onUpdatePagination(data) {
       this.setParams(data);
+      this.fetchEvents();
+    },
+
+    onChangeSort(data) {
+      // destructure and give alias to prevent eslint error
+      const { sort_by: sortBy, sort_order: sortOrder } = data;
+
+      if (sortOrder === 'NO-SORT') {
+        this.setParams({
+          sort_by: null,
+          sort_order: null,
+        });
+      } else if (sortBy === 'time') {
+        this.setParams({
+          sort_by: 'start_hour',
+          sort_order: sortOrder,
+        });
+      } else {
+        this.setParams(data);
+      }
+
       this.fetchEvents();
     },
 

@@ -9,6 +9,7 @@
       @previous-page="onPaginationChange('previous-page', $event)"
       @per-page-change="onPaginationChange('per-page-change', $event)"
       @page-change="onPaginationChange('page-change', $event)"
+      @change:sort="onSortChange($event)"
     >
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.type="{item}">
@@ -116,6 +117,13 @@ export default {
       this.$emit('update:pagination', {
         page: this.pagination.currentPage,
         per_page: this.pagination.itemsPerPage,
+      });
+    },
+
+    onSortChange(sort) {
+      this.$emit('change:sort', {
+        sort_by: Object.keys(sort)[0],
+        sort_order: Object.values(sort)[0].toUpperCase(),
       });
     },
   },
