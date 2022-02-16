@@ -856,7 +856,7 @@ export default {
         start_date: this.selectedDate ? formatDate(this.selectedDate, 'yyyy-MM-dd') : null,
         end_date: endDate ? formatDate(endDate, 'yyyy-MM-dd') : null,
         category,
-        tags,
+        tags: tags.map((tag) => tag.tag_name),
         area_id: areaId,
         status,
       };
