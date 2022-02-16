@@ -256,7 +256,7 @@ export default {
       } else if (sort_by === 'time') {
         this.setParams({
           sort_by: 'start_hour',
-          sort_order: null,
+          sort_order,
         });
       } else {
         this.setParams(data);
