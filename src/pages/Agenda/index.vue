@@ -247,7 +247,7 @@ export default {
       // destructure and give alias to prevent eslint error
       const { sort_by: sortBy, sort_order: sortOrder } = data;
 
-      if (sortBy === 'NO-SORT') {
+      if (sortOrder === 'NO-SORT') {
         this.setParams({
           sort_by: null,
           sort_order: null,
