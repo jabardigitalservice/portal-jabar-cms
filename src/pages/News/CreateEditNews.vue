@@ -840,12 +840,12 @@ export default {
       // if the image is a blob
       if (image && typeof image === 'object') {
         try {
+          this.progress = 50;
           image = await this.uploadMedia(image);
         } catch (error) {
-          this.setMessage('ERROR', 'Gagal menyimpan berita', 'Terjadi kesalahan dalam menyimpan berita');
+          this.progress = 100;
           this.loading = false;
-        } finally {
-          this.progress = 50;
+          this.setMessage('ERROR', 'Gagal menyimpan berita', 'Terjadi kesalahan dalam menyimpan berita');
         }
       }
 
