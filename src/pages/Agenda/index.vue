@@ -244,19 +244,18 @@ export default {
     },
 
     onChangeSort(data) {
-      // eslint-disable-next-line camelcase
-      const { sort_by, sort_order } = data;
-      // eslint-disable-next-line camelcase
-      if (sort_order === 'NO-SORT') {
+      // destructure and give alias to prevent eslint error
+      const { sort_by: sortBy, sort_order: sortOrder } = data;
+
+      if (sortBy === 'NO-SORT') {
         this.setParams({
           sort_by: null,
           sort_order: null,
         });
-      // eslint-disable-next-line camelcase
-      } else if (sort_by === 'time') {
+      } else if (sortBy === 'time') {
         this.setParams({
           sort_by: 'start_hour',
-          sort_order,
+          sort_order: sortOrder,
         });
       } else {
         this.setParams(data);
