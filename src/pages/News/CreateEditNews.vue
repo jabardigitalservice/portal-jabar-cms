@@ -765,9 +765,12 @@ export default {
           maxWidth: 1200,
           maxHeight: 900,
         });
+        console.log(1);
         const fileUri = await this.uploadMedia(compressedImage);
         success(fileUri);
       } catch (err) {
+        console.log(2);
+        console.log({ err });
         // Show error message and remove image from the document
         failure('Gagal menambahkan gambar', { remove: true });
       }
@@ -845,6 +848,7 @@ export default {
           this.setMessage('ERROR', 'Gagal menyimpan berita', 'Terjadi kesalahan dalam menyimpan berita');
         } finally {
           this.progress = 50;
+          this.loading = false;
         }
       }
 
