@@ -47,6 +47,7 @@
           @update:pagination="onUpdatePagination($event)"
           @open-preview="handleShowPreview($event)"
           @delete="handleDeleteAction($event)"
+          @change:sort="onChangeSort($event)"
         />
       </div>
     </section>
@@ -143,6 +144,8 @@ export default {
         end_date: null,
         per_page: 10,
         page: 1,
+        sort_by: null,
+        sort_order: null,
       },
       isPreviewModalOpen: false,
       isDeletePromptOpen: false,
@@ -237,6 +240,22 @@ export default {
      */
     onUpdatePagination(data) {
       this.setParams(data);
+      this.fetchEvents();
+    },
+
+    onChangeSort(data) {
+      // eslint-disable-next-line camelcase
+      const { sort_order } = data;
+      // eslint-disable-next-line camelcase
+      if (sort_order === 'NO-SORT') {
+        this.setParams({
+          sort_by: null,
+          sort_order: null,
+        });
+      } else {
+        this.setParams(data);
+      }
+
       this.fetchEvents();
     },
 
