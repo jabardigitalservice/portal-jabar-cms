@@ -843,9 +843,9 @@ export default {
           image = await this.uploadMedia(image);
         } catch (error) {
           this.setMessage('ERROR', 'Gagal menyimpan berita', 'Terjadi kesalahan dalam menyimpan berita');
+          this.loading = false;
         } finally {
           this.progress = 50;
-          this.loading = false;
         }
       }
 
