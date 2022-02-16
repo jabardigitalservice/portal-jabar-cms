@@ -848,11 +848,12 @@ export default {
       // if the image is a blob
       if (image && typeof image === 'object') {
         try {
+          this.progress = 50;
           image = await this.uploadMedia(image);
         } catch (error) {
+          this.progress = 100;
+          this.loading = false;
           this.setMessage('ERROR', 'Gagal menyimpan berita', 'Terjadi kesalahan dalam menyimpan berita');
-        } finally {
-          this.progress = 50;
         }
       }
 
@@ -864,7 +865,7 @@ export default {
         start_date: this.selectedDate ? formatDate(this.selectedDate, 'yyyy-MM-dd') : null,
         end_date: endDate ? formatDate(endDate, 'yyyy-MM-dd') : null,
         category,
-        tags,
+        tags: tags.map((tag) => tag.tag_name),
         area_id: areaId,
         status,
       };
