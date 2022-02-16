@@ -543,17 +543,17 @@ export default {
       return this.isSuccess ? 'text-green-600' : 'text-red-600';
     },
     requiredFields() {
-      const { duration, form: { image, category, areaId } } = this;
+      const { form: { image, category, areaId } } = this;
       const title = this.form.title.trim();
       const content = this.sanitizeHTML(this.form.content).slice(0, 160).trim();
 
-      return [title, image, content, duration, category, areaId];
+      return [title, image, content, category, areaId];
     },
     hasTitle() {
       return this.form.title !== '';
     },
     isFormValid() {
-      return this.requiredFields.every((field) => !this.isEmpty(field));
+      return this.hasDuration && this.requiredFields.every((field) => !this.isEmpty(field));
     },
     author() {
       const { name, unit } = this.$store.getters['auth/user'];
@@ -733,6 +733,12 @@ export default {
       const MAX_WIDTH = 1600;
       const MAX_HEIGHT = 900;
 
+      // validate file format
+      const isValidFormat = ['image/png', 'image/jpg', 'image/jpeg'].includes(file.type);
+      if (!isValidFormat) {
+        this.setMessage('ERROR', 'Gagal memilih file', 'Maaf file yang anda masukkan tidak didukung');
+      }
+
       // validate file size
       if (file.size > MAX_SIZE) {
         this.setMessage('ERROR', 'Gagal memilih file', 'Ukuran file yang Anda pilih melebihi 5 MB');
@@ -744,19 +750,21 @@ export default {
       image.onload = async () => {
         if (image.width > MAX_WIDTH || image.height > MAX_HEIGHT) {
           this.setMessage('ERROR', 'Gagal memilih file', 'Resolusi file yang Anda pilih melebihi 1600x900');
-        } else {
-          try {
-            const compressedImage = await this.compressImage(file, {
-              quality: 0.6,
-              width: 1600,
-              height: 900,
-            });
-            this.setImage(compressedImage);
-          } catch (err) {
-            this.setMessage('ERROR', 'Gagal memilih file', 'Terjadi kesalahan dalam memilih gambar');
-          }
         }
       };
+
+      if (!this.isError) {
+        try {
+          const compressedImage = await this.compressImage(file, {
+            quality: 0.6,
+            width: 1600,
+            height: 900,
+          });
+          this.setImage(compressedImage);
+        } catch (err) {
+          this.setMessage('ERROR', 'Gagal memilih file', 'Terjadi kesalahan dalam memilih gambar');
+        }
+      }
     },
     async onContentImageUpload(blobInfo, success, failure) {
       try {
