@@ -245,11 +245,17 @@ export default {
 
     onChangeSort(data) {
       // eslint-disable-next-line camelcase
-      const { sort_order } = data;
+      const { sort_by, sort_order } = data;
       // eslint-disable-next-line camelcase
       if (sort_order === 'NO-SORT') {
         this.setParams({
           sort_by: null,
+          sort_order: null,
+        });
+      // eslint-disable-next-line camelcase
+      } else if (sort_by === 'time') {
+        this.setParams({
+          sort_by: 'start_hour',
           sort_order: null,
         });
       } else {
