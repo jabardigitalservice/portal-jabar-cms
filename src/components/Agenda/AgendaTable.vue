@@ -5,6 +5,7 @@
       :items="items"
       :loading="loading"
       :pagination="pagination"
+      empty-text="Data tidak tersedia"
       @next-page="onPaginationChange('next-page', $event)"
       @previous-page="onPaginationChange('previous-page', $event)"
       @per-page-change="onPaginationChange('per-page-change', $event)"
