@@ -8,9 +8,13 @@ import news from './modules/news';
 Vue.use(Vuex);
 
 const vuexLocalStorage = new VuexPersist({
-  key: 'vuex',
+  key: 'news-preview',
   storage: window.localStorage,
-  reducer: (state) => ({ news: state.news }),
+  reducer: (state) => ({
+    news: {
+      newsPreview: state.news.newsPreview,
+    },
+  }),
 });
 
 export default new Vuex.Store({

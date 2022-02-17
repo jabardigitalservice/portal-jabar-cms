@@ -605,7 +605,7 @@ export default {
   },
   created() {
     this.getLocationOptions();
-    this.$store.dispatch('news/clearNews');
+    this.$store.dispatch('news/clearNewsPreview');
 
     if (this.isEditMode) {
       // TODO: get news data from api
