@@ -610,6 +610,8 @@ export default {
     if (this.isEditMode) {
       // TODO: get news data from api
     } else {
+      // This is just a temporary id only for visiting the preview page
+      // because the preview page needs an id
       this.newsId = Math.floor(Math.random() * (100 - 1 + 1) + 1);
     }
   },
