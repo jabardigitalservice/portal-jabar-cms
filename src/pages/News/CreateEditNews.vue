@@ -11,6 +11,7 @@
           type="button"
           :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+          @click="onNewsPreview"
         >
           <template #icon-left>
             <ReviewIcon :class="[isFormValid ? 'fill-green-700' : 'fill-gray-700']" />
@@ -310,7 +311,7 @@
                   Penulis
                 </p>
                 <p class="text-sm font-bold text-blue-gray-800">
-                  {{ author }}
+                  <span class="capitalize">{{ author.name }}</span> - {{ author.unit }}
                 </p>
               </div>
               <JdsSelect
@@ -441,6 +442,7 @@ export default {
         tags: [],
         areaId: null,
       },
+      newsId: null,
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
       duration: '',
@@ -558,10 +560,26 @@ export default {
     author() {
       const { name, unit } = this.$store.getters['auth/user'];
 
-      return `${name} - ${unit.name}`;
+      return { name, unit: unit.name };
+    },
+    newsPreview() {
+      const data = {
+        ...this.form,
+        id: this.newsId,
+        author: this.author,
+        image: this.imagePreview,
+      };
+
+      return data;
     },
   },
   watch: {
+    form: {
+      handler() {
+        this.$store.dispatch('news/createNewsPreview', this.newsPreview);
+      },
+      deep: true,
+    },
     duration() {
       if (!this.form.startDate) {
         this.setStartDate();
@@ -585,8 +603,20 @@ export default {
       this.setMessageModalVisibility(this.isError);
     },
   },
-  mounted() {
+  created() {
     this.getLocationOptions();
+    this.$store.dispatch('news/clearNewsPreview');
+
+    if (this.isEditMode) {
+      // TODO: get news data from api
+    } else {
+      // This is just a temporary id only for visiting the preview page
+      // because the preview page needs an id
+      this.newsId = Math.floor(Math.random() * (100 - 1 + 1) + 1);
+    }
+  },
+  destroyed() {
+    this.$store.dispatch('news/clearNewsPreview');
   },
   methods: {
     sanitizeHTML(html) {
@@ -892,6 +922,12 @@ export default {
         this.setMessage('ERROR', messageTitle, messageBody);
       } finally {
         this.loading = false;
+      }
+    },
+    onNewsPreview() {
+      if (this.isFormValid) {
+        const url = `/berita-dan-informasi/${this.newsId}/pratinjau?mode=local`;
+        window.open(url, '_blank').focus();
       }
     },
   },

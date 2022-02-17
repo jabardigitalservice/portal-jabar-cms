@@ -19,10 +19,14 @@ export default {
     };
   },
   async created() {
-    const { id } = this.$route.params;
-    const response = await newsRepository.getNewsById(id);
-    const { data } = response.data;
-    this.news = data;
+    if (this.$route.query.mode === 'local') {
+      this.news = this.$store.getters['news/newsPreview'];
+    } else {
+      const { id } = this.$route.params;
+      const response = await newsRepository.getNewsById(id);
+      const { data } = response.data;
+      this.news = data;
+    }
   },
 };
 </script>
