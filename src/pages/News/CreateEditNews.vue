@@ -466,7 +466,6 @@ export default {
           images_upload_handler: this.onContentImageUpload,
           image_caption: true,
         },
-        // 'initial-value': '<span><strong>PORTALJABAR, BANDUNG  - </strong></span>',
       }),
       loading: false,
       progress: 0,
