@@ -46,7 +46,7 @@
         <!-- TODO: Add action on edit clicked -->
         <li v-if="shouldShowAction('edit')">
           <router-link
-            to="#"
+            :to="`berita-dan-informasi/${item.id}/ubah`"
             class="font-lato text-sm leading-4 text-gray-800"
           >
             Ubah

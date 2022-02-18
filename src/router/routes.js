@@ -41,6 +41,14 @@ export default [
     component: () => import('@/pages/News'),
   },
   {
+    path: '/berita-dan-informasi/:id/ubah',
+    name: 'Ubah Berita',
+    component: () => import('@/pages/News/CreateEditNews'),
+    meta: {
+      mode: 'edit',
+    },
+  },
+  {
     path: '/berita-dan-informasi/tambah',
     name: 'Buat Berita Baru',
     component: () => import('@/pages/News/CreateEditNews'),
