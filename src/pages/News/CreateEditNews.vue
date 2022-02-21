@@ -625,6 +625,40 @@ export default {
 
       return container.textContent;
     },
+    insertNewsPrefix(html) {
+      try {
+        const container = document.createElement('div');
+        container.innerHTML = html;
+
+        const paragraphs = container.querySelectorAll('p');
+
+        /**
+       * Filter only paragraph that only contain a text,
+       * not a break or new line element,
+       * and doesn't have image as it's children.
+       */
+        const textOnlyParagraphs = Array.from(paragraphs)
+          .filter((item) => item.innerText.trim() !== '' && !item.contains(item.querySelector('img')));
+
+        if (textOnlyParagraphs.length) {
+          const firstParagraph = textOnlyParagraphs[0];
+
+          const selectedLocation = this.locationOptions
+            .find((item) => item.value === this.form.areaId);
+
+          const prefixText = `<span><strong>PORTALJABAR, ${selectedLocation.label} - </strong></span>`;
+
+          // Insert prefix before the first paragraph's text content
+          firstParagraph.insertAdjacentHTML('afterbegin', prefixText);
+
+          return container.innerHTML;
+        }
+
+        return html;
+      } catch (error) {
+        return html;
+      }
+    },
     isEmpty(data) {
       return data === '' || data === null;
     },
@@ -891,7 +925,7 @@ export default {
         title,
         excerpt: this.sanitizeHTML(content).slice(0, 160),
         image,
-        content,
+        content: this.isEditMode ? content : this.insertNewsPrefix(content),
         start_date: this.selectedDate ? formatDate(this.selectedDate, 'yyyy-MM-dd') : null,
         end_date: endDate ? formatDate(endDate, 'yyyy-MM-dd') : null,
         category,
