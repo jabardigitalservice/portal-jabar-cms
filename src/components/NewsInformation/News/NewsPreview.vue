@@ -41,14 +41,14 @@
         </h1>
         <div class="flex gap-3 items-center mb-6">
           <p class="font-lato font-normal text-sm text-blue-gray-100 flex items-center">
-            <CalendarIcon class="inline mr-[10px]" />
+            <CalendarIcon class="inline mr-[10px] w-4 h-4 fill-gray-200" />
             {{ date }}
           </p>
           <p class="font-normal text-sm text-blue-gray-100">
             |
           </p>
           <p class="font-lato font-normal text-sm text-blue-gray-100 flex items-center capitalize">
-            <PenIcon class="inline mr-[10px]" />
+            <PenIcon class="inline mr-[10px] w-4 h-4 fill-gray-200" />
             Penulis : {{ author }}
           </p>
         </div>
