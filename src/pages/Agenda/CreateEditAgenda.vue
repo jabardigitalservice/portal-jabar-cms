@@ -24,13 +24,10 @@
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
           @click="onSubmit"
         >
-          <img
-            src="@/assets/icons/save.svg"
-            alt="Save"
-            width="20"
-            height="20"
-            :class="{ 'invert brightness-[60%]': !isFormValid }"
-          >
+          <SaveIcon
+            class="w-5 h-5"
+            :class="!isFormValid ? 'fill-gray-600' : 'fill-white'"
+          />
           <p>
             {{ submitButtonLabel }}
           </p>
@@ -91,12 +88,7 @@
                 placeholder="Masukkan link kegiatan"
               >
                 <template #prefix-icon>
-                  <img
-                    src="@/assets/icons/link.svg"
-                    width="16"
-                    height="16"
-                    alt="Link"
-                  >
+                  <LinkIcon class="w-4 h-4 fill-gray-600" />
                 </template>
                 />
               </JdsInputText>
@@ -312,6 +304,8 @@ import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
+import SaveIcon from '@/assets/icons/save.svg?inline';
+import LinkIcon from '@/assets/icons/link.svg?inline';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const agendaRepository = RepositoryFactory.get('agenda');
@@ -324,6 +318,8 @@ export default {
     BaseButton,
     BaseModal,
     AgendaPreview,
+    SaveIcon,
+    LinkIcon,
   },
   beforeRouteLeave(to, from, next) {
     this.targetRoute = to;

@@ -83,13 +83,7 @@
                     text-gray-800 group-hover:text-green-700"
                     @click="navigate"
                   >
-                    <img
-                      src="@/assets/icons/setting-outline.svg"
-                      alt="pengaturan icon"
-                      width="20"
-                      height="20"
-                      class="w-5 h-5 object-cover object-center"
-                    >
+                    <SettingIcon class="h-5 w-5 fill-black group-hover:fill-green-700" />
                     Pengaturan Akun
                   </a>
                 </li>
@@ -102,13 +96,7 @@
                   class="flex gap-2 items-center font-lato font-medium text-sm text-gray-800
                   group-hover:text-green-700"
                 >
-                  <img
-                    src="@/assets/icons/logout.svg"
-                    alt="logout icon"
-                    width="20"
-                    height="20"
-                    class="w-5 h-5 object-cover object-center"
-                  >
+                  <LogoutIcon class="h-5 w-5 fill-black group-hover:fill-green-700" />
                   Keluar
                 </p>
               </button>
@@ -153,12 +141,16 @@
 <script>
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
+import SettingIcon from '@/assets/icons/setting-outline.svg?inline';
+import LogoutIcon from '@/assets/icons/logout.svg?inline';
 
 export default {
   name: 'Header',
   components: {
     BaseModal,
     BaseButton,
+    SettingIcon,
+    LogoutIcon,
   },
   data() {
     return {

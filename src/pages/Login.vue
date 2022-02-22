@@ -20,7 +20,7 @@
             class="flex items-center gap-3 text-white"
           >
             Ke Beranda
-            <img src="@/assets/icons/home.svg">
+            <HomeIcon class="w-5 h-5 fill-white" />
           </a>
         </nav>
       </header>
@@ -44,11 +44,13 @@
 
 <script>
 import LoginForm from '@/components/Login/LoginForm';
+import HomeIcon from '@/assets/icons/home.svg?inline';
 
 export default {
   name: 'Login',
   components: {
     LoginForm,
+    HomeIcon,
   },
   data() {
     return {
