@@ -2,23 +2,23 @@ export const NAVIGATION_MENU = [
   {
     link: '/',
     label: 'Dashboard',
-    icon: 'dashboard',
+    icon: 'DashboardIcon',
   },
   {
     link: '/layanan',
     label: 'Layanan',
-    icon: 'layanan',
+    icon: 'ServiceIcon',
     arrow: true,
   },
   {
     link: '/agenda',
     label: 'Agenda',
-    icon: 'agenda',
+    icon: 'AgendaIcon',
   },
   {
     link: '/berita-dan-informasi',
     label: 'Berita dan Informasi',
-    icon: 'berita',
+    icon: 'NewsIcon',
     arrow: true,
   },
 ];

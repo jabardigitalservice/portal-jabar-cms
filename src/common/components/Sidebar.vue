@@ -50,12 +50,11 @@
             class="w-full flex items-center gap-3 whitespace-nowrap"
             @click="navigate"
           >
-            <img
-              :src="require(`@/assets/icons/${navigation.icon}.svg`)"
-              :alt="navigation.label"
-              width="20px"
-              height="20px"
-            >
+            <!-- Menu Icon -->
+            <component
+              :is="navigation.icon"
+              class="w-5 h-5 fill-white"
+            />
             {{ navigation.label }}
             <span
               v-show="navigation.arrow"
@@ -91,11 +90,7 @@
             class="w-full flex items-center gap-3 whitespace-nowrap"
             @click="navigate"
           >
-            <img
-              src="@/assets/icons/setting.svg"
-              width="20px"
-              height="20px"
-            >
+            <SettingIcon class="w-5 h-5 fill-white" />
             Pengaturan Akun
           </a>
         </li>
@@ -106,9 +101,21 @@
 
 <script>
 import { NAVIGATION_MENU } from '@/common/constants';
+import DashboardIcon from '@/assets/icons/dashboard.svg?inline';
+import ServiceIcon from '@/assets/icons/layanan.svg?inline';
+import AgendaIcon from '@/assets/icons/agenda.svg?inline';
+import NewsIcon from '@/assets/icons/berita.svg?inline';
+import SettingIcon from '@/assets/icons/setting.svg?inline';
 
 export default {
   name: 'Sidebar',
+  components: {
+    DashboardIcon,
+    ServiceIcon,
+    AgendaIcon,
+    NewsIcon,
+    SettingIcon,
+  },
   data() {
     return {
       navigationMenu: NAVIGATION_MENU,
