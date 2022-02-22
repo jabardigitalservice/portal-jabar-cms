@@ -19,15 +19,7 @@
           ref="agenda-preview-category"
           class="flex gap-2 mb-6"
         >
-          <div class="h-4 w-4">
-            <img
-              src="@/assets/icons/category-green.svg"
-              alt="kategori kegiatan"
-              width="16"
-              height="16"
-              class="min-h-full object-cover object-center"
-            >
-          </div>
+          <CategoryIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
             <h2 class="text-xs text-blue-gray-200">
               Kategori Event
@@ -66,15 +58,7 @@
           ref="agenda-preview-date"
           class="flex gap-2 mb-6"
         >
-          <div class="h-4 w-4">
-            <img
-              src="@/assets/icons/calendar-green.svg"
-              alt="tanggal kegiatan"
-              width="16"
-              height="16"
-              class="min-h-full object-cover object-center"
-            >
-          </div>
+          <CalendarIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
             <h2 class="text-xs text-blue-gray-200">
               Tanggal
@@ -108,15 +92,7 @@
           ref="agenda-preview-link"
           class="flex gap-2 col-span-2 mb-6"
         >
-          <div class="h-4 w-4">
-            <img
-              src="@/assets/icons/link-green.svg"
-              alt="link kegiatan"
-              width="16"
-              height="16"
-              class="min-h-full object-cover object-center"
-            >
-          </div>
+          <LinkIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
             <h2 class="text-xs text-blue-gray-200">
               Link Kegiatan
@@ -137,15 +113,7 @@
           ref="agenda-preview-address"
           class="flex gap-2 col-span-2 mb-6"
         >
-          <div class="h-4 w-4">
-            <img
-              src="@/assets/icons/marker-green.svg"
-              alt="tempat pelaksanaan"
-              width="16"
-              height="16"
-              class="min-h-full object-cover object-center"
-            >
-          </div>
+          <LocationIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
             <h2 class="text-xs text-blue-gray-200">
               Tempat Pelaksanaan
@@ -163,15 +131,7 @@
           ref="agenda-preview-tags"
           class="flex gap-2 col-span-2"
         >
-          <div class="h-4 w-4">
-            <img
-              src="@/assets/icons/tag-green.svg"
-              alt="tags kegiatan"
-              width="16"
-              height="16"
-              class="min-h-full object-cover object-center"
-            >
-          </div>
+          <TagIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
             <h2 class="text-xs text-blue-gray-200">
               Tags
@@ -194,11 +154,23 @@
 
 <script>
 import BaseModal from '@/common/components/BaseModal';
+import CategoryIcon from '@/assets/icons/category.svg?inline';
+import CalendarIcon from '@/assets/icons/calendar.svg?inline';
+import LinkIcon from '@/assets/icons/link.svg?inline';
+import LocationIcon from '@/assets/icons/marker.svg?inline';
+import TagIcon from '@/assets/icons/tag.svg?inline';
 import { formatDate } from '@/common/helpers/date';
 
 export default {
   name: 'AgendaPreview',
-  components: { BaseModal },
+  components: {
+    BaseModal,
+    CategoryIcon,
+    CalendarIcon,
+    LinkIcon,
+    LocationIcon,
+    TagIcon,
+  },
   props: {
     open: {
       type: Boolean,
