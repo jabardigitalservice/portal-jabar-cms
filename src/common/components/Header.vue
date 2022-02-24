@@ -35,14 +35,13 @@
         <JdsPopover :value="isUserDropdownOpen">
           <template #activator>
             <div class="grid grid-cols-[34px,_minmax(0,_1fr)] gap-4 items-center">
-              <!-- TODO: Replace dummy image with user avatar -->
               <img
                 ref="header-user-avatar"
-                src="https://picsum.photos/200/300"
+                :src="userAvatar"
                 alt="user avatar"
                 width="34"
                 height="34"
-                class="w-[34px] h-[34px] max-w-full object-cover object-center rounded-full border-2 border-green-700 bg-gray-800"
+                class="w-[34px] h-[34px] max-w-full object-cover object-center rounded-full border-2 border-green-700 bg-gray-500"
               >
               <button
                 ref="header-user-dropdown-button"
@@ -139,6 +138,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 import SettingIcon from '@/assets/icons/setting-outline.svg?inline';
@@ -160,8 +160,12 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['user']),
     pageName() {
       return this.$route.name;
+    },
+    userAvatar() {
+      return this.user?.photo || null;
     },
   },
   methods: {
