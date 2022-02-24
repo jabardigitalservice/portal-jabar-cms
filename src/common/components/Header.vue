@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 import SettingIcon from '@/assets/icons/setting-outline.svg?inline';
@@ -160,7 +160,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('auth', ['user']),
+    ...mapGetters('auth', ['user']),
     pageName() {
       return this.$route.name;
     },
