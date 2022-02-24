@@ -1,12 +1,21 @@
-import { mount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
+import VueRouter from 'vue-router';
+import PortalVue from 'portal-vue';
 import LoginForm from '@/components/Login/LoginForm';
 
 describe('Login Form', () => {
+  const localVue = createLocalVue();
+  localVue.use(VueRouter);
+  localVue.use(PortalVue);
+  const router = new VueRouter();
+
   let wrapper;
 
   beforeEach(() => {
     wrapper = mount(LoginForm, {
-      stubs: ['router-link', 'JdsIcon'],
+      localVue,
+      router,
+      stubs: ['JdsIcon'],
     });
   });
 
@@ -36,5 +45,15 @@ describe('Login Form', () => {
     const button = wrapper.findComponent({ ref: 'login-button' });
 
     expect(button.exists()).toBe(true);
+  });
+
+  test('should render forgot password modal when `lupa kata sandi` button clicked', async () => {
+    const button = wrapper.findComponent({ ref: 'forgot-password-link' });
+
+    await button.trigger('click');
+
+    const modal = wrapper.findComponent({ ref: 'forgot-password-modal' });
+
+    expect(modal.exists()).toBe(true);
   });
 });
