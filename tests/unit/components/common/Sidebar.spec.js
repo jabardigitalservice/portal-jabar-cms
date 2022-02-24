@@ -1,13 +1,20 @@
-import { mount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
+import VueRouter from 'vue-router';
 import { NAVIGATION_MENU } from '@/common/constants';
 import Sidebar from '@/common/components/Sidebar';
 
 describe('Component: Sidebar', () => {
+  const localVue = createLocalVue();
+  localVue.use(VueRouter);
+  const router = new VueRouter();
+
   let wrapper;
 
   beforeEach(() => {
     wrapper = mount(Sidebar, {
-      stubs: ['router-link', 'JdsIcon'],
+      localVue,
+      router,
+      stubs: ['JdsIcon'],
     });
   });
 
