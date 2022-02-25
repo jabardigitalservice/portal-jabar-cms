@@ -1,5 +1,6 @@
 <template>
   <router-link
+    ref="link-button"
     v-bind="$attrs"
     :to="href"
     :target="newTab ? '_blank' : null"
