@@ -1,12 +1,21 @@
-import { mount } from '@vue/test-utils';
-import Login from '@/components/Login';
+import { mount, createLocalVue } from '@vue/test-utils';
+import VueRouter from 'vue-router';
+import PortalVue from 'portal-vue';
+import Login from '@/pages/Login';
 
 describe('Login', () => {
+  const localVue = createLocalVue();
+  localVue.use(VueRouter);
+  localVue.use(PortalVue);
+  const router = new VueRouter();
+
   let wrapper;
 
   beforeEach(() => {
     wrapper = mount(Login, {
-      stubs: ['router-link', 'JdsIcon'],
+      localVue,
+      router,
+      stubs: ['JdsIcon'],
     });
   });
 

@@ -1,20 +1,20 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
-
-// import JdsPopover from '@jabardigitalservice/jds-design-system';
+import PortalVue from 'portal-vue';
 import Header from '@/common/components/Header';
-import HomePage from '@/pages/HomePage.vue';
+import Home from '@/pages/Home.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Dashboard',
-    component: HomePage,
+    component: Home,
   },
 ];
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
+localVue.use(PortalVue);
 
 const router = new VueRouter({
   routes,
@@ -25,7 +25,7 @@ describe('Component: Header', () => {
 
   beforeEach(() => {
     wrapper = mount(Header, {
-      stubs: ['router-link', 'JdsIcon', 'JdsBadge', 'JdsPopover', 'portal'],
+      stubs: ['JdsIcon', 'JdsBadge', 'JdsPopover'],
       localVue,
       router,
     });
@@ -53,5 +53,16 @@ describe('Component: Header', () => {
   test('should render user menu', () => {
     const userMenu = wrapper.findComponent({ ref: 'header-user' });
     expect(userMenu.exists()).toBe(true);
+  });
+
+  test('should show modal when logout button clicked', async () => {
+    const dropdownMenu = wrapper.findComponent({ ref: 'header-user-dropdown-menu' });
+    const logoutButton = dropdownMenu.findComponent('button');
+
+    await logoutButton.trigger('click');
+
+    const modal = wrapper.findComponent({ ref: 'header-logout-modal' });
+
+    expect(modal.exists()).toBe(true);
   });
 });

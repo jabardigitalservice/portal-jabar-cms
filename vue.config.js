@@ -6,6 +6,7 @@
  */
 
 module.exports = {
+  lintOnSave: false,
   chainWebpack: (config) => {
     const svgRule = config.module.rule('svg');
 
@@ -14,9 +15,6 @@ module.exports = {
     svgRule
       .oneOf('inline')
       .resourceQuery(/inline/)
-      .use('babel-loader')
-      .loader('babel-loader')
-      .end()
       .use('vue-svg-loader')
       .loader('vue-svg-loader')
       .end()

@@ -106,6 +106,7 @@
     </div>
     <!-- Logout Modal -->
     <BaseModal
+      ref="header-logout-modal"
       :open="isLogoutModalOpen"
       @close="toggleLogoutModal"
     >

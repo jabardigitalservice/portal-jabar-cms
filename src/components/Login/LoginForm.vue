@@ -115,6 +115,7 @@
       </button>
     </form>
     <ForgotPassword
+      ref="forgot-password-modal"
       :open="isForgotPasswordModalOpen"
       @close="toggleForgotPasswordModal"
     />
