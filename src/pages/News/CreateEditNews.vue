@@ -189,7 +189,7 @@
             </h2>
             <div class="flex flex-col gap-4">
               <JdsSelect
-                v-model="duration"
+                v-model="form.duration"
                 label="Durasi Penayangan"
                 placeholder="Pilih durasi"
                 :options="newsDuration"
@@ -436,6 +436,7 @@ export default {
         title: '',
         image: '',
         content: '',
+        duration: '',
         startDate: null,
         endDate: null,
         category: '',
@@ -445,7 +446,6 @@ export default {
       newsId: null,
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
-      duration: '',
       showDateInput: false,
       locationOptions: [],
       tag: '',
@@ -496,8 +496,11 @@ export default {
     hasTags() {
       return Array.isArray(this.form.tags) && !!this.form.tags.length;
     },
+    infiniteDuration() {
+      return this.form.duration === -1;
+    },
     hasDuration() {
-      return this.duration !== '';
+      return this.form.duration !== '';
     },
     isDateHasPassed() {
       return this.showDateInput && daysDifference(this.selectedDate, new Date()) < 0;
@@ -545,17 +548,17 @@ export default {
       return this.isSuccess ? 'text-green-600' : 'text-red-600';
     },
     requiredFields() {
-      const { form: { image, category, areaId } } = this;
+      const { image, duration, category, areaId } = this.form;
       const title = this.form.title.trim();
       const content = this.sanitizeHTML(this.form.content).slice(0, 160).trim();
 
-      return [title, image, content, category, areaId];
+      return [title, image, duration, content, category, areaId];
     },
     hasTitle() {
       return this.form.title !== '';
     },
     isFormValid() {
-      return this.hasDuration && this.requiredFields.every((field) => !this.isEmpty(field));
+      return this.requiredFields.every((field) => !this.isEmpty(field));
     },
     author() {
       const { name, unit } = this.$store.getters['auth/user'];
@@ -580,7 +583,7 @@ export default {
       },
       deep: true,
     },
-    duration() {
+    'form.duration': function () {
       if (!this.form.startDate) {
         this.setStartDate();
       }
@@ -667,7 +670,11 @@ export default {
     },
     setEndDate() {
       const startDate = new Date(this.selectedDate);
-      const endDate = this.duration ? startDate.setDate(startDate.getDate() + this.duration) : null;
+      let endDate = null;
+
+      if (this.hasDuration && !this.infiniteDuration) {
+        endDate = startDate.setDate(startDate.getDate() + this.form.duration);
+      }
 
       this.form.endDate = endDate;
     },
@@ -905,7 +912,7 @@ export default {
       this.loading = true;
       this.progress = 20;
 
-      const { title, content, category, tags, endDate, areaId } = this.form;
+      const { title, content, duration, category, tags, endDate, areaId } = this.form;
       let { image } = this.form;
 
       // upload the image first before submitting the form
@@ -926,6 +933,7 @@ export default {
         excerpt: this.sanitizeHTML(content).slice(0, 160),
         image,
         content: this.isEditMode ? content : this.insertNewsPrefix(content),
+        duration,
         start_date: this.selectedDate ? formatDate(this.selectedDate, 'yyyy-MM-dd') : null,
         end_date: endDate ? formatDate(endDate, 'yyyy-MM-dd') : null,
         category,
