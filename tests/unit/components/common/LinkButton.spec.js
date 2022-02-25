@@ -55,7 +55,7 @@ describe('Component: LinkButton', () => {
   });
 
   test('should open link in new tab', async () => {
-    // mutate `newData` props to `true`
+    // mutate `newTab` props to `true`
     await wrapper.setData({ newTab: true });
 
     const button = wrapper.findComponent({ ref: 'link-button' });
