@@ -4,12 +4,17 @@ import BaseButton from '@/common/components/BaseButton';
 describe('Component: BaseButton', () => {
   let wrapper;
 
+  const onClick = jest.fn();
+
   beforeEach(() => {
     wrapper = mount(BaseButton, {
       slots: {
         default: 'My Button',
         'icon-left': '<i>icon-left</i>',
         'icon-right': '<i>icon-right</i>',
+      },
+      listeners: {
+        click: onClick,
       },
     });
   });
@@ -34,5 +39,13 @@ describe('Component: BaseButton', () => {
     const button = wrapper.findComponent({ ref: 'base-button' });
 
     expect(button.html()).toContain('<i>icon-right</i>');
+  });
+
+  test('should raise click event when clicked', async () => {
+    const button = wrapper.findComponent({ ref: 'base-button' });
+
+    await button.trigger('click');
+
+    expect(onClick).toHaveBeenCalled();
   });
 });
