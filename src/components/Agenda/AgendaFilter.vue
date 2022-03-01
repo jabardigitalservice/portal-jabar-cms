@@ -388,7 +388,14 @@ export default {
 </script>
 
 <style>
-/*
+/**
+ * Override default Jds-Popover styling
+ */
+.agenda-filter .jds-popover__content {
+  z-index: 20 !important;
+}
+
+/**
  * Override default Jds-Checkbox styling
  */
 .agenda-filter .jds-checkbox__option-label {
@@ -397,6 +404,9 @@ export default {
   color: #424242 !important;
 }
 
+/**
+ * Override default Jds-DateInput styling
+ */
 .agenda-filter .date-input .jds-popover {
   visibility: unset !important;
 }
