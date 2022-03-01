@@ -161,7 +161,7 @@
 import FilterIcon from '@/assets/icons/filter.svg?inline';
 import BaseButton from '@/common/components/BaseButton';
 import { AGENDA_CATEGORIES, AGENDA_TYPES } from '@/common/constants';
-import { daysDifference } from '@/common/helpers/date';
+import { daysDifference, formatDate } from '@/common/helpers/date';
 
 export default {
   name: 'AgendaFilter',
@@ -314,7 +314,16 @@ export default {
     },
 
     submitFilter() {
-      this.$emit('change:filter', this.filter);
+      const { start_date: startDate, end_date: endDate } = this.filter;
+
+      const filterObj = { ...this.filter };
+
+      if (startDate && endDate) {
+        filterObj.start_date = formatDate(this.convertStringToDate(startDate), 'yyyy/MM/dd');
+        filterObj.end_date = formatDate(this.convertStringToDate(endDate), 'yyyy/MM/dd');
+      }
+
+      this.$emit('change:filter', filterObj);
       this.updateFilterCount();
       this.toggleFilterDropdown();
     },
