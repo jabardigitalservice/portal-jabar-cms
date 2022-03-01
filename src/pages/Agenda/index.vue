@@ -16,6 +16,7 @@
         <div class="flex mb-4">
           <!-- TODO: handle search events -->
           <SearchBar placeholder="Cari agenda" />
+          <AgendaFilter class="ml-6" />
           <LinkButton
             href="agenda/tambah"
             title="Tambah Agenda"
@@ -109,6 +110,7 @@
 <script>
 import AgendaTable from '@/components/Agenda/AgendaTable.vue';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
+import AgendaFilter from '@/components/Agenda/AgendaFilter.vue';
 import LinkButton from '@/common/components/LinkButton';
 import SearchBar from '@/common/components/SearchBar';
 import BaseModal from '@/common/components/BaseModal';
@@ -125,6 +127,7 @@ export default {
   components: {
     AgendaTable,
     AgendaPreview,
+    AgendaFilter,
     LinkButton,
     SearchBar,
     BaseButton,
