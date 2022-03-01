@@ -13,9 +13,17 @@
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white rounded-full"
           @click="toggleFilterDropdown"
         >
-          <p class="font-normal">
-            Belum ada filter
-          </p>
+          <div class="min-w-0 flex gap-2 items-center">
+            <p class="font-normal">
+              {{ filterButtonLabel }}
+            </p>
+            <div
+              v-show="filterCount"
+              class="w-5 h-5 rounded-full bg-red-500 text-white"
+            >
+              {{ filterCount }}
+            </div>
+          </div>
           <template #icon-right>
             <JdsIcon
               name="chevron-down"
@@ -137,7 +145,7 @@
           <BaseButton
             class="bg-green-700 hover:bg-green-600 w-full"
             :disabled="!isFilterValid"
-            @click="$emit('change:filter', filter)"
+            @click="submitFilter"
           >
             <p class="w-full text-sm font-normal text-white text-center">
               Terapkan
@@ -171,6 +179,7 @@ export default {
         start_date: null,
         end_date: null,
       },
+      filterCount: 0,
       categories: AGENDA_CATEGORIES,
       types: AGENDA_TYPES,
       popoverOptions: {
@@ -257,6 +266,9 @@ export default {
       return true;
     },
 
+    filterButtonLabel() {
+      return this.filterCount > 0 ? 'Diterapkan' : 'Belum ada filter';
+    },
   },
   methods: {
     isCategorySelected(category) {
@@ -301,6 +313,12 @@ export default {
       this.isFilterOpen = !this.isFilterOpen;
     },
 
+    submitFilter() {
+      this.$emit('change:filter', this.filter);
+      this.updateFilterCount();
+      this.toggleFilterDropdown();
+    },
+
     resetFilter() {
       this.filter = {
         cat: [],
@@ -308,6 +326,42 @@ export default {
         start_date: null,
         end_date: null,
       };
+      this.resetDatePicker();
+      this.filterCount = 0;
+      this.isDatePickerTouched = false;
+    },
+
+    /**
+     * NOTE:
+     * There is an issue with `JdsDateInput` component,
+     * the value displayed in the date picker is not reset back to default
+     * when we change the bound model to `null` or `undefined`.
+     *
+     * One solution we can do is to reset the values
+     * manually using the DOM element selector
+     */
+    resetDatePicker() {
+      const datePickers = document.querySelectorAll('.agenda-filter .jds-date-input #date');
+
+      datePickers.forEach((datePicker) => {
+        datePicker.value = null;
+      });
+    },
+
+    updateFilterCount() {
+      let count = 0;
+
+      Object.keys(this.filter).forEach((item) => {
+        if (Array.isArray(this.filter[item])) {
+          if (this.filter[item].length) {
+            count += 1;
+          }
+        } else if (this.filter[item]) {
+          count += 1;
+        }
+      });
+
+      this.filterCount = count;
     },
 
     convertStringToDate(string) {
