@@ -16,7 +16,10 @@
         <div class="flex mb-4">
           <!-- TODO: handle search events -->
           <SearchBar placeholder="Cari agenda" />
-          <AgendaFilter class="ml-6" />
+          <AgendaFilter
+            class="ml-6"
+            @change:filter="onChangeFilter($event)"
+          />
           <LinkButton
             href="agenda/tambah"
             title="Tambah Agenda"
@@ -242,6 +245,21 @@ export default {
      * @property {string} per_page
      */
     onUpdatePagination(data) {
+      this.setParams(data);
+      this.fetchEvents();
+    },
+
+    /**
+     * Set new params when filter changes
+     * and fetch events again
+     *
+     * @param {object} data - object cotaining new param based on emit values
+     * @property {string} start_date
+     * @property {string} end_date
+     * @property {Array} cat
+     * @property {Array} type
+     */
+    onChangeFilter(data) {
       this.setParams(data);
       this.fetchEvents();
     },
