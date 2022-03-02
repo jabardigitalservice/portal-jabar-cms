@@ -72,4 +72,8 @@ export default {
   createNews(body) {
     return Repository.post(`${resource}`, body);
   },
+
+  deleteNews(id = null) {
+    return Repository.delete(`${resource}/${id}`);
+  },
 };
