@@ -382,13 +382,6 @@ export default {
 
 <style>
 /**
- * Override default Jds-Popover styling
- */
-.agenda-filter .jds-popover__content {
-  z-index: 20 !important;
-}
-
-/**
  * Override default Jds-Checkbox styling
  */
 .agenda-filter .jds-checkbox__option-label {
