@@ -185,16 +185,6 @@ export default {
       filterCount: 0,
       categories: AGENDA_CATEGORIES,
       types: AGENDA_TYPES,
-      popoverOptions: {
-        strategy: 'fixed',
-        placement: 'bottom-start',
-        modifiers: [
-          {
-            name: 'offset',
-            options: { offset: [-8, 8] },
-          },
-        ],
-      },
     };
   },
   computed: {
