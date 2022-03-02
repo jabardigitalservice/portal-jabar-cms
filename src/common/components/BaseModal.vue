@@ -24,7 +24,7 @@
         </div>
         <div
           ref="modal-footer"
-          class="w-full h-full p-4 bg-white"
+          class="w-full h-full p-4 bg-gray-50"
         >
           <slot name="footer">
             <div class="w-full h-full flex items-center justify-center">
