@@ -14,11 +14,17 @@
       <section
         ref="modal-container"
         class="animate-slide-up relative min-w-[510px] max-w-screen-lg min-h-[200px] max-h-[90%]
-        grid grid-rows-[minmax(0,_1fr)_70px] rounded-lg overflow-hidden"
+        grid grid-rows-[auto_minmax(0,_1fr)_70px] rounded-lg overflow-hidden"
       >
         <div
+          ref="modal-header"
+          class="w-full bg-white"
+        >
+          <slot name="header" />
+        </div>
+        <div
           ref="modal-body"
-          class="w-full h-full overflow-y-auto bg-white p-4 pb-0"
+          class="w-full h-full overflow-y-auto bg-white p-4"
         >
           <slot />
         </div>
