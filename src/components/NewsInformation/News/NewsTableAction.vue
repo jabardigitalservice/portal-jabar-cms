@@ -34,7 +34,7 @@
             Pratinjau
           </a>
         </li>
-        <!-- TODO: Add action on publish clicked -->
+        <!-- Publish Action-->
         <li v-if="shouldShowAction('publish')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
@@ -43,7 +43,7 @@
             Terbitkan
           </button>
         </li>
-        <!-- TODO: Add action on edit clicked -->
+        <!-- Edit Action -->
         <li v-if="shouldShowAction('edit')">
           <router-link
             to="#"
@@ -52,7 +52,7 @@
             Ubah
           </router-link>
         </li>
-        <!-- TODO: Add action on archive clicked -->
+        <!-- Archive Action -->
         <li v-if="shouldShowAction('archive')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
@@ -61,7 +61,7 @@
             Arsipkan
           </button>
         </li>
-        <!-- TODO: Add action on delete clicked -->
+        <!-- Delete Action -->
         <li v-if="shouldShowAction('delete')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
