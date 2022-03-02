@@ -31,9 +31,9 @@
 
     <!-- Filter Modal -->
     <BaseModal :open="isFilterOpen">
-      <section class="agenda-filter min-w-[400px]">
+      <template #header>
         <!-- Title and Reset Button -->
-        <div class="min-w-0 w-full flex items-center justify-between mb-5">
+        <div class="min-w-0 w-full p-4 pb-0 flex items-center justify-between">
           <h2 class="font-roboto font-bold text-blue-gray-800">
             Filter Agenda
           </h2>
@@ -46,8 +46,10 @@
             </p>
           </BaseButton>
         </div>
+      </template>
+      <section class="agenda-filter min-w-[400px]">
         <!-- Category Select Box -->
-        <div class="w-full mb-5">
+        <div class="w-full mb-6">
           <div class="min-w-0 w-full flex gap-3 items-center mb-4">
             <p class="font-lato text-sm text-blue-gray-700 leading-none whitespace-nowrap">
               Kategori Agenda
@@ -73,10 +75,10 @@
           </div>
         </div>
         <!-- Start and End Date Picker -->
-        <div class="w-full mb-5">
+        <div class="w-full mb-6">
           <div class="min-w-0 w-full flex gap-3 items-center mb-4">
             <p class="font-lato text-sm text-blue-gray-700 leading-none whitespace-nowrap">
-              Tanggal dan Waktu
+              Tanggal
             </p>
             <div class="w-full border border-gray-100" />
           </div>
@@ -104,7 +106,7 @@
           </div>
         </div>
         <!-- Agenda Type -->
-        <div class="w-full mb-[125px]">
+        <div class="w-full mb-[120px]">
           <div class="min-w-0 w-full flex gap-3 items-center mb-4">
             <p class="font-lato text-sm text-blue-gray-700 leading-none whitespace-nowrap">
               Tipe Agenda
