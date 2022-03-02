@@ -104,7 +104,7 @@ export default {
         PUBLISHED: ['preview', 'archive'],
         DRAFT: ['preview', 'edit', 'delete'],
         REVIEW: ['preview', 'publish', 'edit'],
-        ARCHIVED: ['preview', 'delete'],
+        ARCHIVED: ['preview'],
       }),
     };
   },
