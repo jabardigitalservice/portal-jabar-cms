@@ -4,37 +4,34 @@
     <p class="font-lato text-sm">
       Filter :
     </p>
-    <JdsPopover
-      :value="isFilterOpen"
-      :options="popoverOptions"
+    <BaseButton
+      class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white rounded-full"
+      @click="toggleFilterDropdown"
     >
-      <template #activator>
-        <BaseButton
-          class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white rounded-full"
-          @click="toggleFilterDropdown"
+      <div class="min-w-0 flex gap-2 items-center">
+        <p class="font-normal">
+          {{ filterButtonLabel }}
+        </p>
+        <div
+          v-show="filterCount"
+          class="w-5 h-5 rounded-full bg-red-500 text-white"
         >
-          <div class="min-w-0 flex gap-2 items-center">
-            <p class="font-normal">
-              {{ filterButtonLabel }}
-            </p>
-            <div
-              v-show="filterCount"
-              class="w-5 h-5 rounded-full bg-red-500 text-white"
-            >
-              {{ filterCount }}
-            </div>
-          </div>
-          <template #icon-right>
-            <JdsIcon
-              name="chevron-down"
-              size="16px"
-              fill="#fff"
-              class="h-4 w-4"
-            />
-          </template>
-        </BaseButton>
+          {{ filterCount }}
+        </div>
+      </div>
+      <template #icon-right>
+        <JdsIcon
+          name="chevron-down"
+          size="16px"
+          fill="#fff"
+          class="h-4 w-4"
+        />
       </template>
-      <section class="min-w-[400px] px-4 py-5 rounded-lg bg-white shadow-xl border border-gray-100 overflow-clip">
+    </BaseButton>
+
+    <!-- Filter Modal -->
+    <BaseModal :open="isFilterOpen">
+      <section class="agenda-filter min-w-[400px]">
         <!-- Title and Reset Button -->
         <div class="min-w-0 w-full flex items-center justify-between mb-5">
           <h2 class="font-roboto font-bold text-blue-gray-800">
@@ -76,7 +73,7 @@
           </div>
         </div>
         <!-- Start and End Date Picker -->
-        <div class="relative z-10 w-full mb-5">
+        <div class="w-full mb-5">
           <div class="min-w-0 w-full flex gap-3 items-center mb-4">
             <p class="font-lato text-sm text-blue-gray-700 leading-none whitespace-nowrap">
               Tanggal dan Waktu
@@ -107,7 +104,7 @@
           </div>
         </div>
         <!-- Agenda Type -->
-        <div class="w-full mb-5">
+        <div class="w-full mb-[125px]">
           <div class="min-w-0 w-full flex gap-3 items-center mb-4">
             <p class="font-lato text-sm text-blue-gray-700 leading-none whitespace-nowrap">
               Tipe Agenda
@@ -132,8 +129,10 @@
             </div>
           </div>
         </div>
+      </section>
+      <template #footer>
         <!-- Cancel and Submit buttons -->
-        <div class="relative -m-5 mt-5 min-w-full flex gap-4 bg-gray-50 p-4">
+        <div class="w-full flex gap-3">
           <BaseButton
             class="border-green-700 hover:bg-green-50 bg-white w-full"
             @click="toggleFilterDropdown"
@@ -152,14 +151,15 @@
             </p>
           </BaseButton>
         </div>
-      </section>
-    </JdsPopover>
+      </template>
+    </BaseModal>
   </section>
 </template>
 
 <script>
 import FilterIcon from '@/assets/icons/filter.svg?inline';
 import BaseButton from '@/common/components/BaseButton';
+import BaseModal from '@/common/components/BaseModal';
 import { AGENDA_CATEGORIES, AGENDA_TYPES } from '@/common/constants';
 import { daysDifference, formatDate } from '@/common/helpers/date';
 
@@ -168,6 +168,7 @@ export default {
   components: {
     FilterIcon,
     BaseButton,
+    BaseModal,
   },
   data() {
     return {
