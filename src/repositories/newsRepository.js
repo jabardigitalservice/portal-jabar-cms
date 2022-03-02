@@ -73,6 +73,12 @@ export default {
     return Repository.post(`${resource}`, body);
   },
 
+  /**
+   * Delete event by id
+   * @param {string, number} id
+   *
+   * @returns {Promise}
+   */
   deleteNews(id = null) {
     return Repository.delete(`${resource}/${id}`);
   },
