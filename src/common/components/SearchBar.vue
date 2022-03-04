@@ -58,7 +58,9 @@ export default {
   watch: {
     // Debounce event emit to prevent unnecessary data fetching
     value: debounce(function () {
-      this.$emit('input', this.value);
+      if (this.value.length >= 3) {
+        this.$emit('input', this.value);
+      }
     }, 750),
   },
   methods: {
