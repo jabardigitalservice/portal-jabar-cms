@@ -11,7 +11,7 @@
     <form @submit.prevent="onSubmit">
       <input
         ref="search-bar-input"
-        v-model="value"
+        v-model.trim="value"
         type="text"
         placeholder="Cari agenda"
         class="w-[150px] h-full font-lato text-sm text-blue-gray-800
@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import debounce from 'lodash.debounce';
+
 export default {
   name: 'SearchBar',
   props: {
@@ -53,6 +55,12 @@ export default {
       return this.value !== '';
     },
   },
+  watch: {
+    // Debounce event emit to prevent unnecessary data fetching
+    value: debounce(function () {
+      this.$emit('input', this.value);
+    }, 500),
+  },
   methods: {
     clearValue() {
       this.value = '';
@@ -61,6 +69,5 @@ export default {
       this.$emit('submit', this.value);
     },
   },
-
 };
 </script>
