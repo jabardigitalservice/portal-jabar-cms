@@ -27,6 +27,10 @@
             </p>
           </LinkButton>
         </div>
+        <div class="min-w-0 w-full flex mb-5 items-center">
+          <SearchBar placeholder="Cari berita" />
+          <NewsCategoryFilter class="ml-6" />
+        </div>
         <NewsTable
           :items="items"
           :loading="loading"
@@ -93,9 +97,11 @@
 import NewsTabBar from '@/components/NewsInformation/News/NewsTabBar';
 import NewsTable from '@/components/NewsInformation/News/NewsTable';
 import NewsMonthFilter from '@/components/NewsInformation/News/NewsMonthFilter';
+import NewsCategoryFilter from '@/components/NewsInformation/News/NewsCategoryFilter';
 import LinkButton from '@/common/components/LinkButton';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import SearchBar from '@/common/components/SearchBar';
 import { formatDate } from '@/common/helpers/date';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
@@ -107,9 +113,11 @@ export default {
     NewsTabBar,
     NewsTable,
     NewsMonthFilter,
+    NewsCategoryFilter,
     LinkButton,
     BaseButton,
     BaseModal,
+    SearchBar,
   },
   data() {
     return {
