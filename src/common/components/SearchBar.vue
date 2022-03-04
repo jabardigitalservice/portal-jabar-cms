@@ -48,6 +48,7 @@ export default {
   data() {
     return {
       value: '',
+      isSearchActive: false,
     };
   },
   computed: {
@@ -56,12 +57,22 @@ export default {
     },
   },
   watch: {
-    // Debounce event emit to prevent unnecessary data fetching
-    value: debounce(function () {
-      if (this.value.length >= 3 || this.value === '') {
-        this.$emit('input', this.value);
-      }
-    }, 750),
+    value: {
+      handler() {
+        if (!this.isSearchActive && this.value.length >= 3) {
+          this.isSearchActive = true;
+        }
+
+        if (this.isSearchActive && this.value.length >= 3) {
+          this.onInputChange(this.value);
+        }
+
+        if (this.isSearchActive && this.value === '') {
+          this.onInputChange('');
+          this.isSearchActive = false;
+        }
+      },
+    },
   },
   methods: {
     clearValue() {
@@ -70,6 +81,10 @@ export default {
     onSubmit() {
       this.$emit('submit', this.value);
     },
+    // Debounce event emit to prevent unnecessary data fetching
+    onInputChange: debounce(function (value) {
+      this.$emit('input', value);
+    }, 750),
   },
 };
 </script>
