@@ -606,12 +606,26 @@ export default {
       this.setMessageModalVisibility(this.isError);
     },
   },
-  created() {
+  async created() {
     this.getLocationOptions();
     this.$store.dispatch('news/clearNewsPreview');
 
     if (this.isEditMode) {
-      // TODO: get news data from api
+      const { id } = this.$route.params;
+      const response = await newsRepository.getNewsById(id);
+      const { data } = response.data;
+
+      this.form = {
+        title: data.title,
+        image: data.image,
+        content: data.content,
+        duration: data.duration,
+        startDate: formatDate(data.start_date, 'dd/MM/yyyy'),
+        endDate: formatDate(data.end_date, 'dd/MM/yyyy'),
+        category: data.category,
+        tags: data.tags,
+        areaId: data.area.id,
+      };
     } else {
       // This is just a temporary id only for visiting the preview page
       // because the preview page needs an id
