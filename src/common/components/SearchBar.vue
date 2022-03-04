@@ -59,7 +59,7 @@ export default {
     // Debounce event emit to prevent unnecessary data fetching
     value: debounce(function () {
       this.$emit('input', this.value);
-    }, 500),
+    }, 750),
   },
   methods: {
     clearValue() {
