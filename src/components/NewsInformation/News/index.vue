@@ -34,6 +34,7 @@
           @update:pagination="onUpdatePagination($event)"
           @publish="setupPromptDetail('publish', $event)"
           @archive="setupPromptDetail('archive', $event)"
+          @delete="setupPromptDetail('delete', $event)"
         />
       </section>
     </section>
@@ -263,6 +264,21 @@ export default {
       }
     },
 
+    async deleteNews(id) {
+      try {
+        this.promptDetail.loading = true;
+
+        await newsRepository.deleteNews(id);
+
+        this.$toast({ type: 'success', message: 'Berita telah berhasil dihapus' });
+      } catch (error) {
+        this.$toast({ type: 'error', message: 'Mohon maaf, gagal menghapus berita!' });
+      } finally {
+        this.closeActionPrompt();
+        this.fetchNews();
+      }
+    },
+
     filterNewsByStatus(status) {
       if (status === 'ALL') {
         this.setParams({ status: null });
@@ -346,6 +362,19 @@ export default {
           subtitle: 'Apakah Anda yakin akan mengarsipkan berita ini?',
           buttonLabel: 'Ya, arsipkan berita',
           buttonClick: () => this.archiveNews(news.id),
+          newsTitle: news.title,
+          newsId: news.id,
+          loading: false,
+        };
+      }
+
+      if (action === 'delete') {
+        this.promptDetail = {
+          action: 'delete',
+          title: 'Hapus Berita',
+          subtitle: 'Apakah Anda yakin akan menghapus berita ini?',
+          buttonLabel: 'Ya, saya yakin',
+          buttonClick: () => this.deleteNews(news.id),
           newsTitle: news.title,
           newsId: news.id,
           loading: false,

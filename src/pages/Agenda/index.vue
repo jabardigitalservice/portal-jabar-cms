@@ -14,8 +14,14 @@
       <div class="w-full">
         <!-- Table Menu -->
         <div class="flex mb-4">
-          <!-- TODO: handle search events -->
-          <SearchBar placeholder="Cari agenda" />
+          <SearchBar
+            placeholder="Cari agenda"
+            @input="onSearch($event)"
+          />
+          <AgendaFilter
+            class="ml-6"
+            @change:filter="onChangeFilter($event)"
+          />
           <LinkButton
             href="agenda/tambah"
             title="Tambah Agenda"
@@ -109,6 +115,7 @@
 <script>
 import AgendaTable from '@/components/Agenda/AgendaTable.vue';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
+import AgendaFilter from '@/components/Agenda/AgendaFilter.vue';
 import LinkButton from '@/common/components/LinkButton';
 import SearchBar from '@/common/components/SearchBar';
 import BaseModal from '@/common/components/BaseModal';
@@ -125,6 +132,7 @@ export default {
   components: {
     AgendaTable,
     AgendaPreview,
+    AgendaFilter,
     LinkButton,
     SearchBar,
     BaseButton,
@@ -146,6 +154,7 @@ export default {
         page: 1,
         sort_by: null,
         sort_order: null,
+        q: null,
       },
       isPreviewModalOpen: false,
       isDeletePromptOpen: false,
@@ -231,6 +240,17 @@ export default {
     },
 
     /**
+     * Set new params when search input changes
+     * and fetch events again
+     *
+     * @param {string} query - search query
+     */
+    onSearch(query) {
+      this.setParams({ q: query });
+      this.fetchEvents();
+    },
+
+    /**
      * Set new params when pagination changes
      * and fetch events again
      *
@@ -239,6 +259,21 @@ export default {
      * @property {string} per_page
      */
     onUpdatePagination(data) {
+      this.setParams(data);
+      this.fetchEvents();
+    },
+
+    /**
+     * Set new params when filter changes
+     * and fetch events again
+     *
+     * @param {object} data - object cotaining new param based on emit values
+     * @property {string} start_date
+     * @property {string} end_date
+     * @property {Array} cat
+     * @property {Array} type
+     */
+    onChangeFilter(data) {
       this.setParams(data);
       this.fetchEvents();
     },

@@ -34,7 +34,7 @@
             Pratinjau
           </a>
         </li>
-        <!-- TODO: Add action on publish clicked -->
+        <!-- Publish Action-->
         <li v-if="shouldShowAction('publish')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
@@ -43,6 +43,7 @@
             Terbitkan
           </button>
         </li>
+        <!-- Edit Action -->
         <li v-if="shouldShowAction('edit')">
           <router-link
             :to="`berita-dan-informasi/${item.id}/ubah`"
@@ -51,7 +52,7 @@
             Ubah
           </router-link>
         </li>
-        <!-- TODO: Add action on archive clicked -->
+        <!-- Archive Action -->
         <li v-if="shouldShowAction('archive')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
@@ -60,7 +61,7 @@
             Arsipkan
           </button>
         </li>
-        <!-- TODO: Add action on delete clicked -->
+        <!-- Delete Action -->
         <li v-if="shouldShowAction('delete')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
@@ -103,7 +104,7 @@ export default {
         PUBLISHED: ['preview', 'archive'],
         DRAFT: ['preview', 'edit', 'delete'],
         REVIEW: ['preview', 'publish', 'edit'],
-        ARCHIVED: ['preview', 'delete'],
+        ARCHIVED: ['preview'],
       }),
     };
   },

@@ -78,6 +78,17 @@ export const AGENDA_CATEGORIES = [
   },
 ];
 
+export const AGENDA_TYPES = [
+  {
+    label: 'Agenda Offline',
+    value: 'offline',
+  },
+  {
+    label: 'Agenda Online',
+    value: 'online',
+  },
+];
+
 export const AGENDA_STATUS_MAP = {
   publish: 'Telah Dipublish',
   unpublish: 'Belum Dipublish',
