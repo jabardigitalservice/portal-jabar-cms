@@ -43,7 +43,6 @@
             Terbitkan
           </button>
         </li>
-        <!-- TODO: Add action on edit clicked -->
         <li v-if="shouldShowAction('edit')">
           <router-link
             :to="`berita-dan-informasi/${item.id}/ubah`"
