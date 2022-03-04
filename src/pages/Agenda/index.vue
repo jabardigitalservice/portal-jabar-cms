@@ -14,8 +14,10 @@
       <div class="w-full">
         <!-- Table Menu -->
         <div class="flex mb-4">
-          <!-- TODO: handle search events -->
-          <SearchBar placeholder="Cari agenda" />
+          <SearchBar
+            placeholder="Cari agenda"
+            @input="onSearch($event)"
+          />
           <AgendaFilter
             class="ml-6"
             @change:filter="onChangeFilter($event)"
@@ -152,6 +154,7 @@ export default {
         page: 1,
         sort_by: null,
         sort_order: null,
+        q: null,
       },
       isPreviewModalOpen: false,
       isDeletePromptOpen: false,
@@ -234,6 +237,17 @@ export default {
     setParams(data) {
       const newParams = { ...this.params, ...data };
       this.params = { ...newParams };
+    },
+
+    /**
+     * Set new params when search input changes
+     * and fetch events again
+     *
+     * @param {string} query - search query
+     */
+    onSearch(query) {
+      this.setParams({ q: query });
+      this.fetchEvents();
     },
 
     /**
