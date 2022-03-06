@@ -642,9 +642,10 @@ export default {
         areaId: data.area.id,
       };
 
+      this.newsId = data.id;
+      this.newsStatus = data.status;
       this.form = { ...formData };
       this.initialForm = Object.freeze({ ...formData });
-      this.newsStatus = data.status;
     } else {
       // This is just a temporary id only for visiting the preview page
       // because the preview page needs an id
@@ -990,9 +991,27 @@ export default {
       };
 
       if (this.isEditMode) {
-        // TODO: update the news
+        this.updateNews(this.newsId, data);
       } else {
         this.saveNews(data);
+      }
+    },
+    async updateNews(id, data) {
+      if (this.isError) return;
+      this.progress = 100;
+
+      try {
+        await newsRepository.updateNews(id, data);
+        const messageTitle = data.status === 'DRAFT' ? 'Simpan Berita Berhasil' : 'Ajukan Berita Berhasil';
+        const messageBody = data.status === 'DRAFT' ? 'Berita yang Anda buat berhasil disimpan.' : 'Berita yang Anda buat sedang menunggu untuk direview.';
+        this.setMessage('SUCCESS', messageTitle, messageBody);
+        this.isFormSubmitted = true;
+      } catch (error) {
+        const messageTitle = data.status === 'DRAFT' ? 'Simpan Berita Gagal' : 'Ajukan Berita Gagal';
+        const messageBody = data.status === 'DRAFT' ? 'Berita yang Anda buat gagal disimpan.' : 'Berita yang Anda buat gagal diajukan.';
+        this.setMessage('ERROR', messageTitle, messageBody);
+      } finally {
+        this.loading = false;
       }
     },
     async saveNews(data) {

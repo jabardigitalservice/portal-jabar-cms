@@ -73,6 +73,29 @@ export default {
     return Repository.post(`${resource}`, body);
   },
 
+  /** Update news
+   * @param {string, number} id
+   * @param {Object} body
+   *
+   * @property {string} title
+   * @property {string} excerpt
+   * @property {string} content
+   * @property {string} image
+   * @property {string} category
+   * @property {string} status
+   * @property {string} start_date
+   * @property {string} end_date
+   * @property {Array} tags
+   * @property {number} area_id
+   *
+   * @returns {Promise}
+   */
+  updateNews(id, body) {
+    console.log({ id });
+    console.log({ body });
+    return Repository.put(`${resource}/${id}`, body);
+  },
+
   /**
    * Delete event by id
    * @param {string, number} id
