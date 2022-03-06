@@ -425,7 +425,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     this.targetRoute = to;
 
-    if (!this.hasTitle || this.isFormSubmitted || this.isConfirmToLeave) {
+    if (!this.hasTitle || this.isFormSubmitted || this.isConfirmToLeave || this.isFormDataChanged) {
       next();
     } else {
       this.setConfirmationModalDetail('LEAVE');
