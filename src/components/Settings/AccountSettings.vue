@@ -137,6 +137,7 @@
           </BaseButton>
           <BaseButton
             class="bg-green-700 hover:bg-green-800 text-sm text-white"
+            :disabled="!isInputValid"
             @click="promptDetail.buttonClick"
           >
             Simpan Perubahan
@@ -191,6 +192,11 @@ export default {
       },
     };
   },
+  computed: {
+    isInputValid() {
+      return this.updatedUser[this.promptDetail.action] !== '';
+    },
+  },
   async created() {
     const response = await userRepository.getMe();
     const { data } = response.data;
@@ -215,6 +221,7 @@ export default {
     closePrompt() {
       this.isPromptOpen = false;
       this.resetPromptDetail();
+      this.clearUpdatedUser();
     },
     setPromptDetail(action) {
       if (action === this.actionType.name) {
@@ -245,15 +252,36 @@ export default {
         buttonClick: () => {},
       };
     },
+    clearUpdatedUser() {
+      this.updatedUser = {
+        name: '',
+        occupation: '',
+      };
+    },
     async updateUser() {
+      if (!this.isInputValid) return;
+
       const actionType = this.promptDetail.action;
       /**
        *  set object payload based on action
        */
       const payload = { [actionType]: this.updatedUser[actionType] };
-      const { data } = await userRepository.updateUser(payload);
 
-      this.user[actionType] = data[actionType];
+      try {
+        const { data } = await userRepository.updateUser(payload);
+
+        /**
+         *  generate certain user data from successful response
+         *  so that the field is immediately updated
+         */
+        this.user[actionType] = data[actionType];
+
+        this.$toast({ type: 'success', message: 'Data telah berhasil diubah' });
+        this.closePrompt();
+      } catch (error) {
+        this.$toast({ type: 'error', message: 'Data gagal diubah' });
+        this.closePrompt();
+      }
     },
   },
 };
