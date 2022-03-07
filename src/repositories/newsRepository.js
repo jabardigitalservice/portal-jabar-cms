@@ -91,8 +91,6 @@ export default {
    * @returns {Promise}
    */
   updateNews(id, body) {
-    console.log({ id });
-    console.log({ body });
     return Repository.put(`${resource}/${id}`, body);
   },
 
