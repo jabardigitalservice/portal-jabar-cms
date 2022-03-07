@@ -1,0 +1,260 @@
+<template>
+  <main>
+    <section class="px-6 py-4 bg-white rounded-lg">
+      <h2 class="text-xl text-green-700 font-medium">
+        Informasi Personal
+      </h2>
+      <div class="flex justify-between border-b border-gray-200 items-center py-4">
+        <div class="flex flex-col flex-grow gap-2">
+          <p class="text-blue-gray-300">
+            Nama
+          </p>
+          <p class="font-lato text-sm text-blue-gray-800">
+            {{ user.name || "-" }}
+          </p>
+        </div>
+        <BaseButton
+          class="text-green-700 border-none font-normal"
+          @click="setPromptDetail(actionType.name)"
+        >
+          <template #icon-left>
+            <JdsIcon
+              name="pencil"
+              size="xs"
+            />
+          </template>
+          Ubah Nama
+        </BaseButton>
+      </div>
+      <div class="flex justify-between border-b border-gray-200 items-center py-4">
+        <div class="flex flex-col flex-grow gap-2">
+          <p class="text-blue-gray-300">
+            Jabatan
+          </p>
+          <p class="font-lato text-sm text-blue-gray-800">
+            {{ user.occupation || "-" }}
+          </p>
+        </div>
+        <BaseButton
+          class="text-green-700 border-none font-normal"
+          @click="setPromptDetail(actionType.occupation)"
+        >
+          <template #icon-left>
+            <JdsIcon
+              name="pencil"
+              size="xs"
+            />
+          </template>
+          Ubah Jabatan
+        </BaseButton>
+      </div>
+      <div class="flex justify-between border-b border-gray-200 items-center py-4">
+        <div class="flex flex-col flex-grow gap-2">
+          <p class="text-blue-gray-300">
+            NIP
+          </p>
+          <p class="font-lato text-sm text-blue-gray-800">
+            {{ user.nip || "-" }}
+          </p>
+        </div>
+      </div>
+      <div class="flex justify-between border-b border-gray-200 items-center py-4">
+        <div class="flex flex-col flex-grow gap-2">
+          <p class="text-blue-gray-300">
+            Role
+          </p>
+          <p class="font-lato text-sm text-blue-gray-800">
+            {{ user.role.name || "-" }}
+          </p>
+        </div>
+      </div>
+      <div class="flex justify-between items-center py-4">
+        <div class="flex flex-col flex-grow gap-2">
+          <p class="text-blue-gray-300">
+            Email
+          </p>
+          <p class="font-lato text-sm text-blue-gray-800">
+            {{ user.email || "-" }}
+          </p>
+        </div>
+      </div>
+    </section>
+    <BaseModal
+      :open="isPromptOpen"
+      @close="closePrompt"
+    >
+      <div class="w-full h-full">
+        <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6 text-blue-gray-800">
+          {{ promptDetail.title }}
+        </h1>
+        <p class="font-lato text-sm text-blue-gray-800 mb-4">
+          {{ promptDetail.description }}
+        </p>
+        <div
+          v-if="promptDetail.action === actionType.name"
+          class="flex flex-col flex-grow gap-2"
+        >
+          <label
+            for="name"
+            class="text-blue-gray-800"
+          >
+            Nama Baru
+          </label>
+          <input
+            id="name"
+            v-model="updatedUser[actionType.name]"
+            type="text"
+            class="focus:outline-none border border-gray-400 p-2 rounded-md font-lato text-sm text-blue-gray-800"
+            placeholder="Masukkan nama baru"
+          >
+        </div>
+        <div
+          v-if="promptDetail.action === actionType.occupation"
+          class="flex flex-col flex-grow gap-2"
+        >
+          <label
+            for="occupation"
+            class="text-blue-gray-800"
+          >
+            Jabatan Baru
+          </label>
+          <input
+            id="occupation"
+            v-model="updatedUser[actionType.occupation]"
+            type="text"
+            class="focus:outline-none border border-gray-400 p-2 rounded-md font-lato text-sm text-blue-gray-800"
+            placeholder="Masukkan jabatan"
+          >
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex gap-4 justify-end">
+          <BaseButton
+            class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="closePrompt"
+          >
+            Batal
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-800 text-sm text-white"
+            @click="promptDetail.buttonClick"
+          >
+            Simpan Perubahan
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+  </main>
+</template>
+
+<script>
+import BaseButton from '@/common/components/BaseButton';
+import BaseModal from '@/common/components/BaseModal';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const userRepository = RepositoryFactory.get('user');
+
+export default {
+  name: 'AccountSettings',
+  components: {
+    BaseButton,
+    BaseModal,
+  },
+  data() {
+    return {
+      user: {
+        name: '',
+        username: '',
+        email: '',
+        nip: '',
+        occupation: '',
+        photo: '',
+        role: {
+          id: null,
+          name: '',
+        },
+      },
+      updatedUser: {
+        name: '',
+        occupation: '',
+      },
+      promptDetail: {
+        action: '',
+        title: '',
+        description: '',
+        buttonClick: () => {},
+      },
+      isPromptOpen: false,
+      actionType: {
+        name: 'name',
+        occupation: 'occupation',
+      },
+    };
+  },
+  async created() {
+    const response = await userRepository.getMe();
+    const { data } = response.data;
+
+    this.user = {
+      name: data.name,
+      username: data.username,
+      email: data.email,
+      nip: data.nip,
+      occupation: data.occupation,
+      photo: data.photo,
+      role: {
+        id: data.role.id,
+        name: data.role.name,
+      },
+    };
+  },
+  methods: {
+    openPrompt() {
+      this.isPromptOpen = true;
+    },
+    closePrompt() {
+      this.isPromptOpen = false;
+      this.resetPromptDetail();
+    },
+    setPromptDetail(action) {
+      if (action === this.actionType.name) {
+        this.promptDetail = {
+          action: this.actionType.name,
+          title: 'Ubah Nama',
+          description: 'Masukkan nama baru untuk akun Anda.',
+          buttonClick: () => this.updateUser(),
+        };
+      }
+
+      if (action === this.actionType.occupation) {
+        this.promptDetail = {
+          action: this.actionType.occupation,
+          title: 'Ubah Jabatan',
+          description: 'Masukkan jabatan baru untuk akun Anda.',
+          buttonClick: () => this.updateUser(),
+        };
+      }
+
+      this.openPrompt();
+    },
+    resetPromptDetail() {
+      this.promptDetail = {
+        action: '',
+        title: '',
+        description: '',
+        buttonClick: () => {},
+      };
+    },
+    async updateUser() {
+      const actionType = this.promptDetail.action;
+      /**
+       *  set object payload based on action
+       */
+      const payload = { [actionType]: this.updatedUser[actionType] };
+      const { data } = await userRepository.updateUser(payload);
+
+      this.user[actionType] = data[actionType];
+    },
+  },
+};
+</script>

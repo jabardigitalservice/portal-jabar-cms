@@ -1,0 +1,44 @@
+<template>
+  <div class="h-full">
+    <TabBar
+      :tabs="tabs"
+      :current-tab.sync="currentTab"
+    />
+    <component :is="tab" />
+  </div>
+</template>
+
+<script>
+import TabBar from '@/common/components/TabBar';
+
+export default {
+  name: 'Settings',
+  components: {
+    TabBar,
+    AccountSettings: () => import('@/components/Settings/AccountSettings'),
+    MemberSettings: () => import('@/components/Settings/MemberSettings'),
+  },
+  data() {
+    return {
+      tabs: [
+        { key: 'akun', label: 'Akun' },
+        { key: 'anggota', label: 'Anggota' },
+      ],
+      currentTab: 'akun',
+    };
+  },
+  computed: {
+    tab() {
+      switch (this.currentTab) {
+        case 'akun':
+          return 'AccountSettings';
+        case 'anggota':
+          return 'MemberSettings';
+        default:
+          return 'AccountSettings';
+      }
+    },
+  },
+
+};
+</script>
