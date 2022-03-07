@@ -1,9 +1,12 @@
 <template>
   <main class="pb-5">
     <HeaderMenu>
-      <template #info>
+      <template
+        v-if="isDraft"
+        #info
+      >
         <p class="ml-4 text-gray-600 text-sm">
-          Terakhir disimpan pada: 12/01/2022 - 15:00
+          Terakhir disimpan pada: {{ lastEdit }}
         </p>
       </template>
       <div class="flex gap-4">
@@ -21,6 +24,7 @@
           </p>
         </BaseButton>
         <BaseButton
+          v-if="isEditMode ? isDraft : true"
           type="button"
           :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
@@ -33,11 +37,11 @@
         </BaseButton>
         <BaseButton
           type="button"
-          :disabled="!hasTitle"
+          :disabled="isSaveButtonDisabled"
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
           @click="onSubmit('DRAFT')"
         >
-          <DraftIcon :class="[hasTitle ? 'fill-white' : 'fill-gray-700']" />
+          <DraftIcon :class="[!isSaveButtonDisabled ? 'fill-white' : 'fill-gray-700']" />
           <p>
             {{ saveButtonLabel }}
           </p>
@@ -392,6 +396,7 @@
 import Editor from '@tinymce/tinymce-vue';
 import Compressor from 'compressorjs';
 import debounce from 'lodash.debounce';
+import isequal from 'lodash.isequal';
 import { daysDifference, formatDate } from '@/common/helpers/date';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
@@ -423,7 +428,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     this.targetRoute = to;
 
-    if (!this.hasTitle || this.isFormSubmitted || this.isConfirmToLeave) {
+    if (!this.hasTitle || this.isFormSubmitted || this.isConfirmToLeave || this.isFormDataChanged) {
       next();
     } else {
       this.setConfirmationModalDetail('LEAVE');
@@ -443,6 +448,7 @@ export default {
         tags: [],
         areaId: null,
       },
+      initialForm: null,
       newsId: null,
       newsDuration: NEWS_DURATION,
       newsCategories: NEWS_CATEGORIES,
@@ -478,6 +484,9 @@ export default {
       isConfirmToLeave: false,
       isFormSubmitted: false,
       targetRoute: null,
+      isFormDataChanged: false,
+      newsStatus: null,
+      newsUpdatedAt: null,
     };
   },
   computed: {
@@ -486,6 +495,12 @@ export default {
     },
     isEditMode() {
       return this.mode === 'edit';
+    },
+    isDraft() {
+      return this.newsStatus === 'DRAFT';
+    },
+    lastEdit() {
+      return formatDate(this.newsUpdatedAt, "dd/MM/yyyy' - 'HH:mm");
     },
     saveButtonLabel() {
       return this.isEditMode ? 'Simpan Perubahan' : 'Simpan Berita';
@@ -506,14 +521,7 @@ export default {
       return this.showDateInput && daysDifference(this.selectedDate, new Date()) < 0;
     },
     selectedDate() {
-      if (!this.form.startDate) return null;
-
-      const date = this.form.startDate.split('/');
-      const year = date[2];
-      const month = date[1] - 1;
-      const day = date[0];
-
-      return new Date(year, month, day);
+      return this.normalizeDate(this.form.startDate);
     },
     imagePreview() {
       if (!this.form.image) return null;
@@ -527,7 +535,7 @@ export default {
       return this.form.image;
     },
     endOfDuration() {
-      return this.form.endDate ? formatDate(this.form.endDate, 'dd/MM/yyyy') : 'tanpa batas';
+      return this.form.endDate || 'tanpa batas';
     },
     hasImagePreview() {
       return !!this.imagePreview;
@@ -575,10 +583,27 @@ export default {
 
       return data;
     },
+    isSaveButtonDisabled() {
+      if (this.isEditMode) {
+        return this.isFormDataChanged;
+      }
+      return !this.hasTitle;
+    },
   },
   watch: {
     form: {
       handler() {
+        if (this.isEditMode) {
+          const form = {
+            ...this.form,
+            content: this.sanitizeHTML(this.form.content),
+          };
+          const initialForm = {
+            ...this.initialForm,
+            content: this.sanitizeHTML(this.initialForm.content),
+          };
+          this.isFormDataChanged = isequal(form, initialForm);
+        }
         this.$store.dispatch('news/createNewsPreview', this.newsPreview);
       },
       deep: true,
@@ -615,17 +640,23 @@ export default {
       const response = await newsRepository.getNewsById(id);
       const { data } = response.data;
 
-      this.form = {
+      const formData = {
         title: data.title,
         image: data.image,
         content: data.content,
         duration: data.duration,
         startDate: formatDate(data.start_date, 'dd/MM/yyyy'),
-        endDate: formatDate(data.end_date, 'dd/MM/yyyy'),
+        endDate: data.end_date ? formatDate(data.end_date, 'dd/MM/yyyy') : null,
         category: data.category,
         tags: data.tags,
         areaId: data.area.id,
       };
+
+      this.newsId = id;
+      this.newsStatus = data.status;
+      this.newsUpdatedAt = data.updated_at;
+      this.form = { ...formData };
+      this.initialForm = Object.freeze({ ...formData });
     } else {
       // This is just a temporary id only for visiting the preview page
       // because the preview page needs an id
@@ -636,6 +667,16 @@ export default {
     this.$store.dispatch('news/clearNewsPreview');
   },
   methods: {
+    normalizeDate(initialDate) {
+      if (!initialDate) return null;
+
+      const date = initialDate.split('/');
+      const year = date[2];
+      const month = date[1] - 1;
+      const day = date[0];
+
+      return new Date(year, month, day);
+    },
     sanitizeHTML(html) {
       const container = document.createElement('div');
       container.insertAdjacentHTML('beforeend', html);
@@ -687,7 +728,7 @@ export default {
       let endDate = null;
 
       if (this.hasDuration && !this.infiniteDuration) {
-        endDate = startDate.setDate(startDate.getDate() + this.form.duration);
+        endDate = formatDate(startDate.setDate(startDate.getDate() + this.form.duration), 'dd/MM/yyyy');
       }
 
       this.form.endDate = endDate;
@@ -717,7 +758,10 @@ export default {
       }
     },
     setTags(tag) {
-      this.form.tags.push({ tag_name: tag });
+      this.form.tags = [
+        ...this.form.tags,
+        { tag_name: tag },
+      ];
     },
     setTagSuggestions(tagSuggestions) {
       this.tagSuggestions = tagSuggestions;
@@ -928,6 +972,7 @@ export default {
 
       const { title, content, duration, category, tags, endDate, areaId } = this.form;
       let { image } = this.form;
+      const normalizeEndDate = this.normalizeDate(endDate);
 
       // upload the image first before submitting the form
       // if the image is a blob
@@ -949,7 +994,7 @@ export default {
         content: this.isEditMode ? content : this.insertNewsPrefix(content),
         duration,
         start_date: this.selectedDate ? formatDate(this.selectedDate, 'yyyy-MM-dd') : null,
-        end_date: endDate ? formatDate(endDate, 'yyyy-MM-dd') : null,
+        end_date: normalizeEndDate ? formatDate(normalizeEndDate, 'yyyy-MM-dd') : null,
         category,
         tags: tags.map((tag) => tag.tag_name),
         area_id: areaId,
@@ -957,9 +1002,27 @@ export default {
       };
 
       if (this.isEditMode) {
-        // TODO: update the news
+        this.updateNews(this.newsId, data);
       } else {
         this.saveNews(data);
+      }
+    },
+    async updateNews(id, data) {
+      if (this.isError) return;
+      this.progress = 100;
+
+      try {
+        await newsRepository.updateNews(id, data);
+        const messageTitle = data.status === 'DRAFT' ? 'Simpan Berita Berhasil' : 'Ajukan Berita Berhasil';
+        const messageBody = data.status === 'DRAFT' ? 'Berita yang Anda buat berhasil disimpan.' : 'Berita yang Anda buat sedang menunggu untuk direview.';
+        this.setMessage('SUCCESS', messageTitle, messageBody);
+        this.isFormSubmitted = true;
+      } catch (error) {
+        const messageTitle = data.status === 'DRAFT' ? 'Simpan Berita Gagal' : 'Ajukan Berita Gagal';
+        const messageBody = data.status === 'DRAFT' ? 'Berita yang Anda buat gagal disimpan.' : 'Berita yang Anda buat gagal diajukan.';
+        this.setMessage('ERROR', messageTitle, messageBody);
+      } finally {
+        this.loading = false;
       }
     },
     async saveNews(data) {
