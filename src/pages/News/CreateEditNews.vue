@@ -1,9 +1,12 @@
 <template>
   <main class="pb-5">
     <HeaderMenu>
-      <template #info>
+      <template
+        v-if="isDraft"
+        #info
+      >
         <p class="ml-4 text-gray-600 text-sm">
-          Terakhir disimpan pada: 12/01/2022 - 15:00
+          Terakhir disimpan pada: {{ lastEdit }}
         </p>
       </template>
       <div class="flex gap-4">
@@ -21,7 +24,7 @@
           </p>
         </BaseButton>
         <BaseButton
-          v-if="isEditMode ? newsStatus === 'DRAFT' : true"
+          v-if="isEditMode ? isDraft : true"
           type="button"
           :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
@@ -483,6 +486,7 @@ export default {
       targetRoute: null,
       isFormDataChanged: false,
       newsStatus: null,
+      newsUpdatedAt: null,
     };
   },
   computed: {
@@ -491,6 +495,12 @@ export default {
     },
     isEditMode() {
       return this.mode === 'edit';
+    },
+    isDraft() {
+      return this.newsStatus === 'DRAFT';
+    },
+    lastEdit() {
+      return formatDate(this.newsUpdatedAt, "dd/MM/yyyy' - 'HH:mm");
     },
     saveButtonLabel() {
       return this.isEditMode ? 'Simpan Perubahan' : 'Simpan Berita';
@@ -642,8 +652,9 @@ export default {
         areaId: data.area.id,
       };
 
-      this.newsId = data.id;
+      this.newsId = id;
       this.newsStatus = data.status;
+      this.newsUpdatedAt = data.updated_at;
       this.form = { ...formData };
       this.initialForm = Object.freeze({ ...formData });
     } else {
