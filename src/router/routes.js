@@ -67,7 +67,7 @@ export default [
   {
     path: '/pengaturan',
     name: 'Pengaturan',
-    component: () => import('@/pages/Home'),
+    component: () => import('@/pages/Settings'),
   },
   {
     path: '/login',
