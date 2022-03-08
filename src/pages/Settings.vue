@@ -15,8 +15,8 @@ export default {
   name: 'Settings',
   components: {
     TabBar,
-    AccountSettings: () => import('@/components/Settings/AccountSettings'),
-    MemberSettings: () => import('@/components/Settings/MemberSettings'),
+    AccountSettings: () => import('@/components/Settings/Account'),
+    MemberSettings: () => import('@/components/Settings/Member'),
   },
   data() {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div>
     <section class="px-6 py-4 bg-white rounded-lg">
       <h2 class="text-xl text-green-700 font-medium">
         Informasi Personal
@@ -145,7 +145,7 @@
         </div>
       </template>
     </BaseModal>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -156,7 +156,7 @@ import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 const userRepository = RepositoryFactory.get('user');
 
 export default {
-  name: 'AccountSettings',
+  name: 'PersonalInformationSection',
   components: {
     BaseButton,
     BaseModal,
