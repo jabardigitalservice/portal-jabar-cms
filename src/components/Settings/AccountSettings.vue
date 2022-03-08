@@ -15,7 +15,7 @@
         </div>
         <BaseButton
           class="text-green-700 border-none font-normal"
-          @click="setPromptDetail(actionType.name)"
+          @click="setPromptDetail('name')"
         >
           <template #icon-left>
             <JdsIcon
@@ -37,7 +37,7 @@
         </div>
         <BaseButton
           class="text-green-700 border-none font-normal"
-          @click="setPromptDetail(actionType.occupation)"
+          @click="setPromptDetail('occupation')"
         >
           <template #icon-left>
             <JdsIcon
@@ -91,7 +91,7 @@
           {{ promptDetail.description }}
         </p>
         <div
-          v-if="promptDetail.action === actionType.name"
+          v-if="promptDetail.action === 'name'"
           class="flex flex-col flex-grow gap-2"
         >
           <label
@@ -102,14 +102,14 @@
           </label>
           <input
             id="name"
-            v-model="updatedUser[actionType.name]"
+            v-model="updatedUser['name']"
             type="text"
             class="focus:outline-none border border-gray-400 p-2 rounded-md font-lato text-sm text-blue-gray-800"
             placeholder="Masukkan nama baru"
           >
         </div>
         <div
-          v-if="promptDetail.action === actionType.occupation"
+          v-if="promptDetail.action === 'occupation'"
           class="flex flex-col flex-grow gap-2"
         >
           <label
@@ -120,7 +120,7 @@
           </label>
           <input
             id="occupation"
-            v-model="updatedUser[actionType.occupation]"
+            v-model="updatedUser['occupation']"
             type="text"
             class="focus:outline-none border border-gray-400 p-2 rounded-md font-lato text-sm text-blue-gray-800"
             placeholder="Masukkan jabatan"
@@ -186,10 +186,6 @@ export default {
         buttonClick: () => {},
       },
       isPromptOpen: false,
-      actionType: {
-        name: 'name',
-        occupation: 'occupation',
-      },
     };
   },
   computed: {
@@ -224,18 +220,18 @@ export default {
       this.clearUpdatedUser();
     },
     setPromptDetail(action) {
-      if (action === this.actionType.name) {
+      if (action === 'name') {
         this.promptDetail = {
-          action: this.actionType.name,
+          action: 'name',
           title: 'Ubah Nama',
           description: 'Masukkan nama baru untuk akun Anda.',
           buttonClick: () => this.updateUser(),
         };
       }
 
-      if (action === this.actionType.occupation) {
+      if (action === 'occupation') {
         this.promptDetail = {
-          action: this.actionType.occupation,
+          action: 'occupation',
           title: 'Ubah Jabatan',
           description: 'Masukkan jabatan baru untuk akun Anda.',
           buttonClick: () => this.updateUser(),
