@@ -3,14 +3,14 @@
     <section class="px-3 py-6 rounded-lg bg-white border-2 border-green-600">
       <div class="w-full">
         <!-- Table Menu -->
-        <div class="sm:flex-wrap flex mb-4 ">
+        <div class="sm:flex-wrap flex mb-4 items-start">
           <SearchBar
-            class="sm:mb-3"
+            class="mb-3"
             placeholder="Cari agenda"
             @input="onSearch($event)"
           />
           <AgendaFilter
-            class="sm:ml-0 ml-6"
+            class="sm:ml-0 lg:ml-6"
             @change:filter="onChangeFilter($event)"
           />
           <LinkButton
