@@ -47,6 +47,7 @@
             @publish="setupPromptDetail('publish', $event)"
             @archive="setupPromptDetail('archive', $event)"
             @delete="setupPromptDetail('delete', $event)"
+            @change:sort="onChangeSort($event)"
           />
         </div>
       </section>
@@ -176,6 +177,8 @@ export default {
         end_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 'yyyy-MM-dd'), // last date of today's month
         per_page: 10,
         page: 1,
+        sort_by: '',
+        sort_order: '',
         status: '',
         cat: [],
         q: '',
@@ -370,6 +373,28 @@ export default {
      */
     onSearch(query) {
       this.setParams({ q: query });
+      this.fetchNews();
+    },
+
+    /**
+     * Sort item based on table column
+     *
+     * @param {Object} data - object containing sort params
+     * @property {string} sort_by - the column name
+     * @property {string} sort_order - sort order containing `ASC`, `DESC` or ``NO-SORT
+     */
+    onChangeSort(data) {
+      const sortOrder = data.sort_order;
+
+      if (sortOrder === 'NO-SORT') {
+        this.setParams({
+          sort_by: '',
+          sort_order: '',
+        });
+      } else {
+        this.setParams(data);
+      }
+
       this.fetchNews();
     },
 
