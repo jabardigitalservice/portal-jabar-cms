@@ -37,15 +37,18 @@
             @change:filter="onFilter($event)"
           />
         </div>
-        <NewsTable
-          :items="items"
-          :loading="loading"
-          :meta="meta"
-          @update:pagination="onUpdatePagination($event)"
-          @publish="setupPromptDetail('publish', $event)"
-          @archive="setupPromptDetail('archive', $event)"
-          @delete="setupPromptDetail('delete', $event)"
-        />
+        <div class="w-full overflow-auto">
+          <NewsTable
+            :items="items"
+            :loading="loading"
+            :meta="meta"
+            class="min-w-[1000px]"
+            @update:pagination="onUpdatePagination($event)"
+            @publish="setupPromptDetail('publish', $event)"
+            @archive="setupPromptDetail('archive', $event)"
+            @delete="setupPromptDetail('delete', $event)"
+          />
+        </div>
       </section>
     </section>
 
