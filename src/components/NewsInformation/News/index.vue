@@ -28,7 +28,10 @@
           </LinkButton>
         </div>
         <div class="min-w-0 w-full flex mb-5 items-center">
-          <SearchBar placeholder="Cari berita" />
+          <SearchBar
+            placeholder="Cari berita"
+            @input="onSearch($event)"
+          />
           <NewsCategoryFilter
             class="ml-6"
             @change:filter="onFilter($event)"
@@ -171,6 +174,8 @@ export default {
         per_page: 10,
         page: 1,
         status: null,
+        cat: [],
+        q: null,
       },
       isActionPromptOpen: false,
       promptDetail: {},
@@ -352,6 +357,16 @@ export default {
      */
     onFilter(data) {
       this.setParams(data);
+      this.fetchNews();
+    },
+
+    /**
+     * Set new params and fetch news when search-bar value changes
+     *
+     * @param {string} query - search-bar emit values
+     */
+    onSearch(query) {
+      this.setParams({ q: query });
       this.fetchNews();
     },
 
