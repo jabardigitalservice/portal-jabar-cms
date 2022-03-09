@@ -46,15 +46,18 @@
             Tampilkan agenda dalam bentuk :
           </p>
         </div>
-        <AgendaTable
-          :items="items"
-          :loading="loading"
-          :meta="meta"
-          @update:pagination="onUpdatePagination($event)"
-          @open-preview="handleShowPreview($event)"
-          @delete="handleDeleteAction($event)"
-          @change:sort="onChangeSort($event)"
-        />
+        <div class="w-full overflow-auto">
+          <AgendaTable
+            :items="items"
+            :loading="loading"
+            :meta="meta"
+            class="min-w-[1000px]"
+            @update:pagination="onUpdatePagination($event)"
+            @open-preview="handleShowPreview($event)"
+            @delete="handleDeleteAction($event)"
+            @change:sort="onChangeSort($event)"
+          />
+        </div>
       </div>
     </section>
     <AgendaPreview
