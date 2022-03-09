@@ -13,7 +13,7 @@
         ref="search-bar-input"
         v-model.trim="value"
         type="text"
-        placeholder="Cari agenda"
+        :placeholder="placeholder"
         class="w-[150px] h-full font-lato text-sm text-blue-gray-800
       placeholder:text-blue-gray-200 focus:outline-none"
       >
