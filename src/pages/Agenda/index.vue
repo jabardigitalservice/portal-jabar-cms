@@ -30,12 +30,6 @@
             </p>
           </LinkButton>
         </div>
-        <!-- Table Aditional Info -->
-        <div class="w-full mb-4">
-          <p class="font-lato text-sm text-blue-gray-800 leading-6">
-            Tampilkan agenda dalam bentuk :
-          </p>
-        </div>
         <div class="w-full overflow-auto">
           <AgendaTable
             :items="items"
