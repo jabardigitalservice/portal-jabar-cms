@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-lg overflow-hidden border border-gray-100">
+  <div class="agenda-table rounded-lg overflow-hidden border border-gray-100">
     <JdsDataTable
       :headers="tableHeader"
       :items="items"
@@ -12,6 +12,15 @@
       @page-change="onPaginationChange('page-change', $event)"
       @change:sort="onSortChange($event)"
     >
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.title="{item}">
+        <p
+          class="line-clamp-1"
+          :title="item.title"
+        >
+          {{ item.title }}
+        </p>
+      </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.type="{item}">
         <p class="capitalize">
@@ -130,3 +139,20 @@ export default {
   },
 };
 </script>
+
+<style>
+/**
+ * Override default jds-data-table style
+ */
+.agenda-table .jds-data-table {
+  table-layout: fixed !important;
+}
+
+.agenda-table .jds-data-table thead tr th:nth-child(1) {
+  width: 300px !important;
+}
+
+.news-table .jds-data-table thead tr th:nth-child(2) {
+  width: 160px !important;
+}
+</style>

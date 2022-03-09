@@ -1,25 +1,16 @@
 <template>
   <main class="w-full pb-20">
-    <section class="px-6 py-4 rounded-lg bg-white mb-4">
-      <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3">
-        Daftar Semua Agenda
-      </h1>
-      <!-- TODO: Change this description text -->
-      <p class="font-lato text-sm leading-6 text-blue-gray-800">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Hendrerit euismod non, semper eu interdum habitasse velit. Eu fermentum fames id.
-      </p>
-    </section>
-
     <section class="px-3 py-6 rounded-lg bg-white border-2 border-green-600">
       <div class="w-full">
         <!-- Table Menu -->
-        <div class="flex mb-4">
+        <div class="sm:flex-wrap flex mb-4 items-start">
           <SearchBar
+            class="mb-3"
             placeholder="Cari agenda"
             @input="onSearch($event)"
           />
           <AgendaFilter
-            class="ml-6"
+            class="sm:ml-0 lg:ml-6"
             @change:filter="onChangeFilter($event)"
           />
           <LinkButton
@@ -40,21 +31,18 @@
             </p>
           </LinkButton>
         </div>
-        <!-- Table Aditional Info -->
-        <div class="w-full mb-4">
-          <p class="font-lato text-sm text-blue-gray-800 leading-6">
-            Tampilkan agenda dalam bentuk :
-          </p>
+        <div class="w-full overflow-auto">
+          <AgendaTable
+            :items="items"
+            :loading="loading"
+            :meta="meta"
+            class="min-w-[1000px]"
+            @update:pagination="onUpdatePagination($event)"
+            @open-preview="handleShowPreview($event)"
+            @delete="handleDeleteAction($event)"
+            @change:sort="onChangeSort($event)"
+          />
         </div>
-        <AgendaTable
-          :items="items"
-          :loading="loading"
-          :meta="meta"
-          @update:pagination="onUpdatePagination($event)"
-          @open-preview="handleShowPreview($event)"
-          @delete="handleDeleteAction($event)"
-          @change:sort="onChangeSort($event)"
-        />
       </div>
     </section>
     <AgendaPreview
