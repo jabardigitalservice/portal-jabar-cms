@@ -441,7 +441,7 @@ export default {
         title: '',
         image: '',
         content: '',
-        duration: '',
+        duration: null,
         startDate: null,
         endDate: null,
         category: '',
