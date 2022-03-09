@@ -29,7 +29,10 @@
         </div>
         <div class="min-w-0 w-full flex mb-5 items-center">
           <SearchBar placeholder="Cari berita" />
-          <NewsCategoryFilter class="ml-6" />
+          <NewsCategoryFilter
+            class="ml-6"
+            @change:filter="onFilter($event)"
+          />
         </div>
         <NewsTable
           :items="items"
@@ -338,6 +341,17 @@ export default {
      */
     onUpdateMonthFilter(data) {
       this.setParams({ ...data, page: 1 });
+      this.fetchNews();
+    },
+
+    /**
+     * Set new params and fetch news when filter changes
+     *
+     * @param {Object} data - object containing new param based on emit values
+     * @property {Array} cat - news category params
+     */
+    onFilter(data) {
+      this.setParams(data);
       this.fetchNews();
     },
 
