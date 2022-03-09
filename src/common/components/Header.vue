@@ -144,6 +144,7 @@ import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 import SettingIcon from '@/assets/icons/setting-outline.svg?inline';
 import LogoutIcon from '@/assets/icons/logout.svg?inline';
+import defaultAvatar from '@/assets/icons/user-avatar.svg';
 
 export default {
   name: 'Header',
@@ -166,7 +167,7 @@ export default {
       return this.$route.name;
     },
     userAvatar() {
-      return this.user?.photo || null;
+      return this.user?.photo || defaultAvatar;
     },
   },
   methods: {
