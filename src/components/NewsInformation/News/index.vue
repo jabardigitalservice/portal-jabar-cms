@@ -28,18 +28,27 @@
           </LinkButton>
         </div>
         <div class="min-w-0 w-full flex mb-5 items-center">
-          <SearchBar placeholder="Cari berita" />
-          <NewsCategoryFilter class="ml-6" />
+          <SearchBar
+            placeholder="Cari berita"
+            @input="onSearch($event)"
+          />
+          <NewsCategoryFilter
+            class="ml-6"
+            @change:filter="onFilter($event)"
+          />
         </div>
-        <NewsTable
-          :items="items"
-          :loading="loading"
-          :meta="meta"
-          @update:pagination="onUpdatePagination($event)"
-          @publish="setupPromptDetail('publish', $event)"
-          @archive="setupPromptDetail('archive', $event)"
-          @delete="setupPromptDetail('delete', $event)"
-        />
+        <div class="w-full overflow-auto">
+          <NewsTable
+            :items="items"
+            :loading="loading"
+            :meta="meta"
+            class="min-w-[1000px]"
+            @update:pagination="onUpdatePagination($event)"
+            @publish="setupPromptDetail('publish', $event)"
+            @archive="setupPromptDetail('archive', $event)"
+            @delete="setupPromptDetail('delete', $event)"
+          />
+        </div>
       </section>
     </section>
 
@@ -167,7 +176,9 @@ export default {
         end_date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 'yyyy-MM-dd'), // last date of today's month
         per_page: 10,
         page: 1,
-        status: null,
+        status: '',
+        cat: [],
+        q: '',
       },
       isActionPromptOpen: false,
       promptDetail: {},
@@ -338,6 +349,27 @@ export default {
      */
     onUpdateMonthFilter(data) {
       this.setParams({ ...data, page: 1 });
+      this.fetchNews();
+    },
+
+    /**
+     * Set new params and fetch news when filter changes
+     *
+     * @param {Object} data - object containing new param based on emit values
+     * @property {Array} cat - news category params
+     */
+    onFilter(data) {
+      this.setParams(data);
+      this.fetchNews();
+    },
+
+    /**
+     * Set new params and fetch news when search-bar value changes
+     *
+     * @param {string} query - search-bar emit values
+     */
+    onSearch(query) {
+      this.setParams({ q: query });
       this.fetchNews();
     },
 
