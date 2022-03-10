@@ -308,6 +308,31 @@ export default {
       return this.filterCount > 0 ? 'Diterapkan' : 'Belum ada filter';
     },
   },
+  watch: {
+    /**
+     * NOTE: There is an issue on `JdsDateInput` component where the user
+     * types the wrong date and then resets the value, the error message
+     * still shows up even though the value is already `null`.
+     *
+     * A temporary solution to this problem is to disable keyboard input
+     * by adding a `readonly` attribute to JdsDateInput's input text everytime
+     * Filter modal is open (because the component will re-render
+     * everytime `isFilterOpen` state is true).
+     */
+    isFilterOpen: {
+      async handler() {
+        if (this.isFilterOpen) {
+          await this.$nextTick();
+
+          const datePickers = document.querySelectorAll('.agenda-filter .jds-date-input #date');
+
+          datePickers.forEach((datePicker) => {
+            datePicker.setAttribute('readonly', true);
+          });
+        }
+      },
+    },
+  },
   methods: {
     isCategorySelected(category) {
       return this.filter.cat.includes(category);
