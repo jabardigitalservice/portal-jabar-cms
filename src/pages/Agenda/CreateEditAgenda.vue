@@ -291,11 +291,16 @@
         </div>
       </template>
     </BaseModal>
+    <ProgressModal
+      :open="loading"
+      :value="progress"
+    />
   </main>
 </template>
 
 <script>
 import debounce from 'lodash.debounce';
+import ProgressModal from '@/common/components/ProgressModal';
 import {
   daysDifference, formatDate, isToday, minutesDifference,
 } from '@/common/helpers/date';
@@ -320,6 +325,7 @@ export default {
     AgendaPreview,
     SaveIcon,
     LinkIcon,
+    ProgressModal,
   },
   beforeRouteLeave(to, from, next) {
     this.targetRoute = to;
@@ -356,6 +362,7 @@ export default {
       tagSuggestions: [],
       isTodayChecked: true,
       loading: false,
+      progress: 0,
       errorMessage: {
         title: '',
         body: '',
@@ -594,6 +601,8 @@ export default {
       }
     },
     onSubmit() {
+      this.loading = true;
+      this.progress = 20;
       const data = {
         ...this.form,
         url: this.appendUrl(this.form.url),
@@ -607,8 +616,8 @@ export default {
       }
     },
     async createEvent(data) {
+      this.progress = 50;
       try {
-        this.loading = true;
         await agendaRepository.createEvent(data);
         this.successMessage = {
           title: 'Tambah Agenda Berhasil',
@@ -622,11 +631,12 @@ export default {
         };
       } finally {
         this.loading = false;
+        this.progress = 100;
       }
     },
     async updateEvent(data) {
+      this.progress = 50;
       try {
-        this.loading = true;
         const { id } = this.$route.params;
         await agendaRepository.updateEvent(id, data);
         this.successMessage = {
@@ -641,6 +651,7 @@ export default {
         };
       } finally {
         this.loading = false;
+        this.progress = 100;
       }
     },
     onCancel() {
