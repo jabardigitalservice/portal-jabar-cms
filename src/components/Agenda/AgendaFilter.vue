@@ -39,7 +39,7 @@
           </h2>
           <BaseButton
             class="border-transparent hover:bg-green-50"
-            @click="resetFilter"
+            @click="clearFilter"
           >
             <p class="font-normal text-sm text-green-700">
               Hapus semua filter
@@ -137,7 +137,7 @@
         <div class="w-full flex gap-3">
           <BaseButton
             class="border-green-700 hover:bg-green-50 bg-white w-full"
-            @click="toggleFilterDropdown"
+            @click="closeFilterDropdown"
           >
             <p class="w-full text-sm font-normal text-green-700 text-center">
               Batal
@@ -159,6 +159,7 @@
 </template>
 
 <script>
+import clonedeep from 'lodash.clonedeep';
 import FilterIcon from '@/assets/icons/filter.svg?inline';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
@@ -171,6 +172,18 @@ export default {
     FilterIcon,
     BaseButton,
     BaseModal,
+  },
+  props: {
+    params: {
+      type: Object,
+      default: () => ({
+        cat: [],
+        type: [],
+        start_date: null,
+        end_date: null,
+      }),
+    },
+
   },
   data() {
     return {
@@ -306,10 +319,14 @@ export default {
       this.isFilterOpen = !this.isFilterOpen;
     },
 
-    submitFilter() {
-      const { start_date: startDate, end_date: endDate } = this.filter;
+    closeFilterDropdown() {
+      this.isFilterOpen = false;
+      this.resetFilter();
+    },
 
-      const filterObj = { ...this.filter };
+    submitFilter() {
+      const filterObj = clonedeep(this.filter);
+      const { start_date: startDate, end_date: endDate } = filterObj;
 
       if (startDate && endDate) {
         filterObj.start_date = formatDate(this.convertStringToDate(startDate), 'yyyy/MM/dd');
@@ -321,7 +338,19 @@ export default {
       this.toggleFilterDropdown();
     },
 
+    /**
+     * Reset filter state to original/actual filter params
+     */
     resetFilter() {
+      this.filter = {
+        cat: [...this.params.cat],
+        type: [...this.params.type],
+        start_date: this.params.start_date ? formatDate(this.params.start_date, 'dd/MM/yyyy') : null,
+        end_date: this.params.end_date ? formatDate(this.params.end_date, 'dd/MM/yyyy') : null,
+      };
+    },
+
+    clearFilter() {
       this.filter = {
         cat: [],
         type: [],

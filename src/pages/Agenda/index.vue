@@ -11,6 +11,7 @@
           />
           <AgendaFilter
             class="sm:ml-0 lg:ml-6"
+            :params="params"
             @change:filter="onChangeFilter($event)"
           />
           <LinkButton
@@ -136,13 +137,15 @@ export default {
         per_page: 10,
       },
       params: {
-        start_date: null,
-        end_date: null,
+        start_date: '',
+        end_date: '',
         per_page: 10,
         page: 1,
-        sort_by: null,
-        sort_order: null,
-        q: null,
+        sort_by: '',
+        sort_order: '',
+        cat: [],
+        type: '',
+        q: '',
       },
       isPreviewModalOpen: false,
       isDeletePromptOpen: false,
