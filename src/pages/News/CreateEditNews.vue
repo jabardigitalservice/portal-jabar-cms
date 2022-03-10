@@ -866,11 +866,13 @@ export default {
       const isValidFormat = ['image/png', 'image/jpg', 'image/jpeg'].includes(file.type);
       if (!isValidFormat) {
         this.setMessage('ERROR', 'Gagal memilih file', 'Maaf file yang anda masukkan tidak didukung');
+        return;
       }
 
       // validate file size
       if (file.size > MAX_SIZE) {
         this.setMessage('ERROR', 'Gagal memilih file', 'Ukuran file yang Anda pilih melebihi 5 MB');
+        return;
       }
 
       // validate file resolution
@@ -879,10 +881,9 @@ export default {
       image.onload = async () => {
         if (image.width > MAX_WIDTH || image.height > MAX_HEIGHT) {
           this.setMessage('ERROR', 'Gagal memilih file', 'Resolusi file yang Anda pilih melebihi 1600x900');
+          return;
         }
-      };
 
-      if (!this.isError) {
         try {
           const compressedImage = await this.compressImage(file, {
             quality: 0.6,
@@ -893,7 +894,7 @@ export default {
         } catch (err) {
           this.setMessage('ERROR', 'Gagal memilih file', 'Terjadi kesalahan dalam memilih gambar');
         }
-      }
+      };
     },
     async onContentImageUpload(blobInfo, success, failure) {
       try {
