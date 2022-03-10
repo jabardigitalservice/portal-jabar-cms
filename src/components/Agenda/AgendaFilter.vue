@@ -419,7 +419,6 @@ export default {
         end_date: null,
       };
       this.resetDatePicker();
-      this.filterCount = 0;
       this.isDatePickerTouched = false;
     },
 
