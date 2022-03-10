@@ -113,6 +113,30 @@
             </div>
           </div>
         </div>
+        <!-- Tooltip -->
+        <div
+          v-show="!isEmpty(newPassword)"
+          class="grid grid-cols-2 relative mb-2"
+        >
+          <div class="bg-gray-900 px-3 pt-3 pb-2 rounded-lg text-white text-xs">
+            <div class="grid grid-cols-3 gap-2 mb-2">
+              <div
+                class="h-1 rounded-lg"
+                :class="[lowBarClassName]"
+              />
+              <div
+                class="h-1 rounded-lg"
+                :class="[mediumBarClassName]"
+              />
+              <div
+                class="h-1 rounded-lg"
+                :class="[strongBarClassName]"
+              />
+            </div>
+            <p>Kata sandi Anda <span :class="passwordStrengthLabelClassName">{{ passwordStrength.label }}</span></p>
+          </div>
+          <div class="absolute top-1 left-3 w-3 h-3 -mt-2 rotate-45 bg-gray-900" />
+        </div>
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="newPasswordConfirmation"
@@ -149,30 +173,6 @@
           >
             {{ validationMessage.body }}
           </p>
-        </div>
-        <!-- Tooltip -->
-        <div
-          v-show="!isEmpty(newPassword) || !isEmpty(newPasswordConfirmation)"
-          class="grid grid-cols-2 absolute"
-        >
-          <div class="bg-gray-900 px-3 pt-3 pb-2 rounded-lg text-white text-xs">
-            <div class="grid grid-cols-3 gap-2 mb-2">
-              <div
-                class="h-1 rounded-lg"
-                :class="[lowBarClassName]"
-              />
-              <div
-                class="h-1 rounded-lg"
-                :class="[mediumBarClassName]"
-              />
-              <div
-                class="h-1 rounded-lg"
-                :class="[strongBarClassName]"
-              />
-            </div>
-            <p>Kata sandi Anda <span :class="passwordStrengthLabelClassName">{{ passwordStrength.label }}</span></p>
-          </div>
-          <div class="absolute top-1 left-3 w-3 h-3 -mt-2 rotate-45 bg-gray-900" />
         </div>
       </div>
       <template #footer>
@@ -310,7 +310,6 @@ export default {
     },
     newPasswordConfirmation() {
       this.setPasswordIconVisibility('newPasswordConfirmation', this.newPasswordConfirmation !== '');
-      this.setPasswordStrength(this.checkPasswordStrength(this.newPasswordConfirmation));
     },
   },
   methods: {
