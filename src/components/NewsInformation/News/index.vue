@@ -139,12 +139,6 @@ export default {
           count: null,
         },
         {
-          key: 'PUBLISHED',
-          label: 'Diterbitkan',
-          icon: 'PublishIcon',
-          count: null,
-        },
-        {
           key: 'DRAFT',
           label: 'Tersimpan',
           icon: 'DraftIcon',
@@ -154,6 +148,12 @@ export default {
           key: 'REVIEW',
           label: 'Menunggu Review',
           icon: 'ReviewIcon',
+          count: null,
+        },
+        {
+          key: 'PUBLISHED',
+          label: 'Diterbitkan',
+          icon: 'PublishIcon',
           count: null,
         },
         {
