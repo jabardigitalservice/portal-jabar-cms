@@ -12,6 +12,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@sentry/tracing": "^6.18.2",
+    "@sentry/vue": "^6.18.2",
     "@tinymce/tinymce-vue": "^3.2.8",
     "axios": "^0.24.0",
     "compressorjs": "^1.1.1",
