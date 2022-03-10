@@ -83,11 +83,21 @@
             <div class="w-full border border-gray-100" />
           </div>
           <div class="date-input relative min-w-0 w-full grid grid-cols-2 gap-3">
-            <JdsDateInput
-              v-model="filter.start_date"
-              label="Tanggal Awal"
-              @input="isDatePickerTouched = true"
-            />
+            <div>
+              <JdsDateInput
+                v-model="filter.start_date"
+                label="Tanggal Awal"
+                @input="isDatePickerTouched = true"
+              />
+              <div
+                v-show="isStartDateEmpty"
+                class="py-2"
+              >
+                <p class="text-sm text-red-500">
+                  Tanggal awal tidak boleh kosong
+                </p>
+              </div>
+            </div>
             <div>
               <JdsDateInput
                 v-model="filter.end_date"
@@ -95,11 +105,21 @@
                 @input="isDatePickerTouched = true"
               />
               <div
-                v-show="isDatePickerTouched && !isSelectedDateValid"
+                v-show="isEndDateEmpty"
                 class="py-2"
               >
                 <p class="text-sm text-red-500">
-                  Tanggal yang dipilih tidak valid
+                  Tanggal akhir tidak boleh kosong
+                </p>
+              </div>
+              <div
+                v-show="isEndDateValid"
+                class="py-2"
+              >
+                <p class="text-sm text-red-500 leading-5">
+                  Tanggal akhir tidak boleh kurang
+                  <br>
+                  dari tanggal awal
                 </p>
               </div>
             </div>
@@ -192,8 +212,8 @@ export default {
       filter: {
         cat: [],
         type: [],
-        start_date: null,
-        end_date: null,
+        start_date: formatDate(new Date(), 'dd/MM/yyyy'),
+        end_date: formatDate(new Date(), 'dd/MM/yyyy'),
       },
       filterCount: 0,
       categories: AGENDA_CATEGORIES,
@@ -262,6 +282,18 @@ export default {
       }
 
       return false;
+    },
+
+    isStartDateEmpty() {
+      return this.isDatePickerTouched && !this.filter.start_date;
+    },
+
+    isEndDateValid() {
+      return this.isDatePickerTouched && this.filter.end_date && !this.isSelectedDateValid;
+    },
+
+    isEndDateEmpty() {
+      return this.isDatePickerTouched && !this.filter.end_date;
     },
 
     isFilterValid() {
@@ -345,8 +377,12 @@ export default {
       this.filter = {
         cat: [...this.params.cat],
         type: [...this.params.type],
-        start_date: this.params.start_date ? formatDate(this.params.start_date, 'dd/MM/yyyy') : null,
-        end_date: this.params.end_date ? formatDate(this.params.end_date, 'dd/MM/yyyy') : null,
+        start_date: this.params.start_date
+          ? formatDate(this.params.start_date, 'dd/MM/yyyy')
+          : formatDate(new Date(), 'dd/MM/yyyy'),
+        end_date: this.params.end_date
+          ? formatDate(this.params.end_date, 'dd/MM/yyyy')
+          : formatDate(new Date(), 'dd/MM/yyyy'),
       };
     },
 
