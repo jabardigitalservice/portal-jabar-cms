@@ -39,7 +39,7 @@
           </h2>
           <BaseButton
             class="border-transparent hover:bg-green-50"
-            @click="resetFilter"
+            @click="clearFilter"
           >
             <p class="font-normal text-sm text-green-700">
               Hapus semua filter
@@ -83,11 +83,21 @@
             <div class="w-full border border-gray-100" />
           </div>
           <div class="date-input relative min-w-0 w-full grid grid-cols-2 gap-3">
-            <JdsDateInput
-              v-model="filter.start_date"
-              label="Tanggal Awal"
-              @input="isDatePickerTouched = true"
-            />
+            <div>
+              <JdsDateInput
+                v-model="filter.start_date"
+                label="Tanggal Awal"
+                @input="isDatePickerTouched = true"
+              />
+              <div
+                v-show="isStartDateEmpty"
+                class="py-2"
+              >
+                <p class="text-sm text-red-500">
+                  Tanggal awal tidak boleh kosong
+                </p>
+              </div>
+            </div>
             <div>
               <JdsDateInput
                 v-model="filter.end_date"
@@ -95,11 +105,21 @@
                 @input="isDatePickerTouched = true"
               />
               <div
-                v-show="isDatePickerTouched && !isSelectedDateValid"
+                v-show="isEndDateEmpty"
                 class="py-2"
               >
                 <p class="text-sm text-red-500">
-                  Tanggal yang dipilih tidak valid
+                  Tanggal akhir tidak boleh kosong
+                </p>
+              </div>
+              <div
+                v-show="isEndDateValid"
+                class="py-2"
+              >
+                <p class="text-sm text-red-500 leading-5">
+                  Tanggal akhir tidak boleh kurang
+                  <br>
+                  dari tanggal awal
                 </p>
               </div>
             </div>
@@ -137,7 +157,7 @@
         <div class="w-full flex gap-3">
           <BaseButton
             class="border-green-700 hover:bg-green-50 bg-white w-full"
-            @click="toggleFilterDropdown"
+            @click="closeFilterDropdown"
           >
             <p class="w-full text-sm font-normal text-green-700 text-center">
               Batal
@@ -159,6 +179,7 @@
 </template>
 
 <script>
+import clonedeep from 'lodash.clonedeep';
 import FilterIcon from '@/assets/icons/filter.svg?inline';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
@@ -172,6 +193,18 @@ export default {
     BaseButton,
     BaseModal,
   },
+  props: {
+    params: {
+      type: Object,
+      default: () => ({
+        cat: [],
+        type: [],
+        start_date: null,
+        end_date: null,
+      }),
+    },
+
+  },
   data() {
     return {
       isFilterOpen: false,
@@ -179,8 +212,8 @@ export default {
       filter: {
         cat: [],
         type: [],
-        start_date: null,
-        end_date: null,
+        start_date: formatDate(new Date(), 'dd/MM/yyyy'),
+        end_date: formatDate(new Date(), 'dd/MM/yyyy'),
       },
       filterCount: 0,
       categories: AGENDA_CATEGORIES,
@@ -251,6 +284,18 @@ export default {
       return false;
     },
 
+    isStartDateEmpty() {
+      return this.isDatePickerTouched && !this.filter.start_date;
+    },
+
+    isEndDateValid() {
+      return this.isDatePickerTouched && this.filter.end_date && !this.isSelectedDateValid;
+    },
+
+    isEndDateEmpty() {
+      return this.isDatePickerTouched && !this.filter.end_date;
+    },
+
     isFilterValid() {
       if (this.isDatePickerTouched) {
         return this.isSelectedDateValid;
@@ -306,10 +351,14 @@ export default {
       this.isFilterOpen = !this.isFilterOpen;
     },
 
-    submitFilter() {
-      const { start_date: startDate, end_date: endDate } = this.filter;
+    closeFilterDropdown() {
+      this.isFilterOpen = false;
+      this.resetFilter();
+    },
 
-      const filterObj = { ...this.filter };
+    submitFilter() {
+      const filterObj = clonedeep(this.filter);
+      const { start_date: startDate, end_date: endDate } = filterObj;
 
       if (startDate && endDate) {
         filterObj.start_date = formatDate(this.convertStringToDate(startDate), 'yyyy/MM/dd');
@@ -321,7 +370,23 @@ export default {
       this.toggleFilterDropdown();
     },
 
+    /**
+     * Reset filter state to original/actual filter params
+     */
     resetFilter() {
+      this.filter = {
+        cat: [...this.params.cat],
+        type: [...this.params.type],
+        start_date: this.params.start_date
+          ? formatDate(this.params.start_date, 'dd/MM/yyyy')
+          : formatDate(new Date(), 'dd/MM/yyyy'),
+        end_date: this.params.end_date
+          ? formatDate(this.params.end_date, 'dd/MM/yyyy')
+          : formatDate(new Date(), 'dd/MM/yyyy'),
+      };
+    },
+
+    clearFilter() {
       this.filter = {
         cat: [],
         type: [],
