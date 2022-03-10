@@ -188,6 +188,10 @@
             :disabled="!isFormValid"
             @click="onSubmit"
           >
+            <JdsSpinner
+              v-show="isLoading"
+              size="16px"
+            />
             Simpan Perubahan
           </BaseButton>
         </div>
@@ -199,6 +203,9 @@
 <script>
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'PrivacyAndSecuritySection',
@@ -240,6 +247,7 @@ export default {
         type: '',
         label: '',
       },
+      isLoading: false,
     };
   },
   computed: {
@@ -404,18 +412,30 @@ export default {
     },
     onSubmit() {
       if (!this.isFormValid) return;
-      if (!this.isPasswordMatch(this.currentPassword, this.newPasswordConfirmation)) {
+      if (!this.isPasswordMatch(this.newPassword, this.newPasswordConfirmation)) {
         this.setValidationMessage('newPasswordConfirmation', 'Kata sandi tidak sama');
         return;
       }
       this.updatePassword();
     },
     async updatePassword() {
+      this.isLoading = true;
       try {
-        // todo: update new password
+        const payload = {
+          current_password: this.currentPassword,
+          new_password: this.newPassword,
+        };
+        await userRepository.updateUserPassword(payload);
+        this.$toast({ type: 'success', message: 'Kata sandi berhasil diubah' });
+        this.togglePrompt();
       } catch (error) {
-        // todo: set error on input if current password not match with the status code 422
-        // todo: set global error if the status code is other than 422
+        if (error.response) {
+          this.setValidationMessage('currentPassword', 'Kata sandi lama tidak sesuai');
+        } else {
+          this.$toast({ type: 'error', message: error.message });
+        }
+      } finally {
+        this.isLoading = false;
       }
     },
   },
