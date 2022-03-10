@@ -30,7 +30,7 @@ Sentry.init({
       routingInstrumentation: Sentry.vueRouterInstrumentation(router),
       // NOTE: this origins should not be hardcoded
       // TODO: find a way to make this values dynamic
-      tracingOrigins: ['develop--portal-jabar-cms.netlify.app/', /^\//],
+      tracingOrigins: ['develop--portal-jabar-cms.netlify.app'],
     }),
   ],
   tracesSampleRate: parseFloat(process.env.VUE_APP_SENTRY_SAMPLE_RATE) || 0.2,
