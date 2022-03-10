@@ -412,7 +412,7 @@ export default {
     onSubmit() {
       if (!this.isFormValid) return;
       if (!this.isPasswordMatch(this.newPassword, this.newPasswordConfirmation)) {
-        this.setValidationMessage('newPasswordConfirmation', 'Kata sandi tidak sama');
+        this.setValidationMessage('newPasswordConfirmation', 'Kata sandi baru Anda tidak sama');
         return;
       }
       this.updatePassword();
@@ -425,11 +425,11 @@ export default {
           new_password: this.newPassword,
         };
         await userRepository.updateUserPassword(payload);
-        this.$toast({ type: 'success', message: 'Kata sandi berhasil diubah' });
+        this.$toast({ type: 'success', message: 'Kata sandi Anda berhasil diubah' });
         this.togglePrompt();
       } catch (error) {
         if (error.response) {
-          this.setValidationMessage('currentPassword', 'Kata sandi lama tidak sesuai');
+          this.setValidationMessage('currentPassword', 'Kata sandi lama Anda tidak cocok');
         } else {
           this.$toast({ type: 'error', message: error.message });
         }
