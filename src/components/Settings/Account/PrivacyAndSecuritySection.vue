@@ -42,7 +42,7 @@
       </div>
     </div>
     <BaseModal :open="isPromptOpen">
-      <div class="w-full h-full">
+      <div class="w-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6 text-blue-gray-800">
           Ubah Kata Sandi
         </h1>
@@ -153,7 +153,7 @@
         <!-- Tooltip -->
         <div
           v-show="!isEmpty(newPassword) || !isEmpty(newPasswordConfirmation)"
-          class="grid grid-cols-2 relative"
+          class="grid grid-cols-2 absolute"
         >
           <div class="bg-gray-900 px-3 pt-3 pb-2 rounded-lg text-white text-xs">
             <div class="grid grid-cols-3 gap-2 mb-2">
