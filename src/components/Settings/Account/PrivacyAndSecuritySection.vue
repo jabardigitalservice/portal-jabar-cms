@@ -52,17 +52,21 @@
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="currentPassword"
-            class="text-blue-gray-800"
+            :class="[validationMessage.name === 'currentPassword' ? 'text-red-600' : 'text-blue-gray-800']"
           >
             Kata Sandi Lama
           </label>
-          <div class="border border-gray-500 rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700">
+          <div
+            class="border border-gray-500 rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700"
+            :class="[validationMessage.name === 'currentPassword' ? 'bg-red-50 border border-red-600' : 'bg-white ']"
+          >
             <input
               id="currentPassword"
               v-model.trim="currentPassword"
               :type="passwordInputType['currentPassword']"
               placeholder="Masukkan kata sandi lama"
-              class="text-sm placeholder:text-gray-600 p-2 w-full bg-white focus:outline-none"
+              class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none"
+              :class="[validationMessage.name === 'currentPassword' ? 'bg-red-50' : 'bg-white ']"
             >
             <div
               v-show="isPasswordIconVisible['currentPassword']"
@@ -109,20 +113,24 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col flex-grow gap-2">
+        <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="newPasswordConfirmation"
-            class="text-blue-gray-800"
+            :class="[validationMessage.name === 'newPasswordConfirmation' ? 'text-red-600' : 'text-blue-gray-800']"
           >
             Ulangi Kata Sandi Baru
           </label>
-          <div class="border border-gray-500 rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700">
+          <div
+            class="border border-gray-500 rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700"
+            :class="[validationMessage.name === 'newPasswordConfirmation' ? 'bg-red-50 border border-red-600' : 'bg-white ']"
+          >
             <input
               id="newPasswordConfirmation"
               v-model.trim="newPasswordConfirmation"
               :type="passwordInputType['newPasswordConfirmation']"
               placeholder="Ulangi kata sandi baru"
-              class="text-sm placeholder:text-gray-600 p-2 w-full bg-white focus:outline-none"
+              class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none"
+              :class="[validationMessage.name === 'newPasswordConfirmation' ? 'bg-red-50' : 'bg-white ']"
             >
             <div
               v-show="isPasswordIconVisible['newPasswordConfirmation']"
@@ -141,6 +149,30 @@
           >
             {{ validationMessage.body }}
           </p>
+        </div>
+        <!-- Tooltip -->
+        <div
+          v-show="!isEmpty(newPassword) || !isEmpty(newPasswordConfirmation)"
+          class="grid grid-cols-2 relative"
+        >
+          <div class="bg-gray-900 px-3 pt-3 pb-2 rounded-lg text-white text-xs">
+            <div class="grid grid-cols-3 gap-2 mb-2">
+              <div
+                class="h-1 rounded-lg"
+                :class="[lowBarClassName]"
+              />
+              <div
+                class="h-1 rounded-lg"
+                :class="[mediumBarClassName]"
+              />
+              <div
+                class="h-1 rounded-lg"
+                :class="[strongBarClassName]"
+              />
+            </div>
+            <p>Kata sandi Anda <span :class="passwordStrengthLabelClassName">{{ passwordStrength.label }}</span></p>
+          </div>
+          <div class="absolute top-1 left-3 w-3 h-3 -mt-2 rotate-45 bg-gray-900" />
         </div>
       </div>
       <template #footer>
@@ -204,6 +236,10 @@ export default {
         name: '',
         body: '',
       },
+      passwordStrength: {
+        type: '',
+        label: '',
+      },
     };
   },
   computed: {
@@ -213,6 +249,48 @@ export default {
 
       return !isPasswordEmpty && isPasswordValid;
     },
+    lowBarClassName() {
+      switch (this.passwordStrength.type) {
+        case 'low':
+          return 'bg-red-600';
+        case 'medium':
+          return 'bg-yellow-600';
+        case 'strong':
+          return 'bg-green-600';
+        default:
+          return 'bg-gray-600';
+      }
+    },
+    mediumBarClassName() {
+      switch (this.passwordStrength.type) {
+        case 'medium':
+          return 'bg-yellow-600';
+        case 'strong':
+          return 'bg-green-600';
+        default:
+          return 'bg-gray-600';
+      }
+    },
+    strongBarClassName() {
+      switch (this.passwordStrength.type) {
+        case 'strong':
+          return 'bg-green-600';
+        default:
+          return 'bg-gray-600';
+      }
+    },
+    passwordStrengthLabelClassName() {
+      switch (this.passwordStrength.type) {
+        case 'low':
+          return 'text-red-500';
+        case 'medium':
+          return 'text-yellow-500';
+        case 'strong':
+          return 'text-green-500';
+        default:
+          return '';
+      }
+    },
   },
   watch: {
     currentPassword() {
@@ -220,15 +298,18 @@ export default {
     },
     newPassword() {
       this.setPasswordIconVisibility('newPassword', this.newPassword !== '');
+      this.setPasswordStrength(this.checkPasswordStrength(this.newPassword));
     },
     newPasswordConfirmation() {
       this.setPasswordIconVisibility('newPasswordConfirmation', this.newPasswordConfirmation !== '');
+      this.setPasswordStrength(this.checkPasswordStrength(this.newPasswordConfirmation));
     },
   },
   methods: {
     togglePrompt() {
       this.clearValidationMessage();
       this.clearPasswordInput();
+      this.clearPasswordStrength();
       this.isPromptOpen = !this.isPromptOpen;
     },
     setPasswordIconVisibility(name, value) {
@@ -249,15 +330,48 @@ export default {
       // contain at least 1 special character
       const isContainSymbol = /(?=.*[!@#$%^&*])/.test(string);
 
-      if (isContainLowerCase && isContainUpperCase && isContainNumber && isContainSymbol) {
+      if (string.length >= 6 && isContainLowerCase && isContainUpperCase && isContainNumber && isContainSymbol) {
         return 'strong';
       }
 
-      if ((isContainLowerCase || isContainUpperCase) && isContainNumber) {
+      if (string.length >= 6 && (isContainLowerCase || isContainUpperCase) && isContainNumber) {
         return 'medium';
       }
 
       return 'low';
+    },
+    setPasswordStrength(type) {
+      switch (type) {
+        case 'low':
+          this.passwordStrength = {
+            type: 'low',
+            label: 'tidak cukup kuat',
+          };
+          break;
+        case 'medium':
+          this.passwordStrength = {
+            type: 'medium',
+            label: 'cukup kuat',
+          };
+          break;
+        case 'strong':
+          this.passwordStrength = {
+            type: 'strong',
+            label: 'sangat kuat',
+          };
+          break;
+        default:
+          this.passwordStrength = {
+            type: '',
+            label: '',
+          };
+      }
+    },
+    clearPasswordStrength() {
+      this.passwordStrength = {
+        type: '',
+        label: '',
+      };
     },
     isEmpty(string) {
       return string === '';
@@ -290,7 +404,7 @@ export default {
     },
     onSubmit() {
       if (!this.isFormValid) return;
-      if (!this.isPasswordMatch(this.newPassword, this.newPasswordConfirmation)) {
+      if (!this.isPasswordMatch(this.currentPassword, this.newPasswordConfirmation)) {
         this.setValidationMessage('newPasswordConfirmation', 'Kata sandi tidak sama');
         return;
       }
