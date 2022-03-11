@@ -16,7 +16,7 @@
         </p>
       </div>
       <BaseButton
-        class="text-green-700 border-none font-normal"
+        class="text-green-700 border-none font-normal hover:text-green-800"
         @click="togglePrompt"
       >
         <template #icon-left>
@@ -35,7 +35,7 @@
         </p>
         <a
           href="#"
-          class="font-lato text-sm text-blue-700 underline"
+          class="font-lato text-sm text-blue-700 underline hover:text-blue-800"
         >
           Lihat ketentuan privasi akun Portal Jabar
         </a>
@@ -52,6 +52,7 @@
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="currentPassword"
+            class="text-sm font-medium"
             :class="[validationMessage.name === 'currentPassword' ? 'text-red-600' : 'text-blue-gray-800']"
           >
             Kata Sandi Lama
@@ -89,7 +90,7 @@
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="newPassword"
-            class="text-blue-gray-800"
+            class="text-blue-gray-800 text-sm font-medium"
           >
             Kata Sandi Baru
           </label>
@@ -140,6 +141,7 @@
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="newPasswordConfirmation"
+            class="text-sm font-medium"
             :class="[validationMessage.name === 'newPasswordConfirmation' ? 'text-red-600' : 'text-blue-gray-800']"
           >
             Ulangi Kata Sandi Baru

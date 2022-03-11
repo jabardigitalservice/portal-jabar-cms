@@ -14,7 +14,7 @@
           </p>
         </div>
         <BaseButton
-          class="text-green-700 border-none font-normal"
+          class="text-green-700 border-none font-normal hover:text-green-800"
           @click="setPromptDetail('name')"
         >
           <template #icon-left>
@@ -36,7 +36,7 @@
           </p>
         </div>
         <BaseButton
-          class="text-green-700 border-none font-normal"
+          class="text-green-700 border-none font-normal hover:text-green-800"
           @click="setPromptDetail('occupation')"
         >
           <template #icon-left>
@@ -96,7 +96,7 @@
         >
           <label
             for="name"
-            class="text-blue-gray-800"
+            class="text-blue-gray-800 text-sm font-medium"
           >
             Nama Baru
           </label>
@@ -114,7 +114,7 @@
         >
           <label
             for="occupation"
-            class="text-blue-gray-800"
+            class="text-blue-gray-800 text-sm font-medium"
           >
             Jabatan Baru
           </label>
