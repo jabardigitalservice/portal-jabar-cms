@@ -14,7 +14,7 @@
           </p>
         </div>
         <BaseButton
-          class="text-green-700 border-none font-normal"
+          class="text-green-700 border-none font-normal hover:text-green-800"
           @click="setPromptDetail('name')"
         >
           <template #icon-left>
@@ -36,7 +36,7 @@
           </p>
         </div>
         <BaseButton
-          class="text-green-700 border-none font-normal"
+          class="text-green-700 border-none font-normal hover:text-green-800"
           @click="setPromptDetail('occupation')"
         >
           <template #icon-left>

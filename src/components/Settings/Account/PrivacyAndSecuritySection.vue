@@ -16,7 +16,7 @@
         </p>
       </div>
       <BaseButton
-        class="text-green-700 border-none font-normal"
+        class="text-green-700 border-none font-normal hover:text-green-800"
         @click="togglePrompt"
       >
         <template #icon-left>
@@ -35,7 +35,7 @@
         </p>
         <a
           href="#"
-          class="font-lato text-sm text-blue-700 underline"
+          class="font-lato text-sm text-blue-700 underline hover:text-blue-800"
         >
           Lihat ketentuan privasi akun Portal Jabar
         </a>
