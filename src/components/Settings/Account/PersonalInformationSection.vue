@@ -96,7 +96,7 @@
         >
           <label
             for="name"
-            class="text-blue-gray-800"
+            class="text-blue-gray-800 text-sm font-medium"
           >
             Nama Baru
           </label>
@@ -114,7 +114,7 @@
         >
           <label
             for="occupation"
-            class="text-blue-gray-800"
+            class="text-blue-gray-800 text-sm font-medium"
           >
             Jabatan Baru
           </label>

@@ -52,6 +52,7 @@
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="currentPassword"
+            class="text-sm font-medium"
             :class="[validationMessage.name === 'currentPassword' ? 'text-red-600' : 'text-blue-gray-800']"
           >
             Kata Sandi Lama
@@ -89,7 +90,7 @@
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="newPassword"
-            class="text-blue-gray-800"
+            class="text-blue-gray-800 text-sm font-medium"
           >
             Kata Sandi Baru
           </label>
@@ -116,6 +117,7 @@
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="newPasswordConfirmation"
+            class="text-sm font-medium"
             :class="[validationMessage.name === 'newPasswordConfirmation' ? 'text-red-600' : 'text-blue-gray-800']"
           >
             Ulangi Kata Sandi Baru
