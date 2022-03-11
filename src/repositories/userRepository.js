@@ -16,4 +16,16 @@ export default {
   updateUser(body) {
     return Repository.put(`${resource}/me`, body);
   },
+
+  /**
+   * Update user password
+   *
+   * @param {Object} body
+   *
+   * @property {string} current_password
+   * @property {string} new_password
+   */
+  updateUserPassword(body) {
+    return Repository.put(`${resource}/me/change-password`, body);
+  },
 };

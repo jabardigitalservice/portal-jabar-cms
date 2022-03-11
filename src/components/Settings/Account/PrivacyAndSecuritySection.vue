@@ -113,6 +113,30 @@
             </div>
           </div>
         </div>
+        <!-- Tooltip -->
+        <div
+          v-show="!isEmpty(newPassword)"
+          class="grid grid-cols-2 relative mb-2"
+        >
+          <div class="bg-gray-900 px-3 pt-3 pb-2 rounded-lg text-white text-xs">
+            <div class="grid grid-cols-3 gap-2 mb-2">
+              <div
+                class="h-1 rounded-lg"
+                :class="[lowBarClassName]"
+              />
+              <div
+                class="h-1 rounded-lg"
+                :class="[mediumBarClassName]"
+              />
+              <div
+                class="h-1 rounded-lg"
+                :class="[strongBarClassName]"
+              />
+            </div>
+            <p>Kata sandi Anda <span :class="passwordStrengthLabelClassName">{{ passwordStrength.label }}</span></p>
+          </div>
+          <div class="absolute top-1 left-3 w-3 h-3 -mt-2 rotate-45 bg-gray-900" />
+        </div>
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="newPasswordConfirmation"
@@ -150,30 +174,6 @@
             {{ validationMessage.body }}
           </p>
         </div>
-        <!-- Tooltip -->
-        <div
-          v-show="!isEmpty(newPassword) || !isEmpty(newPasswordConfirmation)"
-          class="grid grid-cols-2 absolute"
-        >
-          <div class="bg-gray-900 px-3 pt-3 pb-2 rounded-lg text-white text-xs">
-            <div class="grid grid-cols-3 gap-2 mb-2">
-              <div
-                class="h-1 rounded-lg"
-                :class="[lowBarClassName]"
-              />
-              <div
-                class="h-1 rounded-lg"
-                :class="[mediumBarClassName]"
-              />
-              <div
-                class="h-1 rounded-lg"
-                :class="[strongBarClassName]"
-              />
-            </div>
-            <p>Kata sandi Anda <span :class="passwordStrengthLabelClassName">{{ passwordStrength.label }}</span></p>
-          </div>
-          <div class="absolute top-1 left-3 w-3 h-3 -mt-2 rotate-45 bg-gray-900" />
-        </div>
       </div>
       <template #footer>
         <div class="flex gap-4 justify-end">
@@ -188,6 +188,10 @@
             :disabled="!isFormValid"
             @click="onSubmit"
           >
+            <JdsSpinner
+              v-show="isLoading"
+              size="16px"
+            />
             Simpan Perubahan
           </BaseButton>
         </div>
@@ -199,6 +203,9 @@
 <script>
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'PrivacyAndSecuritySection',
@@ -240,6 +247,7 @@ export default {
         type: '',
         label: '',
       },
+      isLoading: false,
     };
   },
   computed: {
@@ -302,7 +310,6 @@ export default {
     },
     newPasswordConfirmation() {
       this.setPasswordIconVisibility('newPasswordConfirmation', this.newPasswordConfirmation !== '');
-      this.setPasswordStrength(this.checkPasswordStrength(this.newPasswordConfirmation));
     },
   },
   methods: {
@@ -404,18 +411,30 @@ export default {
     },
     onSubmit() {
       if (!this.isFormValid) return;
-      if (!this.isPasswordMatch(this.currentPassword, this.newPasswordConfirmation)) {
-        this.setValidationMessage('newPasswordConfirmation', 'Kata sandi tidak sama');
+      if (!this.isPasswordMatch(this.newPassword, this.newPasswordConfirmation)) {
+        this.setValidationMessage('newPasswordConfirmation', 'Kata sandi baru Anda tidak sama');
         return;
       }
       this.updatePassword();
     },
     async updatePassword() {
+      this.isLoading = true;
       try {
-        // todo: update new password
+        const payload = {
+          current_password: this.currentPassword,
+          new_password: this.newPassword,
+        };
+        await userRepository.updateUserPassword(payload);
+        this.$toast({ type: 'success', message: 'Kata sandi Anda berhasil diubah' });
+        this.togglePrompt();
       } catch (error) {
-        // todo: set error on input if current password not match with the status code 422
-        // todo: set global error if the status code is other than 422
+        if (error.response) {
+          this.setValidationMessage('currentPassword', 'Kata sandi lama Anda tidak cocok');
+        } else {
+          this.$toast({ type: 'error', message: error.message });
+        }
+      } finally {
+        this.isLoading = false;
       }
     },
   },
