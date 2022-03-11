@@ -5,8 +5,9 @@ const resource = '/users';
 export default {
   /**
    * Get authenticated user data
+   * @returns {Promise}
    */
-  getMe() {
+  getUser() {
     return Repository.get(`${resource}/me`);
   },
 

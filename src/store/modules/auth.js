@@ -2,6 +2,7 @@ import { RepositoryFactory } from '../../repositories/RepositoryFactory';
 import { getAllCookies, removeAllCookies, setCookies } from '@/common/helpers/cookies';
 
 const authRepository = RepositoryFactory.get('auth');
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   namespaced: true,
@@ -31,7 +32,7 @@ export default {
       if (!Object.keys(token).length) return;
 
       try {
-        const response = await authRepository.getUser();
+        const response = await userRepository.getUser();
         dispatch('setToken', token);
         dispatch('setUser', response.data.data);
       } catch (error) {

@@ -149,6 +149,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
@@ -163,18 +164,6 @@ export default {
   },
   data() {
     return {
-      user: {
-        name: '',
-        username: '',
-        email: '',
-        nip: '',
-        occupation: '',
-        photo: '',
-        role: {
-          id: null,
-          name: '',
-        },
-      },
       updatedUser: {
         name: '',
         occupation: '',
@@ -189,26 +178,10 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['user']),
     isInputValid() {
       return this.updatedUser[this.promptDetail.action] !== '';
     },
-  },
-  async created() {
-    const response = await userRepository.getMe();
-    const { data } = response.data;
-
-    this.user = {
-      name: data.name,
-      username: data.username,
-      email: data.email,
-      nip: data.nip,
-      occupation: data.occupation,
-      photo: data.photo,
-      role: {
-        id: data.role.id,
-        name: data.role.name,
-      },
-    };
   },
   methods: {
     openPrompt() {
