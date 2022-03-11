@@ -93,7 +93,7 @@
                 v-show="isStartDateEmpty"
                 class="py-2"
               >
-                <p class="text-sm text-red-500">
+                <p class="text-[13px] text-red-500">
                   Tanggal awal tidak boleh kosong
                 </p>
               </div>
@@ -108,7 +108,7 @@
                 v-show="isEndDateEmpty"
                 class="py-2"
               >
-                <p class="text-sm text-red-500">
+                <p class="text-[13px] text-red-500">
                   Tanggal akhir tidak boleh kosong
                 </p>
               </div>
@@ -116,7 +116,7 @@
                 v-show="isEndDateValid"
                 class="py-2"
               >
-                <p class="text-sm text-red-500 leading-5">
+                <p class="text-[13px] text-red-500 leading-5">
                   Tanggal akhir tidak boleh kurang
                   <br>
                   dari tanggal awal
@@ -374,16 +374,21 @@ export default {
      * Reset filter state to original/actual filter params
      */
     resetFilter() {
+      const prevStartDate = this.filter.start_date;
+      const prevEndDate = this.filter.end_date;
+
       this.filter = {
         cat: [...this.params.cat],
         type: [...this.params.type],
         start_date: this.params.start_date
           ? formatDate(this.params.start_date, 'dd/MM/yyyy')
-          : formatDate(new Date(), 'dd/MM/yyyy'),
+          : prevStartDate,
         end_date: this.params.end_date
           ? formatDate(this.params.end_date, 'dd/MM/yyyy')
-          : formatDate(new Date(), 'dd/MM/yyyy'),
+          : prevEndDate,
       };
+
+      this.isDatePickerTouched = false;
     },
 
     clearFilter() {
@@ -394,7 +399,6 @@ export default {
         end_date: null,
       };
       this.resetDatePicker();
-      this.filterCount = 0;
       this.isDatePickerTouched = false;
     },
 
