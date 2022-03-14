@@ -177,6 +177,7 @@
             </div>
           </div>
         </div>
+        <!-- editor skeleton -->
         <div
           v-show="isEditorLoading"
           class="bg-white rounded-lg border border-gray-200 flex flex-col gap-6 p-4"
@@ -204,6 +205,7 @@
             <div class="w-11/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
           </div>
         </div>
+        <!-- end of skeleton -->
         <Editor
           v-model="form.content"
           placeholder="Tulis isi berita di sini"
