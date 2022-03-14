@@ -115,7 +115,7 @@
           <!-- News Tags -->
           <div
             v-show="hasTags"
-            class="flex gap-4 items-center"
+            class="flex flex-wrap gap-4 items-center"
           >
             <span class="inline-flex items-center font-lato font-bold text-green-800 text-sm leading-6">
               Tags
@@ -484,9 +484,52 @@ body {
   overflow: auto !important;
 }
 
-.article__body h1, .article__body h2, .article__body h3, .article__body h4, .article__body h5, .article__body h6, .article__body p {
+.article__body h1,
+.article__body h2,
+.article__body h3,
+.article__body h4,
+.article__body h5,
+.article__body h6,
+.article__body p,
+.article__body strong {
   font-family: 'Lora';
   color: #424242 ;
+}
+
+.article__body h1 {
+  font-size: 5.8rem;
+  line-height: 8.8rem;
+  font-weight: 400;
+}
+
+.article__body h2 {
+  font-size: 4rem;
+  line-height: 6.5rem;
+  font-weight: 700;
+}
+
+.article__body h3 {
+  font-size: 3rem;
+  line-height: 4.9rem;
+  font-weight: 700;
+}
+
+.article__body h4 {
+  font-size: 2.3rem;
+  line-height: 3.75rem;
+  font-weight: 700;
+}
+
+.article__body h5 {
+  font-size: 1.75rem;
+  line-height: 2.8rem;
+  font-weight: 700;
+}
+
+.article__body h6 {
+  font-size: 1.3rem;
+  line-height: 2.1rem;
+  font-weight: 700;
 }
 
 .article__body p {
@@ -500,10 +543,20 @@ body {
   height: auto;
 }
 
+.article__body figure figcaption {
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.8rem;
+  color: #616161;
+}
+
 .article__body blockquote {
   border-left-width: 8px ;
   border-color: #E0E0E0;
   padding: 0 1.5rem;
+}
+
+.article__body blockquote p {
   font-family: 'Lora';
   font-size: 1rem;
   line-height: 1.5rem;
