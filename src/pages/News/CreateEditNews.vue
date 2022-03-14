@@ -177,13 +177,40 @@
             </div>
           </div>
         </div>
-        <div class="min-h-[500px]">
-          <Editor
-            v-model="form.content"
-            placeholder="Tulis isi berita di sini"
-            v-bind="{...tinyMceConfig}"
-          />
+        <!-- editor skeleton -->
+        <div
+          v-show="isEditorLoading"
+          class="bg-white rounded-lg border border-gray-200 flex flex-col gap-6 p-4"
+        >
+          <div class="flex gap-4">
+            <div class="w-6 h-6 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-6 h-6 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-20 h-6 rounded-lg bg-gray-200 animate-pulse" />
+            <div
+              v-for="i of 8"
+              :key="i"
+              class="w-6 h-6 rounded-lg bg-gray-200 animate-pulse"
+            />
+          </div>
+          <div class="flex flex-col gap-5">
+            <div class="w-5/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-8/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-10/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-9/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-11/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-10/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-8/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-9/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-10/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+            <div class="w-11/12 h-4 rounded-lg bg-gray-200 animate-pulse" />
+          </div>
         </div>
+        <!-- end of skeleton -->
+        <Editor
+          v-model="form.content"
+          placeholder="Tulis isi berita di sini"
+          v-bind="{...tinyMceConfig}"
+        />
       </div>
       <div>
         <div class="p-4 rounded-lg bg-white mb-4">
@@ -459,6 +486,7 @@ export default {
       tinyMceConfig: Object.freeze({
         'api-key': process.env.VUE_APP_TINY_MCE_API_KEY,
         init: {
+          setup: this.tinyMceSetup,
           height: 500,
           skin_url: '/tinymce-skin-ipj/',
           menubar: false,
@@ -487,6 +515,7 @@ export default {
       isFormDataChanged: false,
       newsStatus: null,
       newsUpdatedAt: null,
+      isEditorLoading: true,
     };
   },
   computed: {
@@ -668,6 +697,11 @@ export default {
     this.$store.dispatch('news/clearNewsPreview');
   },
   methods: {
+    tinyMceSetup(editor) {
+      editor.on('init', () => {
+        this.isEditorLoading = false;
+      });
+    },
     normalizeDate(initialDate) {
       if (!initialDate) return null;
 
