@@ -473,6 +473,7 @@ export default {
             outdent indent | link image media | fullscreen `,
           images_upload_handler: this.onContentImageUpload,
           image_caption: true,
+          invalid_elements: 'div',
         },
       }),
       loading: false,
