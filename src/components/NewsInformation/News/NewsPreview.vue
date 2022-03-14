@@ -36,20 +36,54 @@
         </div>
       </div>
       <div class="relative z-20 max-w-screen-xl w-full mx-auto mt-[42px] pb-16">
-        <h1 class="font-lora font-medium text-[34px] leading-[48px] text-white mb-6 max-w-3xl">
+        <!-- Title skeleton -->
+        <div
+          v-show="!title"
+          class="w-full h-[96px] flex flex-col gap-4 justify-center mb-6"
+        >
+          <div class="w-3/5 h-[28px] bg-gray-500 opacity-25 rounded-lg animate-pulse" />
+          <div class="w-2/5 h-[28px] bg-gray-500 opacity-25 rounded-lg animate-pulse" />
+        </div>
+        <!-- end of skeleton -->
+        <h1
+          v-show="title"
+          class="font-lora font-medium text-[34px] leading-[48px] text-white mb-6 max-w-3xl"
+        >
           {{ title }}
         </h1>
         <div class="flex gap-3 items-center mb-6">
           <p class="font-lato font-normal text-sm text-blue-gray-100 flex items-center">
             <CalendarIcon class="inline mr-[10px] w-4 h-4 fill-gray-200" />
-            {{ date }}
+            <!-- Date skeleton -->
+            <span
+              v-show="!date"
+              class="w-[132px] h-5 flex items-center"
+            >
+              <div class="w-full h-[14px] bg-gray-500 opacity-25 rounded-md animate-pulse " />
+            </span>
+            <!-- end of skeleton -->
+            <span v-show="date">{{ date }}</span>
           </p>
           <p class="font-normal text-sm text-blue-gray-100">
             |
           </p>
           <p class="font-lato font-normal text-sm text-blue-gray-100 flex items-center capitalize">
             <PenIcon class="inline mr-[10px] w-4 h-4 fill-gray-200" />
-            Penulis : {{ author }}
+            Penulis :
+            <!-- Author skeleton -->
+            <span
+              v-show="!author"
+              class="ml-3 w-[132px] h-5 flex items-center"
+            >
+              <div class="w-full h-[14px] bg-gray-500 opacity-25 rounded-md animate-pulse" />
+            </span>
+            <!-- end of skeleton -->
+            <span
+              v-show="author"
+              class="ml-3"
+            >
+              {{ author }}
+            </span>
           </p>
         </div>
         <div class="w-full flex justify-between">
@@ -107,8 +141,26 @@
     <section class="mt-12 mb-12">
       <div class="max-w-screen-xl w-full h-full mx-auto grid grid-cols-[60%_auto] gap-20">
         <div>
-          <!-- News Content -->
+          <!-- News content skeleton -->
+          <div
+            v-show="!content"
+            class="w-full min-h-screen"
+          >
+            <div
+              v-for="index in 3"
+              :key="index"
+              class="flex flex-col gap-5 mb-16"
+            >
+              <div class="w-12/12 h-[16px] bg-gray-200 rounded-md animate-pulse" />
+              <div class="w-11/12 h-[16px] bg-gray-200 rounded-md animate-pulse" />
+              <div class="w-9/12 h-[16px] bg-gray-200 rounded-md animate-pulse" />
+              <div class="w-11/12 h-[16px] bg-gray-200 rounded-md animate-pulse" />
+              <div class="w-8/12 h-[16px] bg-gray-200 rounded-md animate-pulse" />
+            </div>
+          </div>
+          <!-- end of skeleton -->
           <article
+            v-show="content"
             class="article__body min-h-screen"
             v-html="content"
           />
@@ -438,13 +490,15 @@ export default {
       return this.news?.image || null;
     },
     title() {
-      return this.news?.title || '-';
+      return this.news?.title || '';
     },
     date() {
-      return formatDate(this.news?.updated_at || new Date(), 'EEEE, dd LLLL yyyy');
+      return this.news?.updated_at
+        ? formatDate(this.news.updated_at, 'EEEE, dd LLLL yyyy')
+        : null;
     },
     author() {
-      return this.news?.author?.name || '-';
+      return this.news?.author?.name || '';
     },
     views() {
       return this.news?.views || 0;
@@ -453,7 +507,7 @@ export default {
       return this.news?.shared || 0;
     },
     content() {
-      return this.news?.content || null;
+      return this.news?.content || '';
     },
     tags() {
       return this.news?.tags || [];
