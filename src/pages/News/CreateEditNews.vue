@@ -579,6 +579,7 @@ export default {
         id: this.newsId,
         author: this.author,
         image: this.imagePreview,
+        content: this.isEditMode ? this.form.content : this.insertNewsPrefix(this.form.content),
       };
 
       return data;
