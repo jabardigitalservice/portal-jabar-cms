@@ -183,7 +183,7 @@ export default {
     },
     async onLogout() {
       await this.$store.dispatch('auth/logout');
-      window.location.replace('/login');
+      this.$router.push('/login');
     },
   },
 };
