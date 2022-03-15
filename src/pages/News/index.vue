@@ -4,7 +4,9 @@
       :tabs="tabs"
       :current-tab.sync="currentTab"
     />
-    <component :is="tab" />
+    <keep-alive>
+      <component :is="tab" />
+    </keep-alive>
   </div>
 </template>
 
