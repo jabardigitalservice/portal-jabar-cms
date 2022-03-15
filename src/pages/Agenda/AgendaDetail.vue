@@ -109,20 +109,6 @@
                   </div>
                 </td>
               </tr>
-              <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
-                  Status Agenda
-                </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
-                  <div
-                    v-if="loading"
-                    class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
-                  />
-                  <div v-else>
-                    {{ status }}
-                  </div>
-                </td>
-              </tr>
             </tbody>
           </JdsSimpleTable>
         </div>
@@ -309,7 +295,6 @@ import HeaderMenu from '@/common/components/HeaderMenu';
 import AgendaPreview from '@/components/Agenda/AgendaPreview.vue';
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
-import { AGENDA_STATUS_MAP } from '@/common/constants';
 
 const agendaRepository = RepositoryFactory.get('agenda');
 
@@ -344,9 +329,6 @@ export default {
       }
 
       return '-';
-    },
-    status() {
-      return AGENDA_STATUS_MAP[this.event.status] ?? this.event.status;
     },
   },
   async mounted() {
