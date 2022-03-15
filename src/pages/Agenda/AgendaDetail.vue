@@ -101,11 +101,8 @@
                     v-if="loading"
                     class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
                   />
-                  <div
-                    v-else
-                    class="capitalize"
-                  >
-                    {{ event.published_by || '-' }}
+                  <div v-else>
+                    {{ unitName }}
                   </div>
                 </td>
               </tr>
@@ -329,6 +326,9 @@ export default {
       }
 
       return '-';
+    },
+    unitName() {
+      return this.event.created_by?.unit_name || '-';
     },
   },
   async mounted() {
