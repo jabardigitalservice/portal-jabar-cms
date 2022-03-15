@@ -89,7 +89,7 @@
               </router-link>
               <button
                 class="p-2 rounded-md group hover:bg-green-50"
-                @click="toggleLogoutModal"
+                @click="openLogoutModal"
               >
                 <p
                   class="flex gap-2 items-center font-lato font-medium text-sm text-gray-800
@@ -108,7 +108,7 @@
     <BaseModal
       ref="header-logout-modal"
       :open="isLogoutModalOpen"
-      @close="toggleLogoutModal"
+      @close="closeLogoutModal"
     >
       <div class="w-full h-full">
         <h1 class="font-roboto font-bold text-center text-green-700 text-[21px] leading-[34px] mb-4">
@@ -122,7 +122,7 @@
         <div class="flex w-full h-full items-center justify-center gap-4">
           <BaseButton
             class="border-green-700 hover:bg-green-50 text-sm text-green-700"
-            @click="toggleLogoutModal"
+            @click="closeLogoutModal"
           >
             Batal
           </BaseButton>
@@ -174,8 +174,12 @@ export default {
     toggleUserDropdown() {
       this.isUserDropdownOpen = !this.isUserDropdownOpen;
     },
-    toggleLogoutModal() {
-      this.isLogoutModalOpen = !this.isLogoutModalOpen;
+    openLogoutModal() {
+      this.isUserDropdownOpen = false;
+      this.isLogoutModalOpen = true;
+    },
+    closeLogoutModal() {
+      this.isLogoutModalOpen = false;
     },
     async onLogout() {
       await this.$store.dispatch('auth/logout');
