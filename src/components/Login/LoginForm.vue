@@ -62,7 +62,7 @@
           <input
             id="password"
             ref="password-input"
-            v-model.trim="password"
+            v-model="password"
             :type="passwordInputType"
             placeholder="Masukkan kata sandi"
             :disabled="isError"
