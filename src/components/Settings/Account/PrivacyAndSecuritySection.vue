@@ -11,8 +11,11 @@
         <p class="font-lato text-sm text-blue-gray-800">
           Gunakan kata sandi yang unik untuk melindungi akun Anda
         </p>
-        <p class="font-lato text-xs text-blue-gray-200">
-          Terakhir diubah: 3 Mei 2020
+        <p
+          v-if="lastPasswordChanged"
+          class="font-lato text-xs text-blue-gray-200"
+        >
+          Terakhir diubah: {{ lastPasswordChanged }}
         </p>
       </div>
       <BaseButton
@@ -203,9 +206,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { formatDate } from '@/common/helpers/date';
 
 const userRepository = RepositoryFactory.get('user');
 
@@ -253,6 +258,10 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['user']),
+    lastPasswordChanged() {
+      return this.user?.last_password_changed ? formatDate(this.user?.last_password_changed, 'dd LLLL yyyy') : '';
+    },
     isFormValid() {
       const isPasswordEmpty = this.isEmpty(this.currentPassword) || this.isEmpty(this.newPassword) || this.isEmpty(this.newPasswordConfirmation);
       const isPasswordValid = this.isPasswordValid(this.newPassword) && this.isPasswordValid(this.newPasswordConfirmation);
