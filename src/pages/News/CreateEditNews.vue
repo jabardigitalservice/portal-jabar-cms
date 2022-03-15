@@ -843,7 +843,7 @@ export default {
         this.confirmationModalDetail = {
           type,
           title: 'Terbitkan Berita',
-          subtitle: 'Apakah Anda yakin ingin menerbitkan berita ini?',
+          subtitle: 'Apakah anda yakin untuk mengajukan berita ini untuk diterbitkan?',
           message: this.form.title,
           cancelButtonLabel: 'Batal',
           confirmButtonLabel: 'Ya, terbitkan berita',
