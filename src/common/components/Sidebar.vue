@@ -35,14 +35,15 @@
       <router-link
         v-for="navigation in navigationMenu"
         :key="navigation.label"
-        v-slot="{ href, navigate, isExactActive }"
+        v-slot="{ href, navigate, isActive }"
         :to="navigation.link"
+        :exact="navigation.link === '/'"
         custom
       >
         <li
           class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
           font-bold text-sm text-white hover:bg-green-700 mb-2"
-          :class="{'bg-green-700' : isExactActive}"
+          :class="{'bg-green-700' : isActive}"
         >
           <a
             :href="href"
@@ -75,14 +76,14 @@
       class="mt-auto"
     >
       <router-link
-        v-slot="{ href, navigate, isExactActive }"
+        v-slot="{ href, navigate, isActive }"
         to="/pengaturan"
         custom
       >
         <li
           class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
           font-bold text-sm text-white hover:bg-green-700 mb-2"
-          :class="{'bg-green-700' : isExactActive}"
+          :class="{'bg-green-700' : isActive}"
         >
           <a
             :href="href"
