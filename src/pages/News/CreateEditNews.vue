@@ -490,6 +490,7 @@ export default {
           height: 500,
           skin_url: '/tinymce-skin-ipj/',
           menubar: false,
+          toolbar_mode: 'sliding',
           plugins: [
             'advlist autolink lists link image charmap print anchor',
             'searchreplace visualblocks code fullscreen',
