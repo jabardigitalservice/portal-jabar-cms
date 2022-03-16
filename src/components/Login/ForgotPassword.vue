@@ -27,7 +27,7 @@
               dismissible
               :message="error.message"
               class="mb-5"
-              @click:close="closeErrorMessage"
+              @click:close="clearErrorMessage"
             />
           </div>
           <div class="flex flex-col gap-1">
@@ -37,10 +37,7 @@
             >
               Email
             </label>
-            <div
-              class="border rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700"
-              :class="[isError ? 'border-red-500' : 'border-gray-500']"
-            >
+            <div class="border rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700 border-gray-500">
               <div class="bg-gray-100 p-2 border-r border-gray-200 flex justify-center items-center">
                 <MailIcon
                   width="16"
@@ -55,6 +52,8 @@
                 type="email"
                 placeholder="Contoh: agus.permadi@gmail.com"
                 class="text-sm placeholder:text-gray-600 p-2 w-full bg-white focus:outline-none"
+                :class="{'cursor-not-allowed': isError}"
+                :disabled="isError"
               >
             </div>
           </div>
@@ -93,7 +92,7 @@
       >
         <BaseButton
           class="bg-green-700 hover:bg-green-600 text-sm text-white"
-          @click="onClose()"
+          @click="onClose"
         >
           Saya Mengerti
         </BaseButton>
@@ -123,42 +122,51 @@ export default {
   data() {
     return {
       email: '',
-      error: null,
+      error: {},
       success: false,
     };
   },
   computed: {
-    isValidInput() {
-      return this.email !== '' && this.isValidEmail(this.email);
-    },
     isError() {
-      return !!this.error;
+      return !!this.error.message;
     },
   },
   methods: {
-    onClose() {
-      this.success = false;
-      this.email = '';
-      this.$emit('close');
-    },
-    onSubmit() {
-      if (!this.isValidInput) {
-        this.error = { message: 'Email belum dimasukkan' };
-      } else {
-        try {
-          // TODO: Send request
-          this.success = true;
-        } catch (error) {
-          this.error = { message: error.message };
-        }
-      }
-    },
     isValidEmail(email) {
       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       return emailPattern.test(email);
     },
-    closeErrorMessage() {
-      this.error = null;
+    validateEmail() {
+      if (this.email === '') {
+        this.error = { message: 'Email belum dimasukkan' };
+      } else if (!this.isValidEmail(this.email)) {
+        this.error = { message: 'Email tidak valid' };
+      }
+    },
+    clearErrorMessage() {
+      this.error = {};
+    },
+    onClose() {
+      this.success = false;
+      this.email = '';
+      this.clearErrorMessage();
+      this.$emit('close');
+    },
+    onSubmit() {
+      this.clearErrorMessage();
+      this.validateEmail();
+
+      if (!this.isError) {
+        this.requestChangePassword();
+      }
+    },
+    requestChangePassword() {
+      try {
+        // TODO: send a request to change password
+        this.success = true;
+      } catch (error) {
+        this.error = { message: error.message };
+      }
     },
   },
 };
