@@ -16,8 +16,8 @@ router.beforeEach((to, from, next) => {
   const privateRoute = to.matched.some((record) => !record.meta.public);
   const publicRoute = to.matched.some((record) => record.meta.public);
 
-  if (privateRoute && !isAuthenticated) next('/login');
-  else if (publicRoute && isAuthenticated) next('/');
+  if (publicRoute && isAuthenticated) next('/');
+  else if (privateRoute && !isAuthenticated) next('/login');
   else next();
 });
 
