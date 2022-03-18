@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import MemberTableAction from '@/components/Settings/Member/MemberTableAction';
+import MemberTableAction from '@/components/Settings/Member/ListSection/MemberTableAction';
 import { MEMBER_TABLE_HEADER } from '@/common/constants';
 
 export default {
