@@ -66,6 +66,7 @@
 import { directive as onClickaway } from 'vue-clickaway';
 
 export default {
+  name: 'MemberTableAction',
   directives: {
     onClickaway,
   },

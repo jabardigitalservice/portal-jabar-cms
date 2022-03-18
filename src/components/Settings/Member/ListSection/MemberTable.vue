@@ -28,7 +28,7 @@ import MemberTableAction from '@/components/Settings/Member/ListSection/MemberTa
 import { MEMBER_TABLE_HEADER } from '@/common/constants';
 
 export default {
-  name: 'NewsTable',
+  name: 'MemberTable',
   components: {
     MemberTableAction,
   },
