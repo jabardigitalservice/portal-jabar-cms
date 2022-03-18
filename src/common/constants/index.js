@@ -183,3 +183,35 @@ export const NEWS_STATUS_MAP = {
   ARCHIVED: 'Diarsipkan',
   REVIEW: 'Menunggu Review',
 };
+
+export const MEMBER_TABLE_HEADER = [
+  {
+    key: 'name',
+    text: 'Nama',
+    sortable: true,
+  },
+  {
+    key: 'email',
+    text: 'Email',
+    sortable: true,
+  },
+  {
+    key: 'role',
+    text: 'Keanggotaan',
+    sortable: true,
+  },
+  {
+    key: 'last_active',
+    text: 'Terakhir Aktif',
+    sortable: true,
+  },
+  {
+    key: 'status',
+    text: 'Status',
+    sortable: true,
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+  },
+];
