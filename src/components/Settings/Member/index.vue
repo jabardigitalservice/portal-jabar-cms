@@ -1,14 +1,16 @@
 <template>
-  <Maintenance />
+  <main class="w-full pb-20">
+    <MemberListSection />
+  </main>
 </template>
 
 <script>
-import Maintenance from '@/common/components/Maintenance';
+import MemberListSection from '@/components/Settings/Member/ListSection';
 
 export default {
   name: 'MemberSettings',
   components: {
-    Maintenance,
+    MemberListSection,
   },
 };
 </script>
