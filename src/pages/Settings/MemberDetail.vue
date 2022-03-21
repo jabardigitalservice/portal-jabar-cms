@@ -13,7 +13,7 @@
         <!-- TODO: Add action on button clicked -->
         <BaseButton class="text-sm bg-green-700 hover:bg-green-600 text-white">
           <template #icon-left>
-            <UserAdminIcon class="w-5 h-5" />
+            <UserAdminIcon class="w-5 h-5 fill-white" />
           </template>
           Jadikan Admin
         </BaseButton>
