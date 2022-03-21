@@ -70,6 +70,11 @@ export default [
     component: () => import('@/pages/Settings'),
   },
   {
+    path: '/pengaturan/member/detail/:id',
+    name: 'Pengaturan - Akun',
+    component: () => import('@/pages/Settings/MemberDetail'),
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('@/pages/Login'),
