@@ -3,6 +3,7 @@
     <PersonalInformationSection />
     <NotificationSection />
     <PrivacyAndSecuritySection />
+    <RequestUpgradeRoleSection />
   </main>
 </template>
 
@@ -10,6 +11,7 @@
 import PersonalInformationSection from './PersonalInformationSection';
 import NotificationSection from './NotificationSection';
 import PrivacyAndSecuritySection from './PrivacyAndSecuritySection';
+import RequestUpgradeRoleSection from './RequestUpgradeRoleSection';
 
 export default {
   name: 'AccountSettings',
@@ -17,6 +19,7 @@ export default {
     PersonalInformationSection,
     NotificationSection,
     PrivacyAndSecuritySection,
+    RequestUpgradeRoleSection,
   },
 };
 </script>
