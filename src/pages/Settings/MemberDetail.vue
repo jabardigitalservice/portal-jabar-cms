@@ -7,7 +7,10 @@
           Ubah Email
         </BaseButton>
         <!-- TODO: Add action on button clicked -->
-        <BaseButton class="text-sm text-green-700 border-green-700 hover:bg-green-50">
+        <BaseButton
+          class="text-sm text-green-700 border-green-700 hover:bg-green-50"
+          @click="toggleDeactivateMemberModal"
+        >
           Nonaktifkan Akun
         </BaseButton>
         <!-- TODO: Add action on button clicked -->
@@ -48,12 +51,17 @@
         </JdsSimpleTable>
       </div>
     </section>
+    <DeactivateMemberModal
+      :open="isDeactivateMemberModalOpen"
+      @close="toggleDeactivateMemberModal"
+    />
   </main>
 </template>
 
 <script>
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
+import DeactivateMemberModal from '@/components/Settings/Member/DeactivateMemberModal';
 import { formatDate } from '@/common/helpers/date.js';
 import UserAdminIcon from '@/assets/icons/user-admin.svg?inline';
 
@@ -63,10 +71,12 @@ export default {
     HeaderMenu,
     BaseButton,
     UserAdminIcon,
+    DeactivateMemberModal,
   },
   data() {
     return {
       member: {},
+      isDeactivateMemberModalOpen: false,
     };
   },
   computed: {
@@ -102,6 +112,11 @@ export default {
           value: this.member?.last_active || formatDate(new Date(), 'dd/MM/yyyy - HH:mm'),
         },
       };
+    },
+  },
+  methods: {
+    toggleDeactivateMemberModal() {
+      this.isDeactivateMemberModalOpen = !this.isDeactivateMemberModalOpen;
     },
   },
 
