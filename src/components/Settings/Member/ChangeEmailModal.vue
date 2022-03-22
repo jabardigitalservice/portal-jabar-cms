@@ -63,7 +63,7 @@ import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 
 export default {
-  name: 'ChangeMemberModal',
+  name: 'ChangeEmailModal',
   components: {
     BaseModal,
     BaseButton,
