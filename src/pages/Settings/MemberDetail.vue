@@ -59,6 +59,7 @@
     </section>
     <DeactivateMemberModal
       :open="isDeactivateMemberModalOpen"
+      :member-email="memberDetail.email.value"
       @close="toggleDeactivateMemberModal"
     />
     <ChangeEmailModal

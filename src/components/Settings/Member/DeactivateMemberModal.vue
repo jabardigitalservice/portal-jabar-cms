@@ -8,7 +8,7 @@
         Nonaktifkan Akun
       </h1>
       <p class="text-center text-sm leading-6 text-blue-gray-800 mb-5">
-        Anda akan menonaktifkan akun <strong>rm.cucu@yahoo.co.id</strong>
+        Anda akan menonaktifkan akun <strong>{{ memberEmail }}</strong>
         <br>
         Ketikkan Kata Sandi untuk konfirmasi.
       </p>
@@ -60,6 +60,10 @@ export default {
     open: {
       type: Boolean,
       default: false,
+    },
+    memberEmail: {
+      type: String,
+      default: '',
     },
   },
   data() {
