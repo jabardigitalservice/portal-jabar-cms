@@ -3,7 +3,10 @@
     <HeaderMenu>
       <div class="min-w-0 flex gap-3">
         <!-- TODO: Add action on button clicked -->
-        <BaseButton class="text-sm text-green-700 border-green-700 hover:bg-green-50">
+        <BaseButton
+          class="text-sm text-green-700 border-green-700 hover:bg-green-50"
+          @click="toggleChangeEmailModal"
+        >
           Ubah Email
         </BaseButton>
         <!-- TODO: Add action on button clicked -->
@@ -55,6 +58,12 @@
       :open="isDeactivateMemberModalOpen"
       @close="toggleDeactivateMemberModal"
     />
+    <ChangeEmailModal
+      :open="isChangeEmailModalOpen"
+      :member-name="memberDetail.name.value"
+      :member-email="memberDetail.email.value"
+      @close="toggleChangeEmailModal"
+    />
   </main>
 </template>
 
@@ -62,6 +71,7 @@
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import DeactivateMemberModal from '@/components/Settings/Member/DeactivateMemberModal';
+import ChangeEmailModal from '@/components/Settings/Member/ChangeEmailModal';
 import { formatDate } from '@/common/helpers/date.js';
 import UserAdminIcon from '@/assets/icons/user-admin.svg?inline';
 
@@ -72,11 +82,13 @@ export default {
     BaseButton,
     UserAdminIcon,
     DeactivateMemberModal,
+    ChangeEmailModal,
   },
   data() {
     return {
       member: {},
       isDeactivateMemberModalOpen: false,
+      isChangeEmailModalOpen: false,
     };
   },
   computed: {
@@ -117,6 +129,9 @@ export default {
   methods: {
     toggleDeactivateMemberModal() {
       this.isDeactivateMemberModalOpen = !this.isDeactivateMemberModalOpen;
+    },
+    toggleChangeEmailModal() {
+      this.isChangeEmailModalOpen = !this.isChangeEmailModalOpen;
     },
   },
 
