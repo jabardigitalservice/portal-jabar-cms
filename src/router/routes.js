@@ -84,6 +84,15 @@ export default [
     },
   },
   {
+    path: '/daftar',
+    name: 'Buat Akun',
+    component: () => import('@/pages/CreateAccount'),
+    meta: {
+      public: true,
+      layout: 'AppLayoutPublic',
+    },
+  },
+  {
     path: '*',
     redirect: '/',
   },
