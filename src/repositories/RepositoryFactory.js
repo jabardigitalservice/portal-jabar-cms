@@ -5,6 +5,7 @@ import newsRepository from './newsRepository';
 import mediaRepository from './mediaRepository';
 import tagRepository from './tagRepository';
 import userRepository from './userRepository';
+import registrationRepository from './registrationRepository';
 
 const repositories = {
   auth: authRepository,
@@ -14,6 +15,7 @@ const repositories = {
   media: mediaRepository,
   tag: tagRepository,
   user: userRepository,
+  registration: registrationRepository,
 };
 
 export const RepositoryFactory = {
