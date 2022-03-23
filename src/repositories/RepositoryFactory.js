@@ -4,6 +4,7 @@ import areaRepository from './areaRepository';
 import newsRepository from './newsRepository';
 import mediaRepository from './mediaRepository';
 import tagRepository from './tagRepository';
+import registrationRepository from './registrationRepository';
 import userRepository from './userRepository';
 import registrationRepository from './registrationRepository';
 
@@ -14,6 +15,7 @@ const repositories = {
   news: newsRepository,
   media: mediaRepository,
   tag: tagRepository,
+  registration: registrationRepository,
   user: userRepository,
   registration: registrationRepository,
 };
