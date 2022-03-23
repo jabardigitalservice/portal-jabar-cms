@@ -124,6 +124,7 @@
 
 <script>
 import ForgotPassword from '@/components/Login/ForgotPassword';
+import { isValidEmail } from '@/common/helpers/validation';
 import MailIcon from '@/assets/icons/mail.svg?inline';
 import KeyIcon from '@/assets/icons/key.svg?inline';
 
@@ -160,7 +161,7 @@ export default {
       return this.loading;
     },
     isValidInput() {
-      return this.email !== '' && this.isValidEmail(this.email) && this.password !== '';
+      return this.email !== '' && isValidEmail(this.email) && this.password !== '';
     },
   },
   watch: {
@@ -179,10 +180,6 @@ export default {
     },
   },
   methods: {
-    isValidEmail(email) {
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      return emailPattern.test(email);
-    },
     setPasswordIconVisibility(value) {
       this.isPasswordIconVisible = value;
     },

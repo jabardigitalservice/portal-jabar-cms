@@ -105,6 +105,7 @@
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 import MailIcon from '@/assets/icons/mail.svg?inline';
+import { isValidEmail } from '@/common/helpers/validation';
 
 export default {
   name: 'ForgotPassword',
@@ -132,14 +133,10 @@ export default {
     },
   },
   methods: {
-    isValidEmail(email) {
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      return emailPattern.test(email);
-    },
     validateEmail() {
       if (this.email === '') {
         this.error = { message: 'Email belum dimasukkan' };
-      } else if (!this.isValidEmail(this.email)) {
+      } else if (!isValidEmail(this.email)) {
         this.error = { message: 'Email tidak valid' };
       }
     },
