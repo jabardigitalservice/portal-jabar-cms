@@ -56,10 +56,11 @@ export default {
       next('/');
     }
   },
-  computed: {
-    token() {
-      return this.$route.query.token || null;
-    },
+  data() {
+    return {
+      portalJabarUrl: process.env.VUE_APP_PORTAL_JABAR_URL,
+      token: this.$route.query.token || null,
+    };
   },
 };
 </script>
