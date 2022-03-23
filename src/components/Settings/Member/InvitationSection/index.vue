@@ -6,7 +6,7 @@
     <div class="flex justify-between items-center py-4 gap-4">
       <div class="flex flex-col flex-grow gap-3">
         <p class="font-lato text-sm text-blue-gray-800">
-          Saat ini akun Anda merupakan <span class="font-bold">Administrator</span> untuk <span class="font-bold">Dinas Pemberdayaan Perempuan Perlindungan Anak dan Keluarga</span>.
+          Saat ini akun Anda merupakan <span class="font-bold">{{ user.role.name }}</span> untuk <span class="font-bold">{{ user.unit.name }}</span>.
         </p>
         <div class="flex gap-6 items-center">
           <BaseButton
@@ -34,7 +34,7 @@
           Masukkan alamat email yang ingin Anda undang ke tim
         </p>
         <p class="text-sm leading-6 text-blue-gray-800 mb-5 font-bold">
-          Dinas Pemberdayaan Perempuan Perlindungan Anak dan Keluarga
+          {{ user.unit.name }}
         </p>
         <div class="flex flex-col flex-grow">
           <label
@@ -115,6 +115,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import { isValidEmail } from '@/common/helpers/validation';
@@ -143,6 +144,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['user']),
     hasMessageModalContent() {
       return !!this.messageModalContent.type;
     },
