@@ -12,4 +12,12 @@ export default {
   createInvitation(body) {
     return Repository.post(`${resource}`, body);
   },
+  /**
+   * Authorize invitation token
+   * @param {string} token
+   * @returns {Promise}
+   */
+  authorizeInvitationToken(token) {
+    return Repository.post(`${resource}/authorize`, { token });
+  },
 };
