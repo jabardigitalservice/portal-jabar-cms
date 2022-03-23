@@ -43,7 +43,7 @@ export default {
     HomeIcon,
   },
   async beforeRouteEnter(to, from, next) {
-    const { token } = to.query || null;
+    const token = to.query?.token || null;
 
     try {
       if (!token) {
