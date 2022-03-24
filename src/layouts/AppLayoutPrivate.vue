@@ -17,7 +17,7 @@ import Header from '@/common/components/Header';
 import Toast from '@/common/components/Toast';
 
 export default {
-  name: 'AppLayoutDefault',
+  name: 'AppLayoutPrivate',
   components: {
     Sidebar,
     Header,
