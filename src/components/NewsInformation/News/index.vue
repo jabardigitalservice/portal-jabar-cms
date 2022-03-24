@@ -268,6 +268,7 @@ export default {
       } finally {
         this.closeActionPrompt();
         this.fetchNews();
+        this.fetchStatusCounter();
       }
     },
 
@@ -283,6 +284,7 @@ export default {
       } finally {
         this.closeActionPrompt();
         this.fetchNews();
+        this.fetchStatusCounter();
       }
     },
 
@@ -298,6 +300,7 @@ export default {
       } finally {
         this.closeActionPrompt();
         this.fetchNews();
+        this.fetchStatusCounter();
       }
     },
 
