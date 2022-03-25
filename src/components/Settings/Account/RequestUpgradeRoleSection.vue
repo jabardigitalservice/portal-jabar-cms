@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <section class="px-6 py-4 bg-white rounded-lg">
     <h2 class="text-xl text-green-700 font-medium">
       Pengajuan Akun Administrator
@@ -49,9 +50,10 @@
           <p class="text-blue-gray-300 mb-1">
             Isi Pengajuan:
           </p>
-          <p class="font-lato text-sm text-blue-gray-800 mb-4 max-w-xl">
-            {{ previewModalContent.body }}
-          </p>
+          <p
+            class="font-lato text-sm text-blue-gray-800 mb-4 max-w-xl"
+            v-html="previewModalContent.body"
+          />
         </div>
       </div>
       <template #footer>
@@ -105,6 +107,9 @@
 <script>
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const templateRepository = RepositoryFactory.get('template');
 
 export default {
   name: 'RequestUpgradeRoleSection',
@@ -115,11 +120,10 @@ export default {
   data() {
     return {
       isPreviewModalOpen: false,
-      // TODO: get the data from api
       previewModalContent: {
-        to: 'adminDP3AKB@jabarprov.go.id',
-        subject: 'Pengajuan akun Administrator',
-        body: 'Salam saya Asep Karuhun izin untuk mengajukan pengubahan hak akses akun Kontributor menjadi Administrator. Terima kasih.',
+        to: '',
+        subject: '',
+        body: '',
       },
       messageModalContent: {
         type: '',
@@ -138,6 +142,12 @@ export default {
     messageModalIconClass() {
       return this.messageModalContent.type === 'success' ? 'text-green-700' : 'text-red-700';
     },
+  },
+  async created() {
+    const { data } = await templateRepository.getAccountSubmissionTemplate();
+    this.previewModalContent.to = data.to;
+    this.previewModalContent.subject = data.subject;
+    this.previewModalContent.body = data.body;
   },
   methods: {
     togglePreviewModal() {
