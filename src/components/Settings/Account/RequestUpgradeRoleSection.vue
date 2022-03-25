@@ -68,7 +68,7 @@
             class="bg-green-700 hover:bg-green-800 text-sm text-white"
             @click="submitRequest"
           >
-            Simpan Perubahan
+            Kirim
           </BaseButton>
         </div>
       </template>
@@ -76,7 +76,7 @@
     <BaseModal :open="hasMessageModalContent">
       <div class="w-full p-2">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
-          Permintaan Pengajuan Akun Berhasil
+          {{ messageModalContent.title }}
         </h1>
         <div class="flex gap-4">
           <JdsIcon
@@ -86,7 +86,7 @@
             :class="messageModalIconClass"
           />
           <p class="font-lato text-sm text-blue-gray-800 mb-4 max-w-md">
-            Pengajuan akun Anda sedang menunggu permintaan untuk disetujui admin. Setelah disetujui link akan dikirimkan ke email: <span class="font-bold">cecep.nurhanudin@gmail.com</span>
+            {{ messageModalContent.description }}
           </p>
         </div>
       </div>
@@ -105,11 +105,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const templateRepository = RepositoryFactory.get('template');
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'RequestUpgradeRoleSection',
@@ -133,6 +135,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['user']),
     hasMessageModalContent() {
       return !!this.messageModalContent.type;
     },
@@ -163,13 +166,14 @@ export default {
       this.messageModalContent.title = '';
       this.messageModalContent.description = '';
     },
-    submitRequest() {
+    async submitRequest() {
       try {
-        // TODO: send request
+        await userRepository.requestUpgradeRole();
+
         this.setMessageModalContent({
           type: 'success',
           title: 'Permintaan Pengajuan Akun Berhasil',
-          description: 'Pengajuan akun Anda sedang menunggu permintaan untuk disetujui admin. Setelah disetujui link akan dikirimkan ke email: cecep.nurhanudin@gmail.com',
+          description: `Pengajuan akun Anda sedang menunggu permintaan untuk disetujui admin. Setelah disetujui link akan dikirimkan ke email: ${this.user.email}`,
         });
       } catch (error) {
         this.setMessageModalContent({
