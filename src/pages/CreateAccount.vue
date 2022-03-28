@@ -24,8 +24,8 @@
           </a>
         </nav>
       </header>
-      <main>
-        <!-- TODO: Add create account form -->
+      <main class="h-full -m-20 flex justify-center items-center">
+        <CreateAccountForm />
       </main>
     </div>
   </div>
@@ -34,6 +34,7 @@
 <script>
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import HomeIcon from '@/assets/icons/home.svg?inline';
+import CreateAccountForm from '@/components/CreateAccount/Form';
 
 const registrationRepository = RepositoryFactory.get('registration');
 
@@ -41,6 +42,7 @@ export default {
   name: 'CreateAccount',
   components: {
     HomeIcon,
+    CreateAccountForm,
   },
   async beforeRouteEnter(to, from, next) {
     const token = to.query?.token || null;
