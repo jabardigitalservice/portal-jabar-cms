@@ -12,6 +12,20 @@ export default {
   },
 
   /**
+   * Create user by invitation
+   * @param {Object} body
+   * @property {string} name
+   * @property {string} occupation
+   * @property {string} nip
+   * @property {string} password
+   * @property {string} token
+   * @returns {Promise}
+   */
+  createUser(body) {
+    return Repository.post(`${resource}/register`, body);
+  },
+
+  /**
    * Update user
    */
   updateUser(body) {
