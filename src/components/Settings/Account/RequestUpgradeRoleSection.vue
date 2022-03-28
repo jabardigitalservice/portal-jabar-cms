@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <section class="px-6 py-4 bg-white rounded-lg">
     <h2 class="text-xl text-green-700 font-medium">
       Pengajuan Akun Administrator
@@ -49,9 +50,10 @@
           <p class="text-blue-gray-300 mb-1">
             Isi Pengajuan:
           </p>
-          <p class="font-lato text-sm text-blue-gray-800 mb-4 max-w-xl">
-            {{ previewModalContent.body }}
-          </p>
+          <p
+            class="font-lato text-sm text-blue-gray-800 mb-4 max-w-xl"
+            v-html="previewModalContent.body"
+          />
         </div>
       </div>
       <template #footer>
@@ -66,7 +68,7 @@
             class="bg-green-700 hover:bg-green-800 text-sm text-white"
             @click="submitRequest"
           >
-            Simpan Perubahan
+            Kirim
           </BaseButton>
         </div>
       </template>
@@ -74,7 +76,7 @@
     <BaseModal :open="hasMessageModalContent">
       <div class="w-full p-2">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
-          Permintaan Pengajuan Akun Berhasil
+          {{ messageModalContent.title }}
         </h1>
         <div class="flex gap-4">
           <JdsIcon
@@ -84,7 +86,7 @@
             :class="messageModalIconClass"
           />
           <p class="font-lato text-sm text-blue-gray-800 mb-4 max-w-md">
-            Pengajuan akun Anda sedang menunggu permintaan untuk disetujui admin. Setelah disetujui link akan dikirimkan ke email: <span class="font-bold">cecep.nurhanudin@gmail.com</span>
+            {{ messageModalContent.description }}
           </p>
         </div>
       </div>
@@ -103,8 +105,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const templateRepository = RepositoryFactory.get('template');
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'RequestUpgradeRoleSection',
@@ -115,11 +122,10 @@ export default {
   data() {
     return {
       isPreviewModalOpen: false,
-      // TODO: get the data from api
       previewModalContent: {
-        to: 'adminDP3AKB@jabarprov.go.id',
-        subject: 'Pengajuan akun Administrator',
-        body: 'Salam saya Asep Karuhun izin untuk mengajukan pengubahan hak akses akun Kontributor menjadi Administrator. Terima kasih.',
+        to: '',
+        subject: '',
+        body: '',
       },
       messageModalContent: {
         type: '',
@@ -129,6 +135,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['user']),
     hasMessageModalContent() {
       return !!this.messageModalContent.type;
     },
@@ -138,6 +145,12 @@ export default {
     messageModalIconClass() {
       return this.messageModalContent.type === 'success' ? 'text-green-700' : 'text-red-700';
     },
+  },
+  async created() {
+    const { data } = await templateRepository.getAccountSubmissionTemplate();
+    this.previewModalContent.to = data.to;
+    this.previewModalContent.subject = data.subject;
+    this.previewModalContent.body = data.body;
   },
   methods: {
     togglePreviewModal() {
@@ -153,13 +166,14 @@ export default {
       this.messageModalContent.title = '';
       this.messageModalContent.description = '';
     },
-    submitRequest() {
+    async submitRequest() {
       try {
-        // TODO: send request
+        await userRepository.requestUpgradeRole();
+
         this.setMessageModalContent({
           type: 'success',
           title: 'Permintaan Pengajuan Akun Berhasil',
-          description: 'Pengajuan akun Anda sedang menunggu permintaan untuk disetujui admin. Setelah disetujui link akan dikirimkan ke email: cecep.nurhanudin@gmail.com',
+          description: `Pengajuan akun Anda sedang menunggu permintaan untuk disetujui admin. Setelah disetujui link akan dikirimkan ke email: ${this.user.email}`,
         });
       } catch (error) {
         this.setMessageModalContent({

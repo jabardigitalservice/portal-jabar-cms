@@ -29,4 +29,11 @@ export default {
   updateUserPassword(body) {
     return Repository.put(`${resource}/me/change-password`, body);
   },
+
+  /**
+   * Upgrade user role
+   */
+  requestUpgradeRole() {
+    return Repository.put(`${resource}/me/account-submission`);
+  },
 };
