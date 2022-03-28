@@ -173,10 +173,6 @@ export default {
 }
 
 .news-table .jds-data-table thead tr th:nth-child(3) {
-  width: 200px !important;
-}
-
-.news-table .jds-data-table thead tr th:nth-child(4) {
-  width: 175px !important;
+  width: 180px !important;
 }
 </style>
