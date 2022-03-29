@@ -25,44 +25,43 @@
         </nav>
       </header>
       <main class="h-full -m-20 flex justify-center items-center">
-        <CreateAccountForm />
+        <section
+          class="bg-white rounded-xl flex flex-col w-[576px] h-[317px] items-center justify-center p-8"
+        >
+          <img
+            src="@/assets/icons/mailbox.svg"
+            alt="mail box illustration"
+            width="99"
+            height="81"
+            class="mb-4"
+          >
+          <h1 class="font-lora text-green-700 text-xl text-center font-bold leading-8 mb-2">
+            Link Anda Tidak Valid
+          </h1>
+          <p class="text-blue-gray-800 text-sm leading-6 text-center">
+            Sepertinya link untuk pendaftaran anggota Anda salah atau sudah tidak valid.
+            <br>
+            Untuk informasi lebih lanjut silakan menghubungi <strong>Group Administrator OPD</strong> Anda.
+          </p>
+        </section>
       </main>
     </div>
   </div>
 </template>
 
 <script>
-import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import HomeIcon from '@/assets/icons/home.svg?inline';
-import CreateAccountForm from '@/components/CreateAccount/Form';
-
-const registrationRepository = RepositoryFactory.get('registration');
 
 export default {
-  name: 'CreateAccount',
+  name: 'InvalidRegistrationLink',
   components: {
     HomeIcon,
-    CreateAccountForm,
-  },
-  async beforeRouteEnter(to, from, next) {
-    const token = to.query?.token || null;
-
-    try {
-      if (!token) {
-        next(`/daftar/error?token=${token}`);
-      } else {
-        await registrationRepository.authorizeInvitationToken(token);
-        next();
-      }
-    } catch (error) {
-      next(`/daftar/error?token=${token}`);
-    }
   },
   data() {
     return {
       portalJabarUrl: process.env.VUE_APP_PORTAL_JABAR_URL,
-      token: this.$route.query.token || null,
     };
   },
+
 };
 </script>
