@@ -36,4 +36,17 @@ export default {
   requestUpgradeRole() {
     return Repository.put(`${resource}/me/account-submission`);
   },
+
+  /**
+   * Get member list
+   *
+   * @param {Object} params
+   * @property {string, number} per_page
+   * @property {string, number} page
+   *
+   * @returns {Promise}
+   */
+  getMemberList(params) {
+    return Repository.get(`${resource}/member`, { params });
+  },
 };
