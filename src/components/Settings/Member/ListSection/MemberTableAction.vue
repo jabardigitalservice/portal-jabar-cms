@@ -79,7 +79,7 @@ export default {
     return {
       isDropdownOpen: false,
       popoverOptions: {
-        placement: 'bottom-start',
+        placement: 'bottom-end',
         modifiers: [
           {
             name: 'offset',
