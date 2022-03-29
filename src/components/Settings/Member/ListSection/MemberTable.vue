@@ -12,6 +12,13 @@
       @page-change="onPaginationChange('page-change', $event)"
       @change:sort="onSortChange($event)"
     >
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.name="{item}">
+        <div class="capitalize">
+          {{ item.name }}
+        </div>
+      </template>
+
       <!-- TODO: handle action button click -->
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.action="{item}">
