@@ -46,14 +46,14 @@
               <button
                 ref="header-user-dropdown-button"
                 class="flex items-center"
-                title="Superadmin"
+                :title="userRole"
                 @click="toggleUserDropdown"
               >
                 <p
                   ref="header-user-name"
                   class="max-w-[100px] text-left font-lato font-semibold text-sm text-blue-gray-800 line-clamp-1 mr-2"
                 >
-                  Superadmin
+                  {{ userRole }}
                 </p>
                 <JdsIcon
                   fill="#069550"
@@ -168,6 +168,9 @@ export default {
     },
     userAvatar() {
       return this.user?.photo || defaultAvatar;
+    },
+    userRole() {
+      return this.user?.role?.name || '';
     },
   },
   methods: {
