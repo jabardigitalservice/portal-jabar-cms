@@ -10,6 +10,7 @@
         :loading="loading"
         :meta="meta"
         class="min-w-[1000px]"
+        @update:pagination="onUpdatePagination($event)"
       />
     </div>
   </section>
@@ -18,6 +19,9 @@
 <script>
 import MemberTable from '@/components/Settings/Member/ListSection/MemberTable';
 import { formatDate } from '@/common/helpers/date.js';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'MemberListSection',
@@ -27,39 +31,16 @@ export default {
   data() {
     return {
       loading: false,
-      // TODO: change this dummy data with actual data from API
-      members: [
-        {
-          id: 1,
-          name: 'John Doe',
-          email: 'john@doe.com',
-          role: 'group admin',
-          last_active: new Date(),
-          status: 'Aktif',
-        },
-        {
-          id: 2,
-          name: 'John Smith',
-          email: 'john@smith.com',
-          role: 'group admin',
-          last_active: new Date(),
-          status: 'Aktif',
-        },
-        {
-          id: 3,
-          name: 'John Lennon',
-          email: 'john@lennon.com',
-          role: 'group admin',
-          last_active: new Date(),
-          status: 'Aktif',
-        },
-      ],
-      // TODO: change this dummy data with actual data from API
+      members: [],
       meta: {
         total_count: 3,
         total_page: 1,
         current_page: 1,
         per_page: 10,
+      },
+      params: {
+        per_page: 10,
+        page: 1,
       },
     };
   },
@@ -67,18 +48,47 @@ export default {
     items() {
       if (Array.isArray(this.members) && !!this.members.length) {
         const items = this.members.map((member) => ({
-          id: member.id,
-          name: member.name,
-          email: member.email,
-          role: member.role,
+          ...member,
           last_active: formatDate(member.last_active, 'dd/MM/yyyy - HH:mm'),
-          status: member.status,
         }));
 
         return items;
       }
 
       return [];
+    },
+  },
+  mounted() {
+    this.fetchMembers();
+  },
+  methods: {
+    async fetchMembers() {
+      try {
+        this.loading = true;
+
+        const response = await userRepository.getMemberList(this.params);
+        const { data, meta } = response.data;
+
+        this.members = data;
+        this.meta = meta;
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Member, silakan coba beberapa saat lagi',
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    setParams(data) {
+      const newParams = { ...this.params, ...data };
+      this.params = { ...newParams };
+    },
+
+    onUpdatePagination(data) {
+      this.setParams(data);
+      this.fetchMembers();
     },
   },
 };
