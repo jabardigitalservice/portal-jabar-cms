@@ -49,7 +49,7 @@ export default {
       if (Array.isArray(this.members) && !!this.members.length) {
         const items = this.members.map((member) => ({
           ...member,
-          last_active: formatDate(member.last_active, 'dd/MM/yyyy - HH:mm'),
+          last_active: member.last_active ? formatDate(member.last_active, 'dd/MM/yyyy - HH:mm') : null,
         }));
 
         return items;
