@@ -32,6 +32,16 @@
         </div>
       </template>
 
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.status="{item}">
+        <div
+          class="line-clamp-1"
+          :title="item.status"
+        >
+          {{ getStatusLabel(item.status) }}
+        </div>
+      </template>
+
       <!-- TODO: handle action button click -->
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.action="{item}">
@@ -139,6 +149,16 @@ export default {
         sort_by: Object.keys(sort)[0],
         sort_order: Object.values(sort)[0].toUpperCase(),
       });
+    },
+
+    getStatusLabel(status) {
+      const statusMap = {
+        active: 'Aktif',
+        'non-active': 'Tidak Aktif',
+        'waiting confirmation': 'Menunggu Konfirmasi',
+      };
+
+      return statusMap[status] ?? null;
     },
   },
 };
