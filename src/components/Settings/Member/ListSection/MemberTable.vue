@@ -42,7 +42,6 @@
         </div>
       </template>
 
-      <!-- TODO: handle action button click -->
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.action="{item}">
         <MemberTableAction
