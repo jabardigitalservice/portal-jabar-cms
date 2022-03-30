@@ -96,9 +96,9 @@ export default {
       },
       // Map allowed actions based on member status
       allowedActions: Object.freeze({
-        Aktif: ['show-detail', 'set-admin', 'deactivate-member', 'change-email'],
-        'Tidak Aktif': ['show-detail'],
-        'Menunggu Konfirmasi': ['cancel-invitation'],
+        active: ['show-detail', 'set-admin', 'deactivate-member', 'change-email'],
+        'non-active': ['show-detail'],
+        'waiting confirmation': ['cancel-invitation'],
       }),
     };
   },
