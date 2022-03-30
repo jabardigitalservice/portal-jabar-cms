@@ -50,7 +50,6 @@ export default {
         const items = this.members.map((member) => ({
           ...member,
           last_active: member.last_active ? formatDate(member.last_active, 'dd/MM/yyyy - HH:mm') : null,
-          status: this.getStatusLabel(member.status),
         }));
 
         return items;
@@ -90,16 +89,6 @@ export default {
     onUpdatePagination(data) {
       this.setParams(data);
       this.fetchMembers();
-    },
-
-    getStatusLabel(status) {
-      const statusMap = {
-        active: 'Aktif',
-        'non-active': 'Tidak Aktif',
-        'waiting confirmation': 'Menunggu Konfirmasi',
-      };
-
-      return statusMap[status] ?? null;
     },
   },
 };
