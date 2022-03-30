@@ -24,7 +24,7 @@
 
     <div class="bg-white p-[18px] rounded-lg border border-gray-200 shadow-xl">
       <ul class="flex flex-col gap-4">
-        <li>
+        <li v-if="shouldShowAction('show-detail')">
           <router-link
             :to="`/pengaturan/member/detail/${item.id}`"
             class="font-lato text-sm leading-4 text-gray-800"
@@ -33,7 +33,7 @@
           </router-link>
         </li>
         <!-- TODO: add action on button clicked -->
-        <li>
+        <li v-if="shouldShowAction('set-admin')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
           >
@@ -41,7 +41,7 @@
           </button>
         </li>
         <!-- TODO: add action on button clicked -->
-        <li>
+        <li v-if="shouldShowAction('deactivate-member')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
           >
@@ -49,11 +49,18 @@
           </button>
         </li>
         <!-- TODO: add action on button clicked -->
-        <li>
+        <li v-if="shouldShowAction('change-email')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
           >
             Ubah Email
+          </button>
+        </li>
+        <li v-if="shouldShowAction('cancel-invitation')">
+          <button
+            class="font-lato text-sm leading-4 text-gray-800"
+          >
+            Batalkan Undangan
           </button>
         </li>
       </ul>
@@ -87,7 +94,26 @@ export default {
           },
         ],
       },
+      // Map allowed actions based on member status
+      allowedActions: Object.freeze({
+        Aktif: ['show-detail', 'set-admin', 'deactivate-member', 'change-email'],
+        'Tidak Aktif': ['show-detail'],
+        'Menunggu Konfirmasi': ['cancel-invitation'],
+      }),
     };
+  },
+  computed: {
+    shouldShowAction() {
+      return (action) => {
+        const { status } = this.item;
+
+        if (!status) {
+          return false;
+        }
+
+        return this.allowedActions[status].includes(action);
+      };
+    },
   },
   methods: {
     toggleDropdown() {
