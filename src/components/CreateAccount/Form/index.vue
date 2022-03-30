@@ -217,7 +217,7 @@ export default {
       // decrement the step
       if (!this.firstStep) this.step -= 1;
     },
-    onClickNext() {
+    async onClickNext() {
       this.clearErrors();
       this.isFormDirty = false;
 
@@ -229,9 +229,20 @@ export default {
         this.isFormDirty = true;
 
         if (!this.hasErrors) {
-          this.isFormDirty = false;
-          // increment the step
-          this.step += 1;
+          // Check if user nip exists
+          try {
+            const { data } = await userRepository.checkUserNIP(this.nip);
+
+            if (!data.exist) {
+              this.isFormDirty = false;
+              // increment the step
+              this.step += 1;
+            } else {
+              this.setErrors('nip', 'NIP telah digunakan');
+            }
+          } catch (error) {
+            this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan dalam pembuatan akun' });
+          }
         }
       } else {
         // validate the step 2 input

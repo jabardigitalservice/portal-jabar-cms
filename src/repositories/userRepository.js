@@ -50,4 +50,13 @@ export default {
   requestUpgradeRole() {
     return Repository.put(`${resource}/me/account-submission`);
   },
+
+  /**
+   * Check if user nip exists
+   * @param {string} nip
+   * @returns {Promise}
+   */
+  checkUserNIP(nip) {
+    return Repository.post(`${resource}/check-nip-exists`, { nip });
+  },
 };
