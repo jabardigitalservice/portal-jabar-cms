@@ -87,8 +87,13 @@
       </BaseButton>
       <BaseButton
         class="bg-green-700 hover:bg-green-800 text-sm text-white text-center w-full"
+        :disabled="!isValidInput(step)"
         @click="onClickNext"
       >
+        <JdsSpinner
+          v-show="isLoading"
+          size="16px"
+        />
         Lanjutkan
       </BaseButton>
     </div>
@@ -147,7 +152,7 @@ export default {
       passwordStrength: '',
       token: '',
       errors: {},
-      isFormDirty: false,
+      isLoading: false,
       isAccountCreated: false,
     };
   },
@@ -164,40 +169,30 @@ export default {
   },
   watch: {
     name() {
-      if (this.isFormDirty) {
-        if (this.name === '') this.setErrors('name', 'Nama harus diisi');
-        else this.errors.name = '';
-      }
+      if (this.name === '') this.setErrors('name', 'Nama harus diisi');
+      else this.clearErrors('name');
     },
     occupation() {
-      if (this.isFormDirty) {
-        if (this.occupation === '') this.setErrors('occupation', 'Jabatan harus diisi');
-        else this.errors.occupation = '';
-      }
+      if (this.occupation === '') this.setErrors('occupation', 'Jabatan harus diisi');
+      else this.clearErrors('occupation');
     },
     nip() {
-      if (this.isFormDirty) {
-        if (this.nip.length !== 18) this.setErrors('nip', 'NIP harus 18 digit');
-        else this.errors.nip = '';
-      }
+      if (this.nip.length !== 18) this.setErrors('nip', 'NIP harus 18 digit');
+      else this.clearErrors('nip');
     },
     password: {
-      immediate: true,
+      immediate: false,
       async handler() {
         await this.$nextTick();
-        if (this.isFormDirty) {
-          if (this.password === '') this.setErrors('password', 'Kata sandi harus diisi');
-          if (this.passwordStrength === 'low') this.setErrors('password', 'Kata sandi anda tidak cukup kuat');
-          else this.errors.password = '';
-        }
+        if (this.password === '') this.setErrors('password', 'Kata sandi harus diisi');
+        else if (this.passwordStrength === 'low') this.setErrors('password', 'Kata sandi anda tidak cukup kuat');
+        else this.clearErrors('password');
       },
     },
     passwordConfirmation() {
-      if (this.isFormDirty) {
-        if (this.passwordConfirmation === '') this.setErrors('passwordConfirmation', 'Kata sandi harus diisi');
-        if (this.password !== this.passwordConfirmation) this.setErrors('passwordConfirmation', 'Kata sandi tidak sama');
-        else this.errors.passwordConfirmation = '';
-      }
+      if (this.passwordConfirmation === '') this.setErrors('passwordConfirmation', 'Kata sandi harus diisi');
+      else if (this.password !== this.passwordConfirmation) this.setErrors('passwordConfirmation', 'Kata sandi tidak sama');
+      else this.clearErrors('passwordConfirmation');
     },
   },
   created() {
@@ -210,53 +205,46 @@ export default {
         [name]: message,
       };
     },
-    clearErrors() {
-      this.errors = {};
+    clearErrors(name) {
+      this.errors[name] = '';
     },
     onClickBack() {
       // decrement the step
       if (!this.firstStep) this.step -= 1;
     },
-    async onClickNext() {
-      this.clearErrors();
-      this.isFormDirty = false;
+    isValidInput(step) {
+      switch (step) {
+        case 1:
+          return this.name !== '' && this.nip !== '' && this.nip.length === 18;
+        case 2:
+          return this.password !== '' && this.passwordStrength !== 'low' && this.passwordConfirmation !== '' && this.password === this.passwordConfirmation;
+        default:
+          return false;
+      }
+    },
+    onClickNext() {
+      if (this.isLoading) return;
+      if (!this.isValidInput(this.step)) return;
 
       if (this.firstStep) {
-        // validate the step 1 input
-        if (this.name === '') this.setErrors('name', 'Nama harus diisi');
-        if (this.occupation === '') this.setErrors('occupation', 'Jabatan harus diisi');
-        if (this.nip.length !== 18) this.setErrors('nip', 'NIP harus 18 digit');
-        this.isFormDirty = true;
-
-        if (!this.hasErrors) {
-          // Check if user nip exists
-          try {
-            const { data } = await userRepository.checkUserNIP(this.nip);
-
-            if (!data.exist) {
-              this.isFormDirty = false;
-              // increment the step
-              this.step += 1;
-            } else {
-              this.setErrors('nip', 'NIP telah digunakan');
-            }
-          } catch (error) {
-            this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan dalam pembuatan akun' });
-          }
-        }
+        // Check if user nip exists
+        this.isLoading = true;
+        userRepository.checkUserNIP(this.nip)
+          .then(({ data }) => {
+            // increment the step
+            if (!data.exist) this.step += 1;
+            else this.setErrors('nip', 'NIP telah digunakan');
+          })
+          .catch(() => this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan dalam pembuatan akun' }))
+          .finally(() => {
+            this.isLoading = false;
+          });
       } else {
-        // validate the step 2 input
-        if (this.password === '') this.setErrors('password', 'Kata sandi harus diisi');
-        if (this.passwordStrength === 'low') this.setErrors('password', 'Kata sandi anda tidak cukup kuat');
-        if (this.passwordConfirmation === '') this.setErrors('passwordConfirmation', 'Kata sandi harus diisi');
-        if (this.password !== this.passwordConfirmation) this.setErrors('passwordConfirmation', 'Kata sandi tidak sama');
-        this.isFormDirty = true;
-
-        // submit the form
-        if (!this.hasErrors) this.createAccount();
+        this.createAccount();
       }
     },
     async createAccount() {
+      this.isLoading = true;
       try {
         const body = {
           name: this.name,
@@ -268,11 +256,10 @@ export default {
         await userRepository.createUser(body);
         this.isAccountCreated = true;
       } catch (error) {
-        if (error.response) {
-          this.$toast({ type: 'error', message: 'Token tidak valid' });
-        } else {
-          this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan dalam pembuatan akun' });
-        }
+        if (error.response) this.$toast({ type: 'error', message: 'Token tidak valid' });
+        else this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan dalam pembuatan akun' });
+      } finally {
+        this.isLoading = false;
       }
     },
   },
