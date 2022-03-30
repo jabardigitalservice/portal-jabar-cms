@@ -1,9 +1,12 @@
 <template>
-  <div class="bg-white w-[443px] p-8 rounded-lg flex flex-col gap-6">
+  <div
+    v-if="!isAccountCreated"
+    class="bg-white w-[443px] p-8 rounded-lg flex flex-col gap-6"
+  >
     <!-- Title -->
     <div class="flex flex-col gap-3">
       <h1 class="text-green-700 font-bold text-2xl">
-        Buat Akun {{ isFormDirty }}
+        Buat Akun
       </h1>
       <p class="text-sm text-gray-700">
         Lengkapi beberapa informasi di bawah ini untuk membuat dan mengaktifkan akun Anda.
@@ -90,17 +93,46 @@
       </BaseButton>
     </div>
   </div>
+  <div
+    v-else
+    class="bg-white w-[443px] p-8 rounded-lg flex flex-col gap-3"
+  >
+    <h1 class="font-roboto font-bold text-2xl text-green-700">
+      Akun Anda Berhasil Dibuat!
+    </h1>
+    <p class="text-sm text-gray-700 ">
+      Selamat akun Anda <span class="font-bold">{{ name }}</span> berhasil dibuat, silahkan menggunakan email dan kata sandi yang telah dibuat
+      untuk akun tersebut agar dapat mengakses Content Management System Portal Jabar.
+    </p>
+    <div class="my-6 flex justify-center items-center">
+      <AccountCreatedIcon />
+    </div>
+    <LinkButton
+      href="/login"
+      variant="secondary"
+      class="text-sm font-bold w-full text-green-700 text-center justify-center"
+    >
+      Masuk ke Akun
+    </LinkButton>
+  </div>
 </template>
 
 <script>
 import BaseButton from '@/common/components/BaseButton';
+import LinkButton from '@/common/components/LinkButton';
 import DetailInformationForm from '@/components/CreateAccount/Form/DetailInformationForm';
 import PasswordForm from '@/components/CreateAccount/Form/PasswordForm';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import AccountCreatedIcon from '@/assets/icons/account-created.svg?inline';
+
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'CreateAccountForm',
   components: {
     BaseButton,
+    LinkButton,
+    AccountCreatedIcon,
     DetailInformationForm,
     PasswordForm,
   },
@@ -113,8 +145,10 @@ export default {
       password: '',
       passwordConfirmation: '',
       passwordStrength: '',
+      token: '',
       errors: {},
       isFormDirty: false,
+      isAccountCreated: false,
     };
   },
   computed: {
@@ -166,6 +200,9 @@ export default {
       }
     },
   },
+  created() {
+    this.token = this.$route.query.token || '';
+  },
   methods: {
     setErrors(name, message) {
       this.errors = {
@@ -180,7 +217,7 @@ export default {
       // decrement the step
       if (!this.firstStep) this.step -= 1;
     },
-    onClickNext() {
+    async onClickNext() {
       this.clearErrors();
       this.isFormDirty = false;
 
@@ -192,9 +229,20 @@ export default {
         this.isFormDirty = true;
 
         if (!this.hasErrors) {
-          this.isFormDirty = false;
-          // increment the step
-          this.step += 1;
+          // Check if user nip exists
+          try {
+            const { data } = await userRepository.checkUserNIP(this.nip);
+
+            if (!data.exist) {
+              this.isFormDirty = false;
+              // increment the step
+              this.step += 1;
+            } else {
+              this.setErrors('nip', 'NIP telah digunakan');
+            }
+          } catch (error) {
+            this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan dalam pembuatan akun' });
+          }
         }
       } else {
         // validate the step 2 input
@@ -208,8 +256,24 @@ export default {
         if (!this.hasErrors) this.createAccount();
       }
     },
-    createAccount() {
-      // TODO: submit the form
+    async createAccount() {
+      try {
+        const body = {
+          name: this.name,
+          occupation: this.occupation,
+          nip: this.nip,
+          password: this.password,
+          token: this.token,
+        };
+        await userRepository.createUser(body);
+        this.isAccountCreated = true;
+      } catch (error) {
+        if (error.response) {
+          this.$toast({ type: 'error', message: 'Token tidak valid' });
+        } else {
+          this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan dalam pembuatan akun' });
+        }
+      }
     },
   },
 };

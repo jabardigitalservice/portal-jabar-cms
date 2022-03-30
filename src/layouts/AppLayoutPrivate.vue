@@ -7,21 +7,18 @@
         <slot />
       </div>
     </div>
-    <Toast />
   </div>
 </template>
 
 <script>
 import Sidebar from '@/common/components/Sidebar';
 import Header from '@/common/components/Header';
-import Toast from '@/common/components/Toast';
 
 export default {
   name: 'AppLayoutPrivate',
   components: {
     Sidebar,
     Header,
-    Toast,
   },
 };
 </script>

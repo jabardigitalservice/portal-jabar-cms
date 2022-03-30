@@ -4,14 +4,18 @@
       <router-view />
     </AppLayout>
     <portal-target name="modal" />
-    <portal-target name="alert" />
+    <Toast />
   </div>
 </template>
 
 <script>
 import AppLayout from '@/layouts/AppLayout';
+import Toast from '@/common/components/Toast';
 
 export default {
-  components: { AppLayout },
+  components: {
+    AppLayout,
+    Toast,
+  },
 };
 </script>
