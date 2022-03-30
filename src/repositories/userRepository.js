@@ -59,4 +59,17 @@ export default {
   checkUserNIP(nip) {
     return Repository.post(`${resource}/check-nip-exists`, { nip });
   },
+
+  /**
+   * Get member list
+   *
+   * @param {Object} params
+   * @property {string, number} per_page
+   * @property {string, number} page
+   *
+   * @returns {Promise}
+   */
+  getMemberList(params) {
+    return Repository.get(`${resource}/member`, { params });
+  },
 };

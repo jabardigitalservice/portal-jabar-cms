@@ -15,12 +15,15 @@
       >
         <input
           id="password"
+          ref="password"
           :value="password"
           :type="passwordInputType['password']"
           placeholder="Masukkan kata sandi"
           class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none focus-within:placeholder:text-gray-500"
           :class="[errors.password ? 'bg-red-50' : 'bg-gray-50 focus-within:bg-gray-50']"
-          @input="$emit('password', $event.target.value)"
+          @input="onInput"
+          @focus="openTooltip"
+          @blur="closeTooltip"
         >
         <div
           v-show="isPasswordIconVisible['password']"
@@ -40,30 +43,10 @@
         {{ errors.password }}
       </p>
     </div>
-    <!-- Tooltip -->
-    <div
-      v-show="!isEmpty(password)"
-      class="flex relative mb-2"
-    >
-      <div class="bg-gray-900 px-3 pt-3 pb-2 rounded-lg text-white text-xs">
-        <div class="grid grid-cols-3 gap-2 mb-2">
-          <div
-            class="h-1 rounded-lg"
-            :class="[lowBarClassName]"
-          />
-          <div
-            class="h-1 rounded-lg"
-            :class="[mediumBarClassName]"
-          />
-          <div
-            class="h-1 rounded-lg"
-            :class="[strongBarClassName]"
-          />
-        </div>
-        <p>Kata sandi Anda <span :class="passwordStrengthLabelClassName">{{ passwordStrength.label }}</span></p>
-      </div>
-      <div class="absolute top-1 left-3 w-3 h-3 -mt-2 rotate-45 bg-gray-900" />
-    </div>
+    <PasswordTooltip
+      :show="isTooltipOpen"
+      :password-strength="passwordStrength"
+    />
     <!-- Password confirmation input -->
     <div class="flex flex-col flex-grow gap-1 mb-4">
       <label
@@ -108,8 +91,13 @@
 </template>
 
 <script>
+import PasswordTooltip from '@/common/components/PasswordTooltip';
+
 export default {
   name: 'PasswordForm',
+  components: {
+    PasswordTooltip,
+  },
   props: {
     password: {
       type: String,
@@ -149,51 +137,8 @@ export default {
         type: '',
         label: '',
       },
+      isTooltipOpen: false,
     };
-  },
-  computed: {
-    lowBarClassName() {
-      switch (this.passwordStrength.type) {
-        case 'low':
-          return 'bg-red-600';
-        case 'medium':
-          return 'bg-yellow-600';
-        case 'strong':
-          return 'bg-green-600';
-        default:
-          return 'bg-gray-600';
-      }
-    },
-    mediumBarClassName() {
-      switch (this.passwordStrength.type) {
-        case 'medium':
-          return 'bg-yellow-600';
-        case 'strong':
-          return 'bg-green-600';
-        default:
-          return 'bg-gray-600';
-      }
-    },
-    strongBarClassName() {
-      switch (this.passwordStrength.type) {
-        case 'strong':
-          return 'bg-green-600';
-        default:
-          return 'bg-gray-600';
-      }
-    },
-    passwordStrengthLabelClassName() {
-      switch (this.passwordStrength.type) {
-        case 'low':
-          return 'text-red-500';
-        case 'medium':
-          return 'text-yellow-500';
-        case 'strong':
-          return 'text-green-500';
-        default:
-          return '';
-      }
-    },
   },
   watch: {
     password() {
@@ -263,6 +208,16 @@ export default {
       this.isPasswordInputVisible[name] = !this.isPasswordInputVisible[name];
       this.passwordInputType[name] = this.isPasswordInputVisible[name] ? 'text' : 'password';
       this.passwordIconName[name] = this.isPasswordInputVisible[name] ? 'eye-off' : 'eye';
+    },
+    openTooltip() {
+      this.isTooltipOpen = !this.isEmpty(this.$refs.password.value);
+    },
+    closeTooltip() {
+      this.isTooltipOpen = false;
+    },
+    onInput() {
+      this.$emit('password', this.$refs.password.value);
+      this.openTooltip();
     },
   },
 };

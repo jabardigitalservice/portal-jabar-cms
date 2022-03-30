@@ -12,6 +12,26 @@
       @page-change="onPaginationChange('page-change', $event)"
       @change:sort="onSortChange($event)"
     >
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.name="{item}">
+        <div
+          class="capitalize line-clamp-1"
+          :title="item.name"
+        >
+          {{ item.name }}
+        </div>
+      </template>
+
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.email="{item}">
+        <div
+          class="line-clamp-1"
+          :title="item.email"
+        >
+          {{ item.email }}
+        </div>
+      </template>
+
       <!-- TODO: handle action button click -->
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.action="{item}">
@@ -130,5 +150,13 @@ export default {
  */
 .member-table .jds-data-table {
   table-layout: fixed !important;
+}
+
+.member-table .jds-data-table thead tr th:nth-child(1) {
+  width: 220px !important;
+}
+
+.member-table .jds-data-table thead tr th:nth-child(2) {
+  width: 220px !important;
 }
 </style>

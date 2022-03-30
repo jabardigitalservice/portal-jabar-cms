@@ -104,6 +104,9 @@
               :type="passwordInputType['newPassword']"
               placeholder="Masukkan kata sandi baru"
               class="text-sm placeholder:text-gray-600 p-2 w-full bg-white focus:outline-none"
+              @input="openTooltip"
+              @focus="openTooltip"
+              @blur="closeTooltip"
             >
             <div
               v-show="isPasswordIconVisible['newPassword']"
@@ -117,30 +120,10 @@
             </div>
           </div>
         </div>
-        <!-- Tooltip -->
-        <div
-          v-show="!isEmpty(newPassword)"
-          class="grid grid-cols-2 relative mb-2"
-        >
-          <div class="bg-gray-900 px-3 pt-3 pb-2 rounded-lg text-white text-xs">
-            <div class="grid grid-cols-3 gap-2 mb-2">
-              <div
-                class="h-1 rounded-lg"
-                :class="[lowBarClassName]"
-              />
-              <div
-                class="h-1 rounded-lg"
-                :class="[mediumBarClassName]"
-              />
-              <div
-                class="h-1 rounded-lg"
-                :class="[strongBarClassName]"
-              />
-            </div>
-            <p>Kata sandi Anda <span :class="passwordStrengthLabelClassName">{{ passwordStrength.label }}</span></p>
-          </div>
-          <div class="absolute top-1 left-3 w-3 h-3 -mt-2 rotate-45 bg-gray-900" />
-        </div>
+        <PasswordTooltip
+          :show="isTooltipOpen"
+          :password-strength="passwordStrength"
+        />
         <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="newPasswordConfirmation"
@@ -209,6 +192,7 @@
 import { mapGetters } from 'vuex';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import PasswordTooltip from '@/common/components/PasswordTooltip';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import { formatDate } from '@/common/helpers/date';
 
@@ -219,6 +203,7 @@ export default {
   components: {
     BaseButton,
     BaseModal,
+    PasswordTooltip,
   },
   data() {
     return {
@@ -226,6 +211,7 @@ export default {
       newPassword: '',
       newPasswordConfirmation: '',
       isPromptOpen: false,
+      isTooltipOpen: false,
       isPasswordInputVisible: {
         currentPassword: false,
         newPassword: false,
@@ -268,48 +254,6 @@ export default {
 
       return !isPasswordEmpty && isPasswordValid;
     },
-    lowBarClassName() {
-      switch (this.passwordStrength.type) {
-        case 'low':
-          return 'bg-red-600';
-        case 'medium':
-          return 'bg-yellow-600';
-        case 'strong':
-          return 'bg-green-600';
-        default:
-          return 'bg-gray-600';
-      }
-    },
-    mediumBarClassName() {
-      switch (this.passwordStrength.type) {
-        case 'medium':
-          return 'bg-yellow-600';
-        case 'strong':
-          return 'bg-green-600';
-        default:
-          return 'bg-gray-600';
-      }
-    },
-    strongBarClassName() {
-      switch (this.passwordStrength.type) {
-        case 'strong':
-          return 'bg-green-600';
-        default:
-          return 'bg-gray-600';
-      }
-    },
-    passwordStrengthLabelClassName() {
-      switch (this.passwordStrength.type) {
-        case 'low':
-          return 'text-red-500';
-        case 'medium':
-          return 'text-yellow-500';
-        case 'strong':
-          return 'text-green-500';
-        default:
-          return '';
-      }
-    },
   },
   watch: {
     currentPassword() {
@@ -324,6 +268,12 @@ export default {
     },
   },
   methods: {
+    openTooltip() {
+      this.isTooltipOpen = !this.isEmpty(this.newPassword);
+    },
+    closeTooltip() {
+      this.isTooltipOpen = false;
+    },
     togglePrompt() {
       this.clearValidationMessage();
       this.clearPasswordInput();

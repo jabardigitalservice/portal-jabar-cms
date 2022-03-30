@@ -118,6 +118,15 @@ export default [
     },
   },
   {
+    path: '/daftar/error',
+    name: 'Link Tidak Valid',
+    component: () => import('@/pages/Errors/InvalidRegistrationLink'),
+    meta: {
+      public: true,
+      layout: 'AppLayoutPublic',
+    },
+  },
+  {
     path: '*',
     redirect: '/',
   },
