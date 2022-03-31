@@ -33,6 +33,16 @@
       </template>
 
       <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.role="{item}">
+        <div
+          class="line-clamp-1"
+          :title="item.role.name"
+        >
+          {{ item.role.name }}
+        </div>
+      </template>
+
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.status="{item}">
         <div
           class="line-clamp-1"
