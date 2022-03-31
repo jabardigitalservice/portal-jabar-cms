@@ -70,6 +70,6 @@ export default {
    * @returns {Promise}
    */
   getMemberList(params) {
-    return Repository.get(`${resource}/member`, { params });
+    return Repository.get(`${resource}`, { params });
   },
 };
