@@ -32,26 +32,26 @@
             Lihat Detail
           </router-link>
         </li>
-        <!-- TODO: add action on button clicked -->
         <li v-if="shouldShowAction('set-admin')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            @click="toggleModal('set-admin')"
           >
             Jadikan Admin
           </button>
         </li>
-        <!-- TODO: add action on button clicked -->
         <li v-if="shouldShowAction('deactivate-member')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            @click="toggleModal('deactivate-member')"
           >
             Nonaktifkan Akun
           </button>
         </li>
-        <!-- TODO: add action on button clicked -->
         <li v-if="shouldShowAction('change-email')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            @click="toggleModal('change-email')"
           >
             Ubah Email
           </button>
@@ -65,16 +65,40 @@
         </li>
       </ul>
     </div>
+    <SetAdminModal
+      :open="isModalOpen['set-admin']"
+      :member-name="item.name"
+      @close="toggleModal('set-admin')"
+    />
+    <DeactivateMemberModal
+      :open="isModalOpen['deactivate-member']"
+      :member-email="item.email"
+      @close="toggleModal('deactivate-member')"
+    />
+    <ChangeEmailModal
+      :open="isModalOpen['change-email']"
+      :member-name="item.name"
+      :member-email="item.email"
+      @close="toggleModal('change-email')"
+    />
   </JdsPopover>
 </template>
 
 <script>
 import { directive as onClickaway } from 'vue-clickaway';
+import SetAdminModal from '@/components/Settings/Member/SetAdminModal';
+import DeactivateMemberModal from '@/components/Settings/Member/DeactivateMemberModal';
+import ChangeEmailModal from '@/components/Settings/Member/ChangeEmailModal';
 
 export default {
   name: 'MemberTableAction',
   directives: {
     onClickaway,
+  },
+  components: {
+    SetAdminModal,
+    DeactivateMemberModal,
+    ChangeEmailModal,
   },
   props: {
     item: {
@@ -85,6 +109,11 @@ export default {
   data() {
     return {
       isDropdownOpen: false,
+      isModalOpen: {
+        'set-admin': false,
+        'deactivate-member': false,
+        'change-email': false,
+      },
       popoverOptions: {
         placement: 'bottom-end',
         modifiers: [
@@ -121,6 +150,9 @@ export default {
     },
     closeDropdown() {
       this.isDropdownOpen = false;
+    },
+    toggleModal(name) {
+      this.isModalOpen[name] = !this.isModalOpen[name];
     },
   },
 };
