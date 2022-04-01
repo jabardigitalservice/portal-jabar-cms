@@ -7,7 +7,7 @@
     <div class="flex justify-between items-center py-4">
       <div class="flex flex-col flex-grow gap-2">
         <p class="font-lato text-sm text-blue-gray-800 mb-2">
-          Saat ini akun Anda merupakan <span class="font-bold">Kontributor</span> untuk <span class="font-bold">Dinas Pemberdayaan Perempuan Perlindungan Anak dan Keluarga</span>.
+          Saat ini akun Anda merupakan <span class="font-bold">{{ userRole }}</span> untuk <span class="font-bold">{{ userUnit }}</span>.
         </p>
         <div class="flex gap-6 items-center">
           <BaseButton
@@ -136,6 +136,12 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['user']),
+    userRole() {
+      return this.user?.role?.name || '';
+    },
+    userUnit() {
+      return this.user?.unit?.name || '';
+    },
     hasMessageModalContent() {
       return !!this.messageModalContent.type;
     },
