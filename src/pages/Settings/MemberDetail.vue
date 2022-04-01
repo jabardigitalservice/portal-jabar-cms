@@ -50,7 +50,13 @@
                 {{ detail.label }}
               </td>
               <td class="w-full font-lato leading-6 text-blue-gray-800 text-sm">
-                {{ detail.value }}
+                <div
+                  v-show="loading"
+                  class="h-4 w-1/3 rounded-lg animate-pulse bg-gray-200"
+                />
+                <div v-show="!loading">
+                  {{ detail.value }}
+                </div>
               </td>
             </tr>
           </tbody>
@@ -82,8 +88,11 @@ import BaseButton from '@/common/components/BaseButton';
 import DeactivateMemberModal from '@/components/Settings/Member/DeactivateMemberModal';
 import ChangeEmailModal from '@/components/Settings/Member/ChangeEmailModal';
 import SetAdminModal from '@/components/Settings/Member/SetAdminModal';
-import { formatDate } from '@/common/helpers/date.js';
 import UserAdminIcon from '@/assets/icons/user-admin.svg?inline';
+import { formatDate } from '@/common/helpers/date.js';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'MemberDetail',
@@ -98,6 +107,7 @@ export default {
   data() {
     return {
       member: {},
+      loading: false,
       isDeactivateMemberModalOpen: false,
       isChangeEmailModalOpen: false,
       isSetAdminModalOpen: false,
@@ -105,40 +115,67 @@ export default {
   },
   computed: {
     memberDetail() {
-      // TODO: change default value to null
       return {
         name: {
           label: 'Nama',
-          value: this.member?.name || 'Asep Sanusi',
+          value: this.member.name,
         },
         occupation: {
           label: 'Jabatan',
-          value: this.member?.occupation || 'Kepala Divisi',
+          value: this.member.occupation,
         },
         nip: {
           label: 'NIP',
-          value: this.member?.nip || '123456 123456 1 001',
+          value: this.member.nip,
         },
         role: {
           label: 'Role/Keanggotaan',
-          value: this.member?.role || 'Administrator',
+          value: this.member.role?.name || '',
         },
         email: {
           label: 'Email',
-          value: this.member?.email || 'asep@sanusi.com',
+          value: this.member.email,
         },
         status: {
           label: 'Status',
-          value: this.member?.status || 'Aktif',
+          value: this.getStatusLabel(this.member.status),
         },
         last_active: {
           label: 'Terakhir Aktif',
-          value: this.member?.last_active || formatDate(new Date(), 'dd/MM/yyyy - HH:mm'),
+          value: this.member.last_active
+            ? formatDate(this.member.last_active, 'dd/MM/yyyy - HH:mm')
+            : null,
         },
       };
     },
   },
+  async mounted() {
+    try {
+      this.loading = true;
+      const { id } = this.$route.params;
+      const response = await userRepository.getUserById(id);
+      const { data } = response.data;
+
+      this.member = data;
+    } catch (error) {
+      this.$toast({
+        type: 'error',
+        message: 'Gagal mendapatkan data Member, silakan coba beberapa saat lagi',
+      });
+    } finally {
+      this.loading = false;
+    }
+  },
   methods: {
+    getStatusLabel(status) {
+      const statusMap = {
+        active: 'Aktif',
+        'non-active': 'Tidak Aktif',
+        'waiting confirmation': 'Menunggu Konfirmasi',
+      };
+
+      return statusMap[status] ?? null;
+    },
     toggleDeactivateMemberModal() {
       this.isDeactivateMemberModalOpen = !this.isDeactivateMemberModalOpen;
     },
@@ -149,6 +186,5 @@ export default {
       this.isSetAdminModalOpen = !this.isSetAdminModalOpen;
     },
   },
-
 };
 </script>

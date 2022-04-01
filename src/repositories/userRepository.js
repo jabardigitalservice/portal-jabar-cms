@@ -12,6 +12,16 @@ export default {
   },
 
   /**
+   * Get User by ID
+   * @param {string, number} id
+   *
+   * @returns {Promise}
+   */
+  getUserById(id = null) {
+    return Repository.get(`${resource}/${id}`);
+  },
+
+  /**
    * Create user by invitation
    * @param {Object} body
    * @property {string} name
