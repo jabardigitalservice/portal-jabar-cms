@@ -8,7 +8,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'Resctricted',
+  name: 'Restricted',
   props: {
     permission: {
       type: String,
