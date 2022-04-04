@@ -31,24 +31,36 @@
             Email yang anda masukkan belum sesuai
           </p>
         </div>
-        <div
-          class="flex flex-col flex-grow"
-        >
+        <div class="flex flex-col flex-grow gap-2 mb-4">
           <label
             for="password"
             class="text-sm font-medium text-blue-gray-800 italic mb-2"
           >
             *Kata sandi yang dimasukkan adalah kata sandi group admin
           </label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            :readonly="isLoading"
-            class="focus:outline-none border p-2 rounded-md font-lato text-sm text-blue-gray-800"
-            :class="[isError ? 'bg-red-50 border-red-700' : 'bg-white border-gray-400 focus:border-green-700']"
-            placeholder="Masukkan kata sandi"
+          <div
+            class="border border-gray-500 rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700"
+            :class="[isError ? 'bg-red-50 border border-red-600' : 'bg-white']"
           >
+            <input
+              id="password"
+              v-model="password"
+              :type="passwordType"
+              placeholder="Masukkan kata sandi"
+              class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none"
+              :class="[isError ? 'bg-red-50' : 'bg-white ']"
+            >
+            <div
+              v-show="isPasswordIconVisible"
+              class="p-2 flex justify-center items-center cursor-pointer"
+              @click="togglePasswordInputVisibility"
+            >
+              <JdsIcon
+                :name="passwordIconName"
+                size="16px"
+              />
+            </div>
+          </div>
           <p
             class="text-red-600 text-xs mt-1"
             :class="isError ? 'visible' : 'invisible'"
@@ -117,6 +129,10 @@ export default {
       isEmailTouched: false,
       isLoading: false,
       isError: false,
+      isPasswordIconVisible: false,
+      isPasswordInputVisible: false,
+      passwordType: 'password',
+      passwordIconName: 'eye',
     };
   },
   computed: {
@@ -133,8 +149,16 @@ export default {
         this.isEmailTouched = true;
       }
     },
+    password() {
+      this.isPasswordIconVisible = this.password !== '';
+    },
   },
   methods: {
+    togglePasswordInputVisibility() {
+      this.isPasswordInputVisible = !this.isPasswordInputVisible;
+      this.passwordType = this.isPasswordInputVisible ? 'text' : 'password';
+      this.passwordIconName = this.isPasswordInputVisible ? 'eye-off' : 'eye';
+    },
     closeModal() {
       this.$emit('close');
       this.resetForm();
