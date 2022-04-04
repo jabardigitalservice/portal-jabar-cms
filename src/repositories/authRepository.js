@@ -19,11 +19,4 @@ export default {
   refreshToken(payload) {
     return Repository.post(`${resource}/refresh`, payload);
   },
-  /**
-   * Get user permissions
-   * @returns {Promise}
-   */
-  getPermissions() {
-    return Repository.get(`${resource}/permissions`);
-  },
 };

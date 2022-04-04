@@ -9,7 +9,6 @@ export default {
   state: {
     token: null,
     user: null,
-    permissions: [],
   },
   getters: {
     isAuthenticated(state) {
@@ -17,9 +16,6 @@ export default {
     },
     user(state) {
       return state.user;
-    },
-    permissions(state) {
-      return state.permissions;
     },
   },
   mutations: {
@@ -29,32 +25,19 @@ export default {
     SET_USER(state, payload) {
       state.user = payload;
     },
-    SET_PERMISSIONS(state, payload) {
-      state.permissions = payload;
-    },
   },
   actions: {
-    // Get user info and permissions
     async getUser({ dispatch }) {
       const token = getAllCookies();
       if (!Object.keys(token).length) return;
 
       try {
-        const [userResponse, permissionsResponse] = await Promise.all([
-          userRepository.getUser(),
-          authRepository.getPermissions(),
-        ]);
-
-        const { data: user } = userResponse.data;
-        const { permissions } = permissionsResponse.data.data;
-
+        const response = await userRepository.getUser();
         dispatch('setToken', token);
-        dispatch('setUser', user);
-        dispatch('setPermissions', permissions);
+        dispatch('setUser', response.data.data);
       } catch (error) {
         dispatch('setToken', null);
         dispatch('setUser', null);
-        dispatch('setPermissions', []);
       }
     },
     /**
@@ -74,7 +57,6 @@ export default {
         removeAllCookies();
         dispatch('setToken', null);
         dispatch('setUser', null);
-        dispatch('setPermissions', []);
 
         if (error.response) {
           throw error.response;
@@ -90,7 +72,6 @@ export default {
       removeAllCookies();
       dispatch('setToken', null);
       dispatch('setUser', null);
-      dispatch('setPermissions', []);
     },
     /**
      * Get new token
@@ -121,13 +102,6 @@ export default {
      */
     setToken({ commit }, payload) {
       commit('SET_TOKEN', payload);
-    },
-    /**
-     * Set user permissions
-     * @param {Object} payload - The object contains user permissions
-     */
-    setPermissions({ commit }, payload) {
-      commit('SET_PERMISSIONS', payload);
     },
   },
 };
