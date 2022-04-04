@@ -38,6 +38,7 @@ Sentry.init({
 });
 
 store.dispatch('auth/getUser')
+  .then(() => store.dispatch('auth/getPermissions'))
   .then(() => {
     new Vue({
       router,

@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode';
 import { RepositoryFactory } from '../../repositories/RepositoryFactory';
 import { getAllCookies, removeAllCookies, setCookies } from '@/common/helpers/cookies';
 
@@ -9,6 +10,7 @@ export default {
   state: {
     token: null,
     user: null,
+    permissions: [],
   },
   getters: {
     isAuthenticated(state) {
@@ -25,6 +27,9 @@ export default {
     SET_USER(state, payload) {
       state.user = payload;
     },
+    SET_PERMISSIONS(state, payload) {
+      state.permissions = payload;
+    },
   },
   actions: {
     async getUser({ dispatch }) {
@@ -40,6 +45,14 @@ export default {
         dispatch('setUser', null);
       }
     },
+    getPermissions({ dispatch }) {
+      const token = getAllCookies();
+      if (!Object.keys(token).length) return;
+
+      const decodedToken = jwtDecode(token.access_token);
+      const { permissions } = decodedToken;
+      dispatch('setPermissions', permissions);
+    },
     /**
      * Logging user in
      * @param {Object} payload - The object contains email and password
@@ -52,11 +65,13 @@ export default {
           setCookies(response.data),
           dispatch('setToken', response.data),
           dispatch('getUser', response.data),
+          dispatch('getPermissions'),
         ]);
       } catch (error) {
         removeAllCookies();
         dispatch('setToken', null);
         dispatch('setUser', null);
+        dispatch('setPermissions', []);
 
         if (error.response) {
           throw error.response;
@@ -72,6 +87,7 @@ export default {
       removeAllCookies();
       dispatch('setToken', null);
       dispatch('setUser', null);
+      dispatch('setPermissions', []);
     },
     /**
      * Get new token
@@ -86,6 +102,7 @@ export default {
         removeAllCookies();
         dispatch('setToken', null);
         dispatch('setUser', null);
+        dispatch('setPermissions', []);
         throw new Error(error);
       }
     },
@@ -102,6 +119,13 @@ export default {
      */
     setToken({ commit }, payload) {
       commit('SET_TOKEN', payload);
+    },
+    /**
+     * Set permissions
+     * @param {Array} payload - The Array contains user permissions
+     */
+    setPermissions({ commit }, payload) {
+      commit('SET_PERMISSIONS', payload);
     },
   },
 };
