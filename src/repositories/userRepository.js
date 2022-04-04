@@ -82,4 +82,14 @@ export default {
   getMemberList(params) {
     return Repository.get(`${resource}`, { params });
   },
+
+  /**
+   * Set user as admin
+   * @param {string, number} id
+   * @param {string} password
+   * @returns {Promise}
+   */
+  setAdmin(id, password) {
+    return Repository.put(`${resource}/${id}/set-as-admin`, { password });
+  },
 };

@@ -66,8 +66,10 @@
       </ul>
     </div>
     <SetAdminModal
+      :id="item.id"
       :open="isModalOpen['set-admin']"
       :member-name="item.name"
+      @success:action="$emit('success:action')"
       @close="toggleModal('set-admin')"
     />
     <DeactivateMemberModal
@@ -134,10 +136,14 @@ export default {
   computed: {
     shouldShowAction() {
       return (action) => {
-        const { status } = this.item;
+        const { status, role } = this.item;
 
         if (!status) {
           return false;
+        }
+
+        if (action === 'set-admin') {
+          return this.allowedActions[status].includes(action) && role.name === 'Contributor';
         }
 
         return this.allowedActions[status].includes(action);
