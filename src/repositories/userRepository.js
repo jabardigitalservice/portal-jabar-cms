@@ -92,4 +92,15 @@ export default {
   setAdmin(id, password) {
     return Repository.put(`${resource}/${id}/set-as-admin`, { password });
   },
+
+  /**
+   * Set user as admin
+   * @param {string, number} id
+   * @param {string} password
+   * @param {string} newEmail
+   * @returns {Promise}
+   */
+  changeEmail(id, password, newEmail) {
+    return Repository.put(`${resource}/${id}/change-email`, { password, new_email: newEmail });
+  },
 };
