@@ -1,5 +1,11 @@
 <template>
   <div>
+    <JdsSectionMessage
+      show
+      variant="info"
+      class="mb-4 password-form"
+      message="Kata Sandi terdiri dari min. 6 karakter dengan kombinasi huruf besar atau kecil, angka, dan simbol."
+    />
     <!-- Password input -->
     <div class="flex flex-col flex-grow gap-1 mb-4">
       <label
@@ -213,3 +219,15 @@ export default {
   },
 };
 </script>
+
+<style>
+.password-form.jds-section-message {
+  gap: 14px;
+  padding: 8px;
+  color: #212121;
+}
+.password-form .jds-section-message__content__text {
+  font-size: 12px;
+  line-height: 18px;
+}
+</style>
