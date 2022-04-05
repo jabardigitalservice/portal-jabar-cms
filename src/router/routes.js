@@ -1,3 +1,15 @@
+import store from '@/store';
+
+function userHasPermission(to, from, next) {
+  const { permission } = to.meta;
+  const permissions = store.getters['auth/permissions'];
+  if (Array.isArray(permissions) && permissions.includes(permission)) {
+    next();
+  } else {
+    next('/');
+  }
+}
+
 export default [
   {
     path: '/',
@@ -97,7 +109,9 @@ export default [
     component: () => import('@/pages/Settings/MemberDetail'),
     meta: {
       layout: 'AppLayoutPrivate',
+      permission: 'user.manage',
     },
+    beforeEnter: userHasPermission,
   },
   {
     path: '/login',
