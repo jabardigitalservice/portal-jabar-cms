@@ -169,25 +169,16 @@ export default {
   },
   watch: {
     name() {
-      if (this.name === '') this.setErrors('name', 'Nama harus diisi');
+      if (this.name.trim() === '') this.setErrors('name', 'Nama harus diisi');
       else this.clearErrors('name');
     },
     occupation() {
-      if (this.occupation === '') this.setErrors('occupation', 'Jabatan harus diisi');
+      if (this.occupation.trim() === '') this.setErrors('occupation', 'Jabatan harus diisi');
       else this.clearErrors('occupation');
     },
     nip() {
       if (this.nip.length !== 18) this.setErrors('nip', 'NIP harus 18 digit');
       else this.clearErrors('nip');
-    },
-    password: {
-      immediate: false,
-      async handler() {
-        await this.$nextTick();
-        if (this.password === '') this.setErrors('password', 'Kata sandi harus diisi');
-        else if (this.passwordStrength === 'low') this.setErrors('password', 'Kata sandi anda tidak cukup kuat');
-        else this.clearErrors('password');
-      },
     },
     passwordConfirmation() {
       if (this.passwordConfirmation === '') this.setErrors('passwordConfirmation', 'Kata sandi harus diisi');
@@ -215,7 +206,7 @@ export default {
     isValidInput(step) {
       switch (step) {
         case 1:
-          return this.name !== '' && this.nip !== '' && this.nip.length === 18;
+          return this.name.trim() !== '' && this.occupation.trim() !== '' && this.nip.length === 18;
         case 2:
           return this.password !== '' && this.passwordStrength !== 'low' && this.passwordConfirmation !== '' && this.password === this.passwordConfirmation;
         default:
@@ -247,8 +238,8 @@ export default {
       this.isLoading = true;
       try {
         const body = {
-          name: this.name,
-          occupation: this.occupation,
+          name: this.name.trim(),
+          occupation: this.occupation.trim(),
           nip: this.nip,
           password: this.password,
           token: this.token,

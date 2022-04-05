@@ -1,26 +1,28 @@
 <template>
   <div>
+    <JdsSectionMessage
+      show
+      variant="info"
+      class="mb-4 password-form"
+      message="Kata Sandi terdiri dari min. 6 karakter dengan kombinasi huruf besar atau kecil, angka, dan simbol."
+    />
     <!-- Password input -->
     <div class="flex flex-col flex-grow gap-1 mb-4">
       <label
         for="password"
-        class="text-[15px] font-medium mb-1"
-        :class="[errors.password ? 'text-red-600' : 'text-gray-800']"
+        class="text-[15px] font-medium mb-1 text-gray-800"
       >
         Kata Sandi
       </label>
-      <div
-        class="border border-gray-500 rounded-lg overflow-hidden flex items-stretch"
-        :class="[errors.password ? 'bg-red-50 border border-red-600' : 'bg-gray-50 focus-within:border-green-700']"
-      >
+      <div class="bg-gray-50 border border-gray-500 rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700">
         <input
           id="password"
           ref="password"
           :value="password"
           :type="passwordInputType['password']"
+          autocomplete="off"
           placeholder="Masukkan kata sandi"
-          class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none focus-within:placeholder:text-gray-500"
-          :class="[errors.password ? 'bg-red-50' : 'bg-gray-50 focus-within:bg-gray-50']"
+          class="text-sm bg-gray-50 placeholder:text-gray-600 p-2 w-full focus:outline-none focus-within:placeholder:text-gray-500 focus-within:bg-gray-50"
           @input="onInput"
           @focus="openTooltip"
           @blur="closeTooltip"
@@ -36,12 +38,6 @@
           />
         </div>
       </div>
-      <p
-        v-show="errors.password"
-        class="text-red-600 text-sm"
-      >
-        {{ errors.password }}
-      </p>
     </div>
     <PasswordTooltip
       :show="isTooltipOpen"
@@ -64,6 +60,7 @@
           id="passwordConfirmation"
           :value="passwordConfirmation"
           :type="passwordInputType['passwordConfirmation']"
+          autocomplete="off"
           placeholder="Ulangi kata sandi"
           class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none focus-within:placeholder:text-gray-500"
           :class="[errors.passwordConfirmation ? 'bg-red-50' : 'bg-gray-50 focus-within:bg-gray-50']"
@@ -222,3 +219,15 @@ export default {
   },
 };
 </script>
+
+<style>
+.password-form.jds-section-message {
+  gap: 14px;
+  padding: 8px;
+  color: #212121;
+}
+.password-form .jds-section-message__content__text {
+  font-size: 12px;
+  line-height: 18px;
+}
+</style>
