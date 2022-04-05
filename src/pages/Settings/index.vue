@@ -1,9 +1,11 @@
 <template>
   <div class="h-full">
-    <TabBar
-      :tabs="tabs"
-      :current-tab.sync="currentTab"
-    />
+    <Restricted permission="user.manage">
+      <TabBar
+        :tabs="tabs"
+        :current-tab.sync="currentTab"
+      />
+    </Restricted>
     <keep-alive>
       <component :is="tab" />
     </keep-alive>
@@ -12,11 +14,13 @@
 
 <script>
 import TabBar from '@/common/components/TabBar';
+import Restricted from '@/common/components/Restricted';
 
 export default {
   name: 'Settings',
   components: {
     TabBar,
+    Restricted,
     AccountSettings: () => import('@/components/Settings/Account'),
     MemberSettings: () => import('@/components/Settings/Member'),
   },

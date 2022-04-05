@@ -32,7 +32,7 @@
             Lihat Detail
           </router-link>
         </li>
-        <li v-if="shouldShowAction('set-admin')">
+        <li v-if="shouldShowAction('set-admin') && $hasPermission('user.set-as-admin')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
             @click="toggleModal('set-admin')"
@@ -40,7 +40,7 @@
             Jadikan Admin
           </button>
         </li>
-        <li v-if="shouldShowAction('deactivate-member')">
+        <li v-if="shouldShowAction('deactivate-member') && $hasPermission('user.deactivate')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
             @click="toggleModal('deactivate-member')"
@@ -48,7 +48,7 @@
             Nonaktifkan Akun
           </button>
         </li>
-        <li v-if="shouldShowAction('change-email')">
+        <li v-if="shouldShowAction('change-email') && $hasPermission('user.change-email')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
             @click="toggleModal('change-email')"
@@ -56,7 +56,7 @@
             Ubah Email
           </button>
         </li>
-        <li v-if="shouldShowAction('cancel-invitation')">
+        <li v-if="shouldShowAction('cancel-invitation') && $hasPermission('user.cancel-invitation')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
           >
