@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 export default {
   name: 'Restricted',
   props: {
@@ -16,12 +14,8 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('auth', ['permissions']),
     isPermitted() {
-      if (Array.isArray(this.permissions)) {
-        return this.permissions.includes(this.permission);
-      }
-      return false;
+      return this.$hasPermission(this.permission);
     },
   },
 };
