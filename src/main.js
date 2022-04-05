@@ -5,6 +5,7 @@ import { BrowserTracing } from '@sentry/tracing';
 import PortalVue from 'portal-vue';
 import { axiosInterceptors } from './repositories/Repository';
 import toast from '@/plugins/toast';
+import permission from '@/plugins/permission';
 import router from './router';
 import store from './store';
 import App from './App';
@@ -13,6 +14,7 @@ import './assets/styles/main.css';
 Vue.use(DesignSystem);
 Vue.use(PortalVue);
 Vue.use(toast);
+Vue.use(permission);
 axiosInterceptors(store);
 
 Vue.config.productionTip = false;
