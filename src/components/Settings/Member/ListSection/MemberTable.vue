@@ -56,6 +56,7 @@
       <template #item.action="{item}">
         <MemberTableAction
           :item="item"
+          @success:action="$emit('success:action')"
         />
       </template>
     </JdsDataTable>

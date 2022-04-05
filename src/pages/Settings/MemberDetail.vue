@@ -1,7 +1,10 @@
 <template>
   <main class="w-full pb-20">
     <HeaderMenu>
-      <div class="min-w-0 flex gap-3">
+      <div
+        v-if="hasMember && !isWaitingConfirmation"
+        class="min-w-0 flex gap-3"
+      >
         <!-- TODO: Add action on button clicked -->
         <BaseButton
           class="text-sm text-green-700 border-green-700 hover:bg-green-50"
@@ -16,8 +19,8 @@
         >
           Nonaktifkan Akun
         </BaseButton>
-        <!-- TODO: Add action on button clicked -->
         <BaseButton
+          v-if="isContributor"
           class="text-sm bg-green-700 hover:bg-green-600 text-white"
           @click="toggleSetAdminModal"
         >
@@ -75,8 +78,10 @@
       @close="toggleChangeEmailModal"
     />
     <SetAdminModal
+      :id="member.id"
       :open="isSetAdminModalOpen"
       :member-name="memberDetail.name.value"
+      @success:action="onSuccess"
       @close="toggleSetAdminModal"
     />
   </main>
@@ -148,25 +153,37 @@ export default {
         },
       };
     },
+    hasMember() {
+      return Object.keys(this.member).length > 0;
+    },
+    isWaitingConfirmation() {
+      return this.member.status === 'waiting confirmation';
+    },
+    isContributor() {
+      return this.member.role?.name === 'Contributor';
+    },
   },
-  async mounted() {
-    try {
-      this.loading = true;
-      const { id } = this.$route.params;
-      const response = await userRepository.getUserById(id);
-      const { data } = response.data;
-
-      this.member = data;
-    } catch (error) {
-      this.$toast({
-        type: 'error',
-        message: 'Gagal mendapatkan data Member, silakan coba beberapa saat lagi',
-      });
-    } finally {
-      this.loading = false;
-    }
+  created() {
+    this.fetchMember();
   },
   methods: {
+    async fetchMember() {
+      try {
+        this.loading = true;
+        const { id } = this.$route.params;
+        const response = await userRepository.getUserById(id);
+        const { data } = response.data;
+
+        this.member = data;
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Member, silakan coba beberapa saat lagi',
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
     getStatusLabel(status) {
       const statusMap = {
         active: 'Aktif',
@@ -184,6 +201,9 @@ export default {
     },
     toggleSetAdminModal() {
       this.isSetAdminModalOpen = !this.isSetAdminModalOpen;
+    },
+    onSuccess() {
+      this.fetchMember();
     },
   },
 };
