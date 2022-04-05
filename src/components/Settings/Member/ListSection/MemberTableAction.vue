@@ -127,9 +127,9 @@ export default {
       },
       // Map allowed actions based on member status
       allowedActions: Object.freeze({
-        active: ['show-detail', 'set-admin', 'deactivate-member', 'change-email'],
-        'non-active': ['show-detail'],
-        'waiting confirmation': ['cancel-invitation'],
+        ACTIVE: ['show-detail', 'set-admin', 'deactivate-member', 'change-email'],
+        INACTIVE: ['show-detail'],
+        PENDING: ['cancel-invitation'],
       }),
     };
   },
