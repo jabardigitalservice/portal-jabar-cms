@@ -2,7 +2,7 @@
   <main class="w-full pb-20">
     <HeaderMenu>
       <div
-        v-if="hasMember && !isWaitingConfirmation"
+        v-if="hasMember && !isPending"
         class="min-w-0 flex gap-3"
       >
         <!-- TODO: Add action on button clicked -->
@@ -156,8 +156,8 @@ export default {
     hasMember() {
       return Object.keys(this.member).length > 0;
     },
-    isWaitingConfirmation() {
-      return this.member.status === 'waiting confirmation';
+    isPending() {
+      return this.member.status === 'PENDING';
     },
     isContributor() {
       return this.member.role?.name === 'Contributor';
@@ -186,9 +186,9 @@ export default {
     },
     getStatusLabel(status) {
       const statusMap = {
-        active: 'Aktif',
-        'non-active': 'Tidak Aktif',
-        'waiting confirmation': 'Menunggu Konfirmasi',
+        ACTIVE: 'Aktif',
+        INACTIVE: 'Tidak Aktif',
+        PENDING: 'Menunggu Konfirmasi',
       };
 
       return statusMap[status] ?? null;
