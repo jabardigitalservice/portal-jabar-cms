@@ -180,15 +180,6 @@ export default {
       if (this.nip.length !== 18) this.setErrors('nip', 'NIP harus 18 digit');
       else this.clearErrors('nip');
     },
-    password: {
-      immediate: false,
-      async handler() {
-        await this.$nextTick();
-        if (this.password === '') this.setErrors('password', 'Kata sandi harus diisi');
-        else if (this.passwordStrength === 'low') this.setErrors('password', 'Kata sandi anda tidak cukup kuat');
-        else this.clearErrors('password');
-      },
-    },
     passwordConfirmation() {
       if (this.passwordConfirmation === '') this.setErrors('passwordConfirmation', 'Kata sandi harus diisi');
       else if (this.password !== this.passwordConfirmation) this.setErrors('passwordConfirmation', 'Kata sandi tidak sama');
