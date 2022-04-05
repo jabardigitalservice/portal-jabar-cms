@@ -169,11 +169,11 @@ export default {
   },
   watch: {
     name() {
-      if (this.name === '') this.setErrors('name', 'Nama harus diisi');
+      if (this.name.trim() === '') this.setErrors('name', 'Nama harus diisi');
       else this.clearErrors('name');
     },
     occupation() {
-      if (this.occupation === '') this.setErrors('occupation', 'Jabatan harus diisi');
+      if (this.occupation.trim() === '') this.setErrors('occupation', 'Jabatan harus diisi');
       else this.clearErrors('occupation');
     },
     nip() {
@@ -215,7 +215,7 @@ export default {
     isValidInput(step) {
       switch (step) {
         case 1:
-          return this.name !== '' && this.nip !== '' && this.nip.length === 18;
+          return this.name.trim() !== '' && this.occupation.trim() !== '' && this.nip.length === 18;
         case 2:
           return this.password !== '' && this.passwordStrength !== 'low' && this.passwordConfirmation !== '' && this.password === this.passwordConfirmation;
         default:
@@ -247,8 +247,8 @@ export default {
       this.isLoading = true;
       try {
         const body = {
-          name: this.name,
-          occupation: this.occupation,
+          name: this.name.trim(),
+          occupation: this.occupation.trim(),
           nip: this.nip,
           password: this.password,
           token: this.token,
