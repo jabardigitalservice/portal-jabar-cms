@@ -10,6 +10,7 @@
         :loading="loading"
         :meta="meta"
         class="min-w-[1000px]"
+        @success:action="onSuccess"
         @update:pagination="onUpdatePagination($event)"
       />
     </div>
@@ -88,6 +89,9 @@ export default {
 
     onUpdatePagination(data) {
       this.setParams(data);
+      this.fetchMembers();
+    },
+    onSuccess() {
       this.fetchMembers();
     },
   },

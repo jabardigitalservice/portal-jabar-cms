@@ -85,6 +85,9 @@
 <script>
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'SetAdminModal',
@@ -93,6 +96,10 @@ export default {
     BaseButton,
   },
   props: {
+    id: {
+      type: String,
+      default: '',
+    },
     open: {
       type: Boolean,
       default: false,
@@ -142,7 +149,18 @@ export default {
       }
     },
     async handleSetAdmin() {
-      // TODO: add set as admin functionality
+      try {
+        await userRepository.setAdmin(this.id, this.password);
+        this.closeModal();
+        this.$emit('success:action');
+        this.$toast({ type: 'success', message: 'Keanggotaan akun berhasil diubah' });
+      } catch (error) {
+        if (error.response?.status === 422) {
+          this.isError = true;
+        } else {
+          this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan pada server' });
+        }
+      }
     },
   },
 };

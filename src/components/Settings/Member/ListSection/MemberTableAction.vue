@@ -66,8 +66,10 @@
       </ul>
     </div>
     <SetAdminModal
+      :id="item.id"
       :open="isModalOpen['set-admin']"
       :member-name="item.name"
+      @success:action="$emit('success:action')"
       @close="toggleModal('set-admin')"
     />
     <DeactivateMemberModal
@@ -125,19 +127,23 @@ export default {
       },
       // Map allowed actions based on member status
       allowedActions: Object.freeze({
-        active: ['show-detail', 'set-admin', 'deactivate-member', 'change-email'],
-        'non-active': ['show-detail'],
-        'waiting confirmation': ['cancel-invitation'],
+        ACTIVE: ['show-detail', 'set-admin', 'deactivate-member', 'change-email'],
+        INACTIVE: ['show-detail'],
+        PENDING: ['cancel-invitation'],
       }),
     };
   },
   computed: {
     shouldShowAction() {
       return (action) => {
-        const { status } = this.item;
+        const { status, role } = this.item;
 
         if (!status) {
           return false;
+        }
+
+        if (action === 'set-admin') {
+          return this.allowedActions[status].includes(action) && role.name === 'Contributor';
         }
 
         return this.allowedActions[status].includes(action);

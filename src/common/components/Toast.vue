@@ -5,7 +5,7 @@
   >
     <div
       v-if="isOpen"
-      class="absolute z-[50] top-[88px] w-full flex justify-center min-h-[55px] pointer-events-none"
+      class="absolute z-[150] top-[88px] w-full flex justify-center min-h-[55px] pointer-events-none"
     >
       <JdsSectionMessage
         :show="isOpen"

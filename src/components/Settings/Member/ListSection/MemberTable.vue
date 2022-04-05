@@ -56,6 +56,7 @@
       <template #item.action="{item}">
         <MemberTableAction
           :item="item"
+          @success:action="$emit('success:action')"
         />
       </template>
     </JdsDataTable>
@@ -162,9 +163,9 @@ export default {
 
     getStatusLabel(status) {
       const statusMap = {
-        active: 'Aktif',
-        'non-active': 'Tidak Aktif',
-        'waiting confirmation': 'Menunggu Konfirmasi',
+        ACTIVE: 'Aktif',
+        INACTIVE: 'Tidak Aktif',
+        PENDING: 'Menunggu Konfirmasi',
       };
 
       return statusMap[status] ?? null;
