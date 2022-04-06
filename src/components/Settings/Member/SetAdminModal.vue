@@ -65,17 +65,14 @@
         </BaseButton>
         <BaseButton
           class="bg-green-700 hover:bg-green-600 text-sm text-white"
-          :disabled="isLoading || !isFormValid"
+          :disabled="!isFormValid"
           @click="submitForm"
         >
+          <JdsSpinner
+            v-show="isLoading"
+            size="16px"
+          />
           Jadikan Administrator
-          <template #icon-right>
-            <JdsSpinner
-              v-show="isLoading"
-              size="16px"
-              foreground="#757575"
-            />
-          </template>
         </BaseButton>
       </div>
     </template>
@@ -150,6 +147,7 @@ export default {
     },
     async handleSetAdmin() {
       try {
+        this.isLoading = true;
         await userRepository.setAdmin(this.id, this.password);
         this.closeModal();
         this.$emit('success:action');
@@ -160,6 +158,8 @@ export default {
         } else {
           this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan pada server' });
         }
+      } finally {
+        this.isLoading = false;
       }
     },
   },
