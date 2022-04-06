@@ -35,7 +35,7 @@
           </a>
         </li>
         <!-- Publish Action-->
-        <li v-if="shouldShowAction('publish')">
+        <li v-if="shouldShowAction('publish') && $hasPermission('news.publish')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
             @click="$emit('publish', item.id)"
@@ -53,7 +53,7 @@
           </router-link>
         </li>
         <!-- Archive Action -->
-        <li v-if="shouldShowAction('archive')">
+        <li v-if="shouldShowAction('archive') && $hasPermission('news.archive')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
             @click="$emit('archive', item.id)"

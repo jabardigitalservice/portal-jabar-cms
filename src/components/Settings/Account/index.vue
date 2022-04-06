@@ -3,7 +3,9 @@
     <PersonalInformationSection />
     <NotificationSection />
     <PrivacyAndSecuritySection />
-    <RequestUpgradeRoleSection />
+    <Restricted permission="user.request-to-be-admin">
+      <RequestUpgradeRoleSection />
+    </Restricted>
   </main>
 </template>
 
@@ -12,6 +14,7 @@ import PersonalInformationSection from './PersonalInformationSection';
 import NotificationSection from './NotificationSection';
 import PrivacyAndSecuritySection from './PrivacyAndSecuritySection';
 import RequestUpgradeRoleSection from './RequestUpgradeRoleSection';
+import Restricted from '@/common/components/Restricted';
 
 export default {
   name: 'AccountSettings',
@@ -20,6 +23,7 @@ export default {
     NotificationSection,
     PrivacyAndSecuritySection,
     RequestUpgradeRoleSection,
+    Restricted,
   },
 };
 </script>
