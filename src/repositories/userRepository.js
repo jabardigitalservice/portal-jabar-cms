@@ -103,4 +103,15 @@ export default {
   changeEmail(id, password, newEmail) {
     return Repository.put(`${resource}/${id}/change-email`, { password, new_email: newEmail });
   },
+
+  /**
+   * Activate Account
+   * @param {string, number} id
+   * @param {string} password
+   * @param {string} newEmail
+   * @returns {Promise}
+   */
+  activateAccount(id, password, status) {
+    return Repository.put(`${resource}/${id}/activate-account`, { password, status });
+  },
 };

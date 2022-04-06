@@ -73,8 +73,10 @@
       @close="toggleModal('set-admin')"
     />
     <DeactivateMemberModal
+      :id="item.id"
       :open="isModalOpen['deactivate-member']"
       :member-email="item.email"
+      @success:action="$emit('success:action')"
       @close="toggleModal('deactivate-member')"
     />
     <ChangeEmailModal
