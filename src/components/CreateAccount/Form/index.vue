@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="!isAccountCreated"
-    class="bg-white w-[443px] p-8 rounded-lg flex flex-col gap-6"
+    class="p-5 mt-10 bg-white w-[443px] rounded-lg flex flex-col gap-6 xl:p-8 xl:mt-0 "
   >
     <!-- Title -->
     <div class="flex flex-col gap-3">
@@ -55,27 +55,37 @@
         </div>
       </li>
     </ul>
+
     <!-- Step 1 -->
-    <DetailInformationForm
+    <div
       v-show="firstStep"
-      :name="name"
-      :occupation="occupation"
-      :nip="nip"
-      :errors="errors"
-      @name="name = $event"
-      @occupation="occupation = $event"
-      @nip="nip = $event"
-    />
+      class="max-h-[200px] pr-4 overflow-y-auto xl:max-h-full"
+    >
+      <DetailInformationForm
+        :name="name"
+        :occupation="occupation"
+        :nip="nip"
+        :errors="errors"
+        @name="name = $event"
+        @occupation="occupation = $event"
+        @nip="nip = $event"
+      />
+    </div>
     <!-- Step 2 -->
-    <PasswordForm
+    <div
       v-show="lastStep"
-      :password="password"
-      :password-confirmation="passwordConfirmation"
-      :errors="errors"
-      @password-strength="passwordStrength = $event"
-      @password="password = $event"
-      @password-confirmation="passwordConfirmation = $event"
-    />
+      ref="lastStepContainer"
+      class="max-h-[200px] pr-4 overflow-y-auto xl:max-h-full"
+    >
+      <PasswordForm
+        :password="password"
+        :password-confirmation="passwordConfirmation"
+        :errors="errors"
+        @password-strength="passwordStrength = $event"
+        @password="password = $event"
+        @password-confirmation="passwordConfirmation = $event"
+      />
+    </div>
     <!-- Action button -->
     <div class="flex gap-5">
       <BaseButton
@@ -184,6 +194,9 @@ export default {
       if (this.passwordConfirmation === '') this.setErrors('passwordConfirmation', 'Kata sandi harus diisi');
       else if (this.password !== this.passwordConfirmation) this.setErrors('passwordConfirmation', 'Kata sandi tidak sama');
       else this.clearErrors('passwordConfirmation');
+    },
+    lastStep() {
+      this.$refs.lastStepContainer.scrollIntoView({ behavior: 'smooth' });
     },
   },
   created() {
