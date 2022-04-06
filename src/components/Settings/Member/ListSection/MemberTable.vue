@@ -189,4 +189,13 @@ export default {
 .member-table .jds-data-table thead tr th:nth-child(2) {
   width: 220px !important;
 }
+
+.member-table .jds-options .jds-options__filter {
+  width: 100% !important;
+  height: 48px !important;
+}
+
+.member-table .jds-options--filterable {
+  min-width: 120px !important;
+}
 </style>

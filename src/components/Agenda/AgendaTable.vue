@@ -152,7 +152,16 @@ export default {
   width: 300px !important;
 }
 
-.news-table .jds-data-table thead tr th:nth-child(2) {
+.agenda-table .jds-data-table thead tr th:nth-child(2) {
   width: 160px !important;
+}
+
+.agenda-table .jds-options .jds-options__filter {
+  width: 100% !important;
+  height: 48px !important;
+}
+
+.agenda-table .jds-options--filterable {
+  min-width: 120px !important;
 }
 </style>
