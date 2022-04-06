@@ -14,24 +14,24 @@
       </p>
       <form @submit.prevent="submitForm">
         <div
-          class="flex flex-col flex-grow mb-3"
+          class="flex flex-col flex-grow mb-4"
         >
           <input
             v-model="newEmail"
             type="email"
             :readonly="isLoading"
-            class="focus:outline-none border p-2 rounded-md font-lato text-sm text-blue-gray-800"
-            :class="[isEmailTouched && !isValidInput ? 'bg-red-50 border-red-700' : 'bg-white border-gray-400 focus:border-green-700']"
+            class="focus:outline-none border p-2 rounded-md font-lato text-sm text-blue-gray-800 placeholder:text-gray-600"
+            :class="[errors.newEmail ? 'bg-red-50 border-red-700' : 'bg-white border-gray-500 focus:border-green-700']"
             placeholder="Masukkan alamat email baru"
           >
           <p
+            v-show="errors.newEmail"
             class="text-red-600 text-xs mt-1"
-            :class="isEmailTouched && !isValidInput ? 'visible' : 'invisible'"
           >
-            Email yang anda masukkan belum sesuai
+            {{ errors.newEmail }}
           </p>
         </div>
-        <div class="flex flex-col flex-grow gap-2 mb-4">
+        <div class="flex flex-col flex-grow mb-4">
           <label
             for="password"
             class="text-sm font-medium text-blue-gray-800 italic mb-2"
@@ -40,7 +40,7 @@
           </label>
           <div
             class="border border-gray-500 rounded-lg overflow-hidden flex items-stretch focus-within:border-green-700"
-            :class="[isError ? 'bg-red-50 border border-red-600' : 'bg-white']"
+            :class="[errors.password ? 'bg-red-50 border border-red-600' : 'bg-white']"
           >
             <input
               id="password"
@@ -48,7 +48,7 @@
               :type="passwordType"
               placeholder="Masukkan kata sandi"
               class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none"
-              :class="[isError ? 'bg-red-50' : 'bg-white ']"
+              :class="[errors.password ? 'bg-red-50' : 'bg-white ']"
             >
             <div
               v-show="isPasswordIconVisible"
@@ -62,10 +62,10 @@
             </div>
           </div>
           <p
+            v-show="errors.password"
             class="text-red-600 text-xs mt-1"
-            :class="isError ? 'visible' : 'invisible'"
           >
-            Kata sandi yang anda masukkan belum sesuai
+            {{ errors.password }}
           </p>
         </div>
       </form>
@@ -80,16 +80,13 @@
         </BaseButton>
         <BaseButton
           class="bg-green-700 hover:bg-green-600 text-sm text-white"
-          :disabled="!isFormValid || isLoading"
+          :disabled="!isFormValid"
           @click="submitForm"
         >
-          <template #icon-right>
-            <JdsSpinner
-              v-show="isLoading"
-              size="16px"
-              foreground="#757575"
-            />
-          </template>
+          <JdsSpinner
+            v-show="isLoading"
+            size="16px"
+          />
           Ubah Email
         </BaseButton>
       </div>
@@ -101,6 +98,9 @@
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 import { isValidEmail } from '@/common/helpers/validation';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'ChangeEmailModal',
@@ -112,6 +112,10 @@ export default {
     open: {
       type: Boolean,
       default: false,
+    },
+    id: {
+      type: String,
+      default: '',
     },
     memberName: {
       type: String,
@@ -126,9 +130,11 @@ export default {
     return {
       newEmail: '',
       password: '',
-      isEmailTouched: false,
       isLoading: false,
-      isError: false,
+      errors: {
+        newEmail: '',
+        password: '',
+      },
       isPasswordIconVisible: false,
       isPasswordInputVisible: false,
       passwordType: 'password',
@@ -136,24 +142,36 @@ export default {
     };
   },
   computed: {
-    isValidInput() {
-      return isValidEmail(this.newEmail);
-    },
     isFormValid() {
-      return this.password !== '' && this.isEmailTouched && this.isValidInput;
+      return this.newEmail.trim() !== '' && isValidEmail(this.newEmail) && this.password !== '';
     },
   },
   watch: {
     newEmail() {
-      if (this.open && !this.isEmailTouched) {
-        this.isEmailTouched = true;
+      if (this.open) {
+        if (this.newEmail.trim() === '') this.setErrors('newEmail', 'Email harus diisi');
+        else if (!isValidEmail(this.newEmail.trim())) this.setErrors('newEmail', 'Email yang anda masukkan belum sesuai');
+        else this.clearErrors('newEmail');
       }
     },
     password() {
       this.isPasswordIconVisible = this.password !== '';
+      if (this.open) {
+        if (this.password === '') this.setErrors('password', 'Kata sandi harus diisi');
+        else this.clearErrors('password');
+      }
     },
   },
   methods: {
+    setErrors(name, message) {
+      this.errors = {
+        ...this.errors,
+        [name]: message,
+      };
+    },
+    clearErrors(name) {
+      this.errors[name] = '';
+    },
     togglePasswordInputVisibility() {
       this.isPasswordInputVisible = !this.isPasswordInputVisible;
       this.passwordType = this.isPasswordInputVisible ? 'text' : 'password';
@@ -165,10 +183,10 @@ export default {
     },
     resetForm() {
       this.isLoading = false;
-      this.isError = false;
-      this.isEmailTouched = false;
       this.password = '';
       this.newEmail = '';
+      this.clearErrors('newEmail');
+      this.clearErrors('password');
     },
     submitForm() {
       if (!this.isLoading && this.isFormValid) {
@@ -176,7 +194,26 @@ export default {
       }
     },
     async handleChangeEmail() {
-      // TODO: add change email functionality
+      try {
+        this.isLoading = true;
+        await userRepository.changeEmail(this.id, this.password, this.newEmail);
+        this.closeModal();
+        this.$emit('success:action');
+        this.$toast({ type: 'success', message: 'Email berhasil diubah' });
+      } catch (error) {
+        if (error.response?.status === 422) {
+          const errorMessage = error.response?.data?.message || '';
+          if (errorMessage.includes('email')) {
+            this.setErrors('newEmail', 'Email yang Anda masukkan sudah terdaftar');
+          } else if (errorMessage.includes('password')) {
+            this.setErrors('password', 'Kata sandi yang Anda masukkan tidak sesuai');
+          }
+        } else {
+          this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan pada server' });
+        }
+      } finally {
+        this.isLoading = false;
+      }
     },
   },
 };

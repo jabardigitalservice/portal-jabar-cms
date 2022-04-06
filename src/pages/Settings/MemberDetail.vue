@@ -2,11 +2,11 @@
   <main class="w-full pb-20">
     <HeaderMenu>
       <div
-        v-if="hasMember && !isPending"
+        v-if="hasMember"
         class="min-w-0 flex gap-3"
       >
-        <!-- TODO: Add action on button clicked -->
         <BaseButton
+          v-if="shouldShowAction('change-email')"
           class="text-sm text-green-700 border-green-700 hover:bg-green-50"
           @click="toggleChangeEmailModal"
         >
@@ -20,7 +20,7 @@
           Nonaktifkan Akun
         </BaseButton>
         <BaseButton
-          v-if="isContributor"
+          v-if="shouldShowAction('set-admin')"
           class="text-sm bg-green-700 hover:bg-green-600 text-white"
           @click="toggleSetAdminModal"
         >
@@ -72,9 +72,11 @@
       @close="toggleDeactivateMemberModal"
     />
     <ChangeEmailModal
+      :id="member.id"
       :open="isChangeEmailModalOpen"
       :member-name="memberDetail.name.value"
       :member-email="memberDetail.email.value"
+      @success:action="onSuccess"
       @close="toggleChangeEmailModal"
     />
     <SetAdminModal
@@ -116,6 +118,12 @@ export default {
       isDeactivateMemberModalOpen: false,
       isChangeEmailModalOpen: false,
       isSetAdminModalOpen: false,
+      // Map allowed actions based on member status
+      allowedActions: Object.freeze({
+        ACTIVE: ['set-admin', 'deactivate-member', 'change-email'],
+        INACTIVE: [],
+        PENDING: [],
+      }),
     };
   },
   computed: {
@@ -156,11 +164,20 @@ export default {
     hasMember() {
       return Object.keys(this.member).length > 0;
     },
-    isPending() {
-      return this.member.status === 'PENDING';
-    },
-    isContributor() {
-      return this.member.role?.name === 'Contributor';
+    shouldShowAction() {
+      return (action) => {
+        const { status, role } = this.member;
+
+        if (!status) {
+          return false;
+        }
+
+        if (action === 'set-admin') {
+          return this.allowedActions[status].includes(action) && role.name === 'Contributor';
+        }
+
+        return this.allowedActions[status].includes(action);
+      };
     },
   },
   created() {

@@ -78,9 +78,11 @@
       @close="toggleModal('deactivate-member')"
     />
     <ChangeEmailModal
+      :id="item.id"
       :open="isModalOpen['change-email']"
       :member-name="item.name"
       :member-email="item.email"
+      @success:action="$emit('success:action')"
       @close="toggleModal('change-email')"
     />
   </JdsPopover>
