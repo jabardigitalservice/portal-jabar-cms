@@ -175,4 +175,13 @@ export default {
 .news-table .jds-data-table thead tr th:nth-child(3) {
   width: 180px !important;
 }
+
+.news-table .jds-options .jds-options__filter {
+  width: 100% !important;
+  height: 48px !important;
+}
+
+.news-table .jds-options--filterable {
+  min-width: 120px !important;
+}
 </style>
