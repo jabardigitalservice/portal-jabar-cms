@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <AppLayout>
-      <router-view />
+      <keep-alive include="Settings">
+        <router-view />
+      </keep-alive>
     </AppLayout>
     <portal-target name="modal" />
     <Toast />

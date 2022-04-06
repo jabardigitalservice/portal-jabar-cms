@@ -59,7 +59,7 @@ export default {
       return [];
     },
   },
-  mounted() {
+  activated() {
     this.fetchMembers();
   },
   methods: {
