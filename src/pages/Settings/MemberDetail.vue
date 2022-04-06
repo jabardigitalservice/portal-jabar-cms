@@ -12,8 +12,8 @@
         >
           Ubah Email
         </BaseButton>
-        <!-- TODO: Add action on button clicked -->
         <BaseButton
+          v-if="shouldShowAction('deactivate-member')"
           class="text-sm text-green-700 border-green-700 hover:bg-green-50"
           @click="toggleDeactivateMemberModal"
         >
@@ -67,8 +67,10 @@
       </div>
     </section>
     <DeactivateMemberModal
+      :id="member.id"
       :open="isDeactivateMemberModalOpen"
       :member-email="memberDetail.email.value"
+      @success:action="onSuccess"
       @close="toggleDeactivateMemberModal"
     />
     <ChangeEmailModal

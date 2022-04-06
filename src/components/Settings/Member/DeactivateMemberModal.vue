@@ -66,17 +66,15 @@
         </BaseButton>
         <BaseButton
           class="bg-red-600 hover:bg-red-700 text-sm text-white"
-          :disabled="isLoading || !isFormValid"
+          :disabled="!isFormValid"
           @click="submitForm"
         >
+          <JdsSpinner
+            v-show="isLoading"
+            size="16px"
+            foreground="#757575"
+          />
           Nonaktifkan
-          <template #icon-right>
-            <JdsSpinner
-              v-show="isLoading"
-              size="16px"
-              foreground="#757575"
-            />
-          </template>
         </BaseButton>
       </div>
     </template>
@@ -86,6 +84,9 @@
 <script>
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const userRepository = RepositoryFactory.get('user');
 
 export default {
   name: 'DeactivateMemberModal',
@@ -94,6 +95,10 @@ export default {
     BaseButton,
   },
   props: {
+    id: {
+      type: String,
+      default: '',
+    },
     open: {
       type: Boolean,
       default: false,
@@ -143,7 +148,21 @@ export default {
       }
     },
     async handleDeactivateMember() {
-      // TODO: add deactivate member functionality
+      try {
+        this.isLoading = true;
+        await userRepository.activateAccount(this.id, this.password, 'INACTIVE');
+        this.closeModal();
+        this.$emit('success:action');
+        this.$toast({ type: 'success', message: 'Akun berhasil dinonaktifkan' });
+      } catch (error) {
+        if (error.response?.status === 422) {
+          this.isError = true;
+        } else {
+          this.$toast({ type: 'error', message: 'Mohon maaf, terjadi kesalahan pada server' });
+        }
+      } finally {
+        this.isLoading = false;
+      }
     },
   },
 };
