@@ -40,7 +40,7 @@
             Jadikan Admin
           </button>
         </li>
-        <li v-if="shouldShowAction('deactivate-member') && $hasPermission('user.deactivate')">
+        <li v-if="shouldShowAction('deactivate-member') && $hasPermission('user.change-status')">
           <button
             class="font-lato text-sm leading-4 text-gray-800"
             @click="toggleModal('deactivate-member')"

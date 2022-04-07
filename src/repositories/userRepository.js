@@ -105,13 +105,13 @@ export default {
   },
 
   /**
-   * Activate Account
+   * Change user status
    * @param {string, number} id
    * @param {string} password
-   * @param {string} newEmail
+   * @param {string} status
    * @returns {Promise}
    */
-  activateAccount(id, password, status) {
-    return Repository.put(`${resource}/${id}/activate-account`, { password, status });
+  changeUserStatus(id, password, status) {
+    return Repository.put(`${resource}/${id}/change-status`, { password, status });
   },
 };

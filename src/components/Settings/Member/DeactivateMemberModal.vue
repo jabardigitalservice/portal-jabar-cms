@@ -151,7 +151,7 @@ export default {
     async handleDeactivateMember() {
       try {
         this.isLoading = true;
-        await userRepository.activateAccount(this.id, this.password, 'INACTIVE');
+        await userRepository.changeUserStatus(this.id, this.password, 'INACTIVE');
         this.closeModal();
         this.$emit('success:action');
         this.$toast({ type: 'success', message: 'Akun berhasil dinonaktifkan' });
