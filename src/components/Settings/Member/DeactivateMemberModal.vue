@@ -141,6 +141,7 @@ export default {
     },
     resetForm() {
       this.password = '';
+      this.isError = false;
     },
     submitForm() {
       if (this.isFormValid && !this.isLoading) {
