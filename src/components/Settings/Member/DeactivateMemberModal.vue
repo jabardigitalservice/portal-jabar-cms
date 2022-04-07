@@ -4,7 +4,7 @@
     @close="closeModal"
   >
     <div class="w-full">
-      <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-4">
+      <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
         Nonaktifkan Akun
       </h1>
       <p class="text-center text-sm leading-6 text-blue-gray-800 mb-5">
@@ -13,13 +13,13 @@
         Ketikkan Kata Sandi untuk konfirmasi.
       </p>
       <form
-        class="flex flex-col flex-grow"
+        class="flex flex-col"
         @submit.prevent="submitForm"
       >
-        <div class="flex flex-col flex-grow gap-2 mb-4">
+        <div class="flex flex-col">
           <label
             for="password"
-            class="text-sm font-medium text-blue-gray-800 italic mb-2"
+            class="text-xs font-medium text-blue-gray-800 italic mb-1"
           >
             *Kata sandi yang dimasukkan adalah kata sandi group admin
           </label>
@@ -47,8 +47,8 @@
             </div>
           </div>
           <p
+            v-show="isError"
             class="text-red-600 text-xs mt-1"
-            :class="isError ? 'visible' : 'invisible'"
           >
             Kata sandi yang anda masukkan belum sesuai
           </p>
