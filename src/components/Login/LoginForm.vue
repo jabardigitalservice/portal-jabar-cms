@@ -1,10 +1,10 @@
 <template>
   <section class="p-8 bg-white rounded-xl">
     <h2 class="text-green-700 text-2xl font-medium mb-3">
-      Login
+      Log In
     </h2>
     <p class="text-xs text-gray-700 leading-5 mb-5">
-      Selamat Datang! Silakan masukkan email dan kata sandi untuk masuk ke Portal Jabar Content Management System.
+      Selamat Datang! Silakan masukkan e-mail dan kata sandi untuk masuk ke Portal Jabar Content Management System.
     </p>
     <div v-if="isError">
       <JdsSectionMessage
@@ -20,7 +20,7 @@
       <div class="flex flex-col gap-1 mb-5">
         <label
           for="email"
-          class="text-gray-800 text-[15px] italic"
+          class="text-gray-800 text-[15px]"
         >
           E-mail
         </label>
