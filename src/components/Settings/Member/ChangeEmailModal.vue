@@ -13,9 +13,7 @@
         <strong>{{ memberEmail }} ({{ memberName }})</strong>
       </p>
       <form @submit.prevent="submitForm">
-        <div
-          class="flex flex-col flex-grow mb-4"
-        >
+        <div class="flex flex-col flex-grow mb-5">
           <input
             v-model="newEmail"
             type="email"
@@ -31,10 +29,10 @@
             {{ errors.newEmail }}
           </p>
         </div>
-        <div class="flex flex-col flex-grow mb-4">
+        <div class="flex flex-col flex-grow">
           <label
             for="password"
-            class="text-sm font-medium text-blue-gray-800 italic mb-2"
+            class="text-xs font-medium text-blue-gray-800 italic mb-1"
           >
             *Kata sandi yang dimasukkan adalah kata sandi group admin
           </label>

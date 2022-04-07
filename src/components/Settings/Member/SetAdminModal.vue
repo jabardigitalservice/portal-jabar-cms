@@ -7,7 +7,7 @@
       <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-4">
         Jadikan Administrator
       </h1>
-      <p class="text-center text-sm leading-6 text-blue-gray-800 mb-5">
+      <p class="text-center text-sm leading-6 text-blue-gray-800 mb-6">
         Anda akan menjadikan akun <strong>{{ memberName }}</strong> sebagai <strong>Administrator</strong>
         <br>
         Ketikkan Kata Sandi untuk konfirmasi.
@@ -16,10 +16,10 @@
         class="flex flex-col flex-grow"
         @submit.prevent="submitForm"
       >
-        <div class="flex flex-col flex-grow gap-2 mb-4">
+        <div class="flex flex-col flex-grow">
           <label
             for="password"
-            class="text-sm font-medium text-blue-gray-800 italic mb-2"
+            class="text-xs font-medium text-blue-gray-800 italic mb-1"
           >
             *Kata sandi yang dimasukkan adalah kata sandi group admin
           </label>
@@ -47,8 +47,8 @@
             </div>
           </div>
           <p
+            v-show="isError"
             class="text-red-600 text-xs mt-1"
-            :class="isError ? 'visible' : 'invisible'"
           >
             Kata sandi yang anda masukkan belum sesuai
           </p>
@@ -139,6 +139,7 @@ export default {
     },
     resetForm() {
       this.password = '';
+      this.isError = false;
     },
     submitForm() {
       if (this.isFormValid && !this.isLoading) {
