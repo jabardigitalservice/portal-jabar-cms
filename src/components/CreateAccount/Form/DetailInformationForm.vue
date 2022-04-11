@@ -4,7 +4,7 @@
     <div class="flex flex-col gap-1 mb-4">
       <label
         for="name"
-        class="text-[15px] font-medium mb-1"
+        class="text-sm font-medium mb-1"
         :class="[errors.name ? 'text-red-600' : 'text-gray-800']"
       >
         Nama Anda
@@ -36,7 +36,7 @@
     <div class="flex flex-col gap-1 mb-4">
       <label
         for="occupation"
-        class="text-[15px] font-medium mb-1"
+        class="text-sm font-medium mb-1"
         :class="[errors.occupation ? 'text-red-600' : 'text-gray-800']"
       >
         Jabatan
@@ -68,7 +68,7 @@
     <div class="flex flex-col gap-1 mb-4">
       <label
         for="nip"
-        class="text-[15px] font-medium mb-1"
+        class="text-sm font-medium mb-1"
         :class="[errors.nip ? 'text-red-600' : 'text-gray-800']"
       >
         NIP
