@@ -865,7 +865,7 @@ export default {
     },
     messageAction() {
       if (this.isSuccess) {
-        this.$router.push('/berita-dan-informasi');
+        this.$router.push('/berita-dan-artikel');
         this.clearMessage();
       } else {
         this.closeMessageModal();
@@ -1083,7 +1083,7 @@ export default {
     },
     onNewsPreview() {
       if (this.isFormValid) {
-        const url = `/berita-dan-informasi/${this.newsId}/pratinjau?mode=local`;
+        const url = `/berita-dan-artikel/${this.newsId}/pratinjau?mode=local`;
         window.open(url, '_blank').focus();
       }
     },
