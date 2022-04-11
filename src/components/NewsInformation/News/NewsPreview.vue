@@ -9,12 +9,10 @@
         class="absolute w-full h-full z-10"
         style="background: linear-gradient(270.04deg, rgba(0, 23, 28, 0) 0.04%, rgba(0, 11, 14, 0.5) 50.31%, rgba(0, 35, 25, 0.9) 91.95%);"
       />
-      <div
-        data-html2canvas-ignore
-        class="relative z-20 w-full min-h-[72px] bg-black bg-opacity-[12%] backdrop-filter backdrop-blur-sm flex items-center"
-      >
+      <div class="relative z-20 w-full min-h-[72px] bg-black bg-opacity-[12%] backdrop-filter backdrop-blur-sm flex items-center">
         <div class="max-w-screen-xl w-full mx-auto flex">
           <BaseButton
+            data-html2canvas-ignore
             class="text-sm text-white border-transparent bg-green-700 hover:bg-green-800"
             title="Perbaharui Berita"
             @click="refreshPage"
@@ -29,6 +27,7 @@
             Perbaharui
           </BaseButton>
           <BaseButton
+            data-html2canvas-ignore
             class="text-sm text-white ml-8"
             title="Unduh Pratinjau (PDF)"
             @click="downloadPDF"
@@ -42,7 +41,10 @@
             </template>
             Unduh Pratinjau (PDF)
           </BaseButton>
-          <p class="flex items-center text-white ml-8">
+          <p
+            data-html2canvas-ignore
+            class="flex items-center text-white ml-8"
+          >
             <JdsIcon
               name="eye"
               size="16px"
@@ -552,10 +554,19 @@ export default {
     },
     downloadPDF() {
       html2canvas(this.$refs.content, {
-        windowWidth: 1366, // render content on 1366px width
+        windowWidth: 1440, // render content on 1440px width
         useCORS: true,
       })
         .then((canvas) => {
+          const pageWidth = 210; // Standard A4 paper width (mm)
+          const pageHeight = 295; // Standard A4 paper height (mm)
+
+          const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+          let availableHeight = imgHeight;
+          let positionY = 0;
+
+          const imgData = canvas.toDataURL('image/png', 0.6);
           // eslint-disable-next-line new-cap
           const pdf = new jsPDF({
             orientation: 'portrait',
@@ -563,12 +574,18 @@ export default {
             format: 'a4',
           });
 
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
+          pdf.addImage(imgData, 'PNG', 0, positionY, pageWidth, imgHeight, 'FAST');
 
-          const img = canvas.toDataURL('image/png');
+          availableHeight -= pageHeight;
 
-          pdf.addImage(img, 'PNG', 0, 0, pdfWidth, pdfHeight);
+          // Generate multiple pages
+          while (availableHeight >= 0) {
+            positionY = availableHeight - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, positionY, pageWidth, imgHeight, 'FAST');
+            availableHeight -= pageHeight;
+          }
+
           pdf.save(`PREVIEW - ${this.title}.pdf`);
         });
     },
