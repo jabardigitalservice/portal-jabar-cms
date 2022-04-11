@@ -1,11 +1,11 @@
 <template>
   <div
     v-if="!isAccountCreated"
-    class="p-5 mt-10 bg-white w-[443px] rounded-lg flex flex-col gap-6 xl:p-8 xl:mt-0 "
+    class="p-5 mt-20 bg-white w-[443px] rounded-lg flex flex-col gap-5"
   >
     <!-- Title -->
     <div class="flex flex-col gap-3">
-      <h1 class="text-green-700 font-bold text-2xl">
+      <h1 class="text-green-700 font-bold text-xl">
         Buat Akun
       </h1>
       <p class="text-sm text-gray-700">
@@ -17,7 +17,7 @@
       <li>
         <div class="flex gap-2 items-center">
           <p
-            class="h-8 w-8 flex justify-center items-center rounded-full font-roboto"
+            class="h-7 w-7 flex justify-center items-center rounded-full font-roboto text-sm"
             :class="[lastStep ? 'bg-white border border-green-700 text-green-700' : 'bg-green-700 text-white']"
           >
             <JdsIcon
@@ -29,7 +29,7 @@
               1
             </template>
           </p>
-          <p class="font-roboto font-medium text-green-700">
+          <p class="font-roboto font-medium text-green-700 text-sm">
             Informasi Detail
           </p>
           <div
@@ -41,13 +41,13 @@
       <li>
         <div class="flex gap-2 items-center">
           <p
-            class="h-8 w-8 flex justify-center items-center rounded-full font-roboto"
+            class="h-7 w-7 flex justify-center items-center rounded-full font-roboto"
             :class="[lastStep ? 'bg-green-700 text-white' : 'bg-gray-200 text-gray-600']"
           >
             2
           </p>
           <p
-            class="font-roboto"
+            class="font-roboto text-sm"
             :class="[lastStep ? 'text-green-700 font-bold' : 'text-gray-700']"
           >
             Kata Sandi

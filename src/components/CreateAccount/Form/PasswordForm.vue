@@ -10,7 +10,7 @@
     <div class="flex flex-col flex-grow gap-1 mb-4">
       <label
         for="password"
-        class="text-[15px] font-medium mb-1 text-gray-800"
+        class="text-sm font-medium mb-1 text-gray-800"
       >
         Kata Sandi
       </label>
@@ -47,7 +47,7 @@
     <div class="flex flex-col flex-grow gap-1 mb-4">
       <label
         for="passwordConfirmation"
-        class="text-[15px] font-medium mb-1"
+        class="text-sm font-medium mb-1"
         :class="[errors.passwordConfirmation ? 'text-red-600' : 'text-gray-800']"
       >
         Ulangi Kata Sandi
