@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main ref="content">
     <!-- News Header -->
     <section
       class="relative w-full min-h-[400px] flex flex-col items-end bg-gray-700 bg-no-repeat bg-cover"
@@ -9,10 +9,13 @@
         class="absolute w-full h-full z-10"
         style="background: linear-gradient(270.04deg, rgba(0, 23, 28, 0) 0.04%, rgba(0, 11, 14, 0.5) 50.31%, rgba(0, 35, 25, 0.9) 91.95%);"
       />
-      <div class="relative z-20 w-full min-h-[72px] bg-black bg-opacity-[12%] backdrop-filter backdrop-blur-sm flex items-center">
+      <div
+        data-html2canvas-ignore
+        class="relative z-20 w-full min-h-[72px] bg-black bg-opacity-[12%] backdrop-filter backdrop-blur-sm flex items-center"
+      >
         <div class="max-w-screen-xl w-full mx-auto flex">
           <BaseButton
-            class="text-sm text-white"
+            class="text-sm text-white border-transparent bg-green-700 hover:bg-green-800"
             title="Perbaharui Berita"
             @click="refreshPage"
           >
@@ -24,6 +27,20 @@
               />
             </template>
             Perbaharui
+          </BaseButton>
+          <BaseButton
+            class="text-sm text-white ml-8"
+            title="Download PDF"
+            @click="downloadPDF"
+          >
+            <template #icon-left>
+              <DownloadIcon
+                width="20"
+                height="20"
+                class="fill-white"
+              />
+            </template>
+            Unduh Pratinjau (PDF)
           </BaseButton>
           <p class="flex items-center text-white ml-8">
             <JdsIcon
@@ -377,6 +394,8 @@
 </template>
 
 <script>
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import BaseButton from '@/common/components/BaseButton';
 import FacebookLogo from '@/assets/icons/social-media/facebook-logo.svg?inline';
 import WhatsappLogo from '@/assets/icons/social-media/whatsapp-logo.svg?inline';
@@ -391,6 +410,7 @@ import MailIcon from '@/assets/icons/mail.svg?inline';
 import FeedbackIcon from '@/assets/icons/feedback.svg?inline';
 import SocialMediaIcon from '@/assets/icons/social-media.svg?inline';
 import TagIcon from '@/assets/icons/tag.svg?inline';
+import DownloadIcon from '@/assets/icons/download.svg?inline';
 
 import { formatDate } from '@/common/helpers/date';
 
@@ -426,6 +446,7 @@ export default {
     FeedbackIcon,
     SocialMediaIcon,
     TagIcon,
+    DownloadIcon,
   },
   props: {
     news: {
@@ -528,6 +549,28 @@ export default {
         notation: 'compact',
         compactDisplay: 'short',
       }).format(number);
+    },
+    downloadPDF() {
+      html2canvas(this.$refs.content, {
+        windowWidth: 1366, // render content on 1366px width
+        useCORS: true,
+      })
+        .then((canvas) => {
+          // eslint-disable-next-line new-cap
+          const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4',
+          });
+
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+
+          const img = canvas.toDataURL('image/png');
+
+          pdf.addImage(img, 'PNG', 0, 0, pdfWidth, pdfHeight);
+          pdf.save(`PREVIEW - ${this.title}.pdf`);
+        });
     },
   },
 };
