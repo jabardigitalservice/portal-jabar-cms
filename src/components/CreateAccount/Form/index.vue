@@ -187,7 +187,7 @@ export default {
       else this.clearErrors('occupation');
     },
     nip() {
-      if (this.nip.length !== 18) this.setErrors('nip', 'NIP harus 18 digit');
+      if (this.nip.length !== 18) this.setErrors('nip', 'NIP harus 18 digit tanpa spasi');
       else this.clearErrors('nip');
     },
     passwordConfirmation() {
