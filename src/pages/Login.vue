@@ -33,7 +33,7 @@
             Content Management System
           </h2>
           <p class="text-white leading-7">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore hic quia dolore vitae impedit assumenda? Voluptas voluptatum labore laboriosam! Iure optio eveniet quis? Odit veritatis dignissimos iste. Suscipit, nulla iusto!
+            Sampurasun! Melalui portal ini, Anda bisa menulis dan mempublikasikan berita, mendapatkan informasi layanan publik, hingga membuat agenda pimpinan dan perangkat daerah di Jawa Barat.
           </p>
         </section>
         <LoginForm />
