@@ -30,7 +30,7 @@
           </BaseButton>
           <BaseButton
             class="text-sm text-white ml-8"
-            title="Download PDF"
+            title="Unduh Pratinjau (PDF)"
             @click="downloadPDF"
           >
             <template #icon-left>
