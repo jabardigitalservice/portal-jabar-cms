@@ -62,15 +62,15 @@ export default [
     },
   },
   {
-    path: '/berita-dan-informasi',
-    name: 'Berita dan Informasi',
+    path: '/berita-dan-artikel',
+    name: 'Berita dan Artikel',
     component: () => import('@/pages/News'),
     meta: {
       layout: 'AppLayoutPrivate',
     },
   },
   {
-    path: '/berita-dan-informasi/:id/ubah',
+    path: '/berita-dan-artikel/:id/ubah',
     name: 'Ubah Berita',
     component: () => import('@/pages/News/CreateEditNews'),
     meta: {
@@ -79,8 +79,8 @@ export default [
     },
   },
   {
-    path: '/berita-dan-informasi/tambah',
-    name: 'Buat Berita Baru',
+    path: '/berita-dan-artikel/tambah',
+    name: 'Tulis Berita Baru',
     component: () => import('@/pages/News/CreateEditNews'),
     meta: {
       mode: 'create',
@@ -88,7 +88,7 @@ export default [
     },
   },
   {
-    path: '/berita-dan-informasi/:id/pratinjau',
+    path: '/berita-dan-artikel/:id/pratinjau',
     name: 'Pratinjau Berita',
     component: () => import('@/pages/News/NewsPreview'),
     meta: {

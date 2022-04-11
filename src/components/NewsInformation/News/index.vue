@@ -10,8 +10,8 @@
         <div class="w-full flex justify-between mb-5 items-center">
           <NewsMonthFilter @update-month-filter="onUpdateMonthFilter($event)" />
           <LinkButton
-            href="berita-dan-informasi/tambah"
-            title="Tambah Berita Baru"
+            href="berita-dan-artikel/tambah"
+            title="Tambah Berita"
             class="ml-auto"
           >
             <template #icon-left>
@@ -23,7 +23,7 @@
               />
             </template>
             <p class="font-lato font-bold text-sm text-white leading-none">
-              Tambah Berita Baru
+              Tambah Berita
             </p>
           </LinkButton>
         </div>

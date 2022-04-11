@@ -27,7 +27,7 @@
         <li v-if="shouldShowAction('preview')">
           <a
             class="font-lato text-sm leading-4 text-gray-800"
-            :href="`berita-dan-informasi/${item.id}/pratinjau`"
+            :href="`berita-dan-artikel/${item.id}/pratinjau`"
             target="_blank"
             rel="noopener"
           >
@@ -46,7 +46,7 @@
         <!-- Edit Action -->
         <li v-if="shouldShowAction('edit')">
           <router-link
-            :to="`berita-dan-informasi/${item.id}/ubah`"
+            :to="`berita-dan-artikel/${item.id}/ubah`"
             class="font-lato text-sm leading-4 text-gray-800"
           >
             Ubah

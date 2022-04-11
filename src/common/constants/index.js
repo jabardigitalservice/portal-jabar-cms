@@ -16,8 +16,8 @@ export const NAVIGATION_MENU = [
     icon: 'AgendaIcon',
   },
   {
-    link: '/berita-dan-informasi',
-    label: 'Berita dan Informasi',
+    link: '/berita-dan-artikel',
+    label: 'Berita dan Artikel',
     icon: 'NewsIcon',
     arrow: true,
   },
