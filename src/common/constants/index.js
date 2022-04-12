@@ -76,6 +76,10 @@ export const AGENDA_CATEGORIES = [
     label: 'OPD',
     value: 'OPD',
   },
+  {
+    label: 'Event Jawa Barat',
+    value: 'Event Jawa Barat',
+  },
 ];
 
 export const AGENDA_TYPES = [
