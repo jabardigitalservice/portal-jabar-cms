@@ -8,7 +8,7 @@
         Jadikan Administrator
       </h1>
       <p class="text-center text-sm leading-6 text-blue-gray-800 mb-6">
-        Anda akan menjadikan akun <strong>{{ memberName }}</strong> sebagai <strong>Administrator</strong>
+        Anda akan menjadikan akun <strong>{{ memberEmail }}</strong> sebagai <strong>Administrator</strong>
         <br>
         Ketikkan Kata Sandi untuk konfirmasi.
       </p>
@@ -101,7 +101,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    memberName: {
+    memberEmail: {
       type: String,
       default: '',
     },

@@ -68,7 +68,7 @@
     <SetAdminModal
       :id="item.id"
       :open="isModalOpen['set-admin']"
-      :member-name="item.name"
+      :member-email="item.email"
       @success:action="$emit('success:action')"
       @close="toggleModal('set-admin')"
     />
