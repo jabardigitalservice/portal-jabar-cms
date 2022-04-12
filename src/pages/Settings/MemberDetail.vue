@@ -84,7 +84,7 @@
     <SetAdminModal
       :id="member.id"
       :open="isSetAdminModalOpen"
-      :member-name="memberDetail.name.value"
+      :member-email="memberDetail.email.value"
       @success:action="onSuccess"
       @close="toggleSetAdminModal"
     />
