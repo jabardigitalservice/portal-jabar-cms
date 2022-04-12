@@ -334,16 +334,50 @@
         <div class="p-4 rounded-lg bg-white mb-4">
           <div class="flex flex-col">
             <h2 class="font-roboto font-medium text-green-700 mb-3">
-              Penulis dan Lokasi
+              Detail
             </h2>
             <div class="flex flex-col gap-4">
-              <div>
-                <p class="text-[15px] mb-1 text-blue-gray-800">
+              <div class="flex flex-col gap-2 relative">
+                <label
+                  for="author"
+                  class="text-[15px] text-blue-gray-800"
+                >
                   Penulis
-                </p>
-                <p class="text-sm font-bold text-blue-gray-800">
-                  <span class="capitalize">{{ author.name }}</span> - {{ author.unit }}
-                </p>
+                </label>
+                <input
+                  id="author"
+                  v-model.trim="form.author"
+                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  placeholder="Masukkan nama penulis"
+                >
+              </div>
+              <div class="flex flex-col gap-2 relative">
+                <label
+                  for="reporter"
+                  class="text-[15px] text-blue-gray-800"
+                >
+                  Peliput
+                </label>
+                <input
+                  id="reporter"
+                  v-model.trim="form.reporter"
+                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  placeholder="Masukkan nama peliput"
+                >
+              </div>
+              <div class="flex flex-col gap-2 relative">
+                <label
+                  for="editor"
+                  class="text-[15px] text-blue-gray-800"
+                >
+                  Editor
+                </label>
+                <input
+                  id="editor"
+                  v-model.trim="form.editor"
+                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  placeholder="Masukkan nama editor"
+                >
               </div>
               <JdsSelect
                 v-model="form.areaId"
@@ -473,6 +507,9 @@ export default {
         endDate: null,
         category: '',
         tags: [],
+        author: '',
+        reporter: '',
+        editor: '',
         areaId: null,
       },
       initialForm: null,
@@ -587,11 +624,11 @@ export default {
       return this.isSuccess ? 'text-green-600' : 'text-red-600';
     },
     requiredFields() {
-      const { image, duration, category, areaId } = this.form;
+      const { image, duration, category, author, reporter, editor, areaId } = this.form;
       const title = this.form.title.trim();
       const content = this.sanitizeHTML(this.form.content).slice(0, 160).trim();
 
-      return [title, image, duration, content, category, areaId];
+      return [title, image, duration, content, category, author, reporter, editor, areaId];
     },
     hasTitle() {
       return this.form.title !== '';
@@ -1008,7 +1045,7 @@ export default {
       this.loading = true;
       this.progress = 20;
 
-      const { title, content, duration, category, tags, endDate, areaId } = this.form;
+      const { title, content, duration, category, tags, endDate, author, reporter, editor, areaId } = this.form;
       let { image } = this.form;
       const normalizeEndDate = this.normalizeDate(endDate);
 
@@ -1035,6 +1072,9 @@ export default {
         end_date: normalizeEndDate ? formatDate(normalizeEndDate, 'yyyy-MM-dd') : null,
         category,
         tags: tags.map((tag) => tag.tag_name),
+        author,
+        reporter,
+        editor,
         area_id: areaId,
         status,
       };
