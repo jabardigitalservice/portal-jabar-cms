@@ -2,7 +2,7 @@
   <main ref="content">
     <!-- News Header -->
     <section
-      class="relative w-full min-h-[400px] flex flex-col items-end bg-gray-700 bg-no-repeat bg-cover"
+      class="relative w-full min-h-[414px] flex flex-col items-end bg-gray-700 bg-no-repeat bg-cover"
       :style="{ backgroundImage: `url('${headerImage}')` }"
     >
       <div
@@ -70,7 +70,7 @@
         >
           {{ title }}
         </h1>
-        <div class="flex gap-3 items-center mb-6">
+        <div class="mb-2">
           <p class="font-lato font-normal text-sm text-blue-gray-100 flex items-center">
             <CalendarIcon class="inline mr-[10px] w-4 h-4 fill-gray-200" />
             <!-- Date skeleton -->
@@ -83,9 +83,8 @@
             <!-- end of skeleton -->
             <span v-show="date">{{ date }}</span>
           </p>
-          <p class="font-normal text-sm text-blue-gray-100">
-            |
-          </p>
+        </div>
+        <div class="flex gap-3 items-center mb-6">
           <p class="font-lato font-normal text-sm text-blue-gray-100 flex items-center capitalize">
             <PenIcon class="inline mr-[10px] w-4 h-4 fill-gray-200" />
             Penulis :
@@ -102,6 +101,27 @@
               class="ml-3"
             >
               {{ author }}
+            </span>
+          </p>
+          <p class="font-normal text-sm text-blue-gray-100">
+            |
+          </p>
+          <p class="font-lato font-normal text-sm text-blue-gray-100 flex items-center capitalize">
+            <PenIcon class="inline mr-[10px] w-4 h-4 fill-gray-200" />
+            Peliput :
+            <!-- Reporter skeleton -->
+            <span
+              v-show="!reporter"
+              class="ml-3 w-[132px] h-5 flex items-center"
+            >
+              <div class="w-full h-[14px] bg-gray-500 opacity-25 rounded-md animate-pulse" />
+            </span>
+            <!-- end of skeleton -->
+            <span
+              v-show="reporter"
+              class="ml-3"
+            >
+              {{ reporter }}
             </span>
           </p>
         </div>
@@ -183,6 +203,14 @@
             class="article__body min-h-screen"
             v-html="content"
           />
+          <div
+            v-show="editor"
+            class="my-8"
+          >
+            <p class="font-lora text-gray-800 leading-6">
+              <strong class="font-lora">Editor: </strong> {{ editor }}
+            </p>
+          </div>
           <!-- News Tags -->
           <div
             v-show="hasTags"
@@ -424,9 +452,8 @@ const defaultNews = {
   shared: 0,
   tags: [],
   category: '',
-  author: {
-    name: '',
-  },
+  author: '',
+  reporter: '',
   created_at: new Date(),
   updated_at: new Date(),
 };
@@ -521,7 +548,13 @@ export default {
         : null;
     },
     author() {
-      return this.news?.author?.name || '';
+      return this.news?.author || '';
+    },
+    reporter() {
+      return this.news?.reporter || '';
+    },
+    editor() {
+      return this.news?.editor || '';
     },
     views() {
       return this.news?.views || 0;
