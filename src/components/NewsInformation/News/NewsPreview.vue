@@ -510,7 +510,13 @@ export default {
   },
   computed: {
     headerImage() {
-      return this.news?.image || null;
+      /**
+       * NOTE:
+       * Add random query string on image source to prevent browser cache.
+       * This will ensure the image is rendered when the user downloads the PDF
+       */
+      const randomStr = new Date().getTime();
+      return this.news?.image ? `${this.news?.image}?${randomStr}` : null;
     },
     title() {
       return this.news?.title || '';
@@ -553,6 +559,20 @@ export default {
       }).format(number);
     },
     downloadPDF() {
+      /**
+       * NOTE:
+       * Add random query string on image source to prevent browser cache.
+       * This will ensure the image is rendered when the user downloads the PDF
+       */
+      const images = document.querySelectorAll('.article__body img');
+
+      if (images.length) {
+        images.forEach((image, index) => {
+          const randomStr = new Date().getTime() + index;
+          image.src += `?${randomStr}`;
+        });
+      }
+
       html2canvas(this.$refs.content, {
         windowWidth: 1440, // render content on 1440px width
         useCORS: true,
