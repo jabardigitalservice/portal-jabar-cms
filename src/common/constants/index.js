@@ -161,8 +161,8 @@ export const NEWS_TABLE_HEADER = [
     sortable: true,
   },
   {
-    key: 'author',
-    text: 'Penulis',
+    key: 'created_by',
+    text: 'Dibuat oleh',
     sortable: true,
   },
   {
