@@ -576,7 +576,6 @@ export default {
       html2canvas(this.$refs.content, {
         windowWidth: 1440, // render content on 1440px width
         useCORS: true,
-        allowTaint: true,
       })
         .then((canvas) => {
           const pageWidth = 210; // Standard A4 paper width (mm)
