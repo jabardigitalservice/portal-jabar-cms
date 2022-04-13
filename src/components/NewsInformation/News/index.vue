@@ -194,7 +194,7 @@ export default {
           id: news.id,
           title: news.title,
           category: news.category,
-          author: news.author?.name || '-',
+          created_by: news.created_by?.name || '-',
           updated_at: formatDate(news.updated_at, 'dd/MM/yyyy'),
           status: news.status,
         }));
