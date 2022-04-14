@@ -208,8 +208,13 @@ export default {
         this.$router.push({ path: '/' });
       } catch (error) {
         if (error.status === 401) {
-          this.error = { message: 'Email atau kata sandi tidak sesuai' };
-          this.loginAttempts += 1;
+          const errorMessage = error.data?.message || '';
+          if (errorMessage.includes('credentials')) {
+            this.error = { message: 'Email atau kata sandi tidak sesuai' };
+            this.loginAttempts += 1;
+          } else if (errorMessage.includes('account')) {
+            this.error = { message: 'Akun Anda tidak aktif' };
+          }
         } else {
           this.error = { message: 'Terjadi kesalahan pada sistem kami' };
         }
