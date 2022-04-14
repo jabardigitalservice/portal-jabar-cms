@@ -549,9 +549,8 @@ export default {
       return this.news?.title || '';
     },
     date() {
-      return this.news?.updated_at
-        ? formatDate(this.news.updated_at, 'EEEE, dd LLLL yyyy')
-        : null;
+      const date = this.news?.updated_at || new Date();
+      return formatDate(date, 'EEEE, dd LLLL yyyy');
     },
     author() {
       return this.news?.author || '';
