@@ -232,13 +232,15 @@ export default {
     async fetchStatusCounter() {
       try {
         const response = await newsRepository.getStatusCounter();
-        const { data = [] } = response.data || {};
-
+        const { data = [] } = response.data;
         const newTabs = [];
 
         this.tabs.forEach((tab) => {
           const object = data.find((item) => item.status === tab.key);
-          newTabs.push({ ...tab, ...object });
+          newTabs.push({
+            ...tab,
+            count: object?.count || 0,
+          });
         });
 
         // Get total news off all status
