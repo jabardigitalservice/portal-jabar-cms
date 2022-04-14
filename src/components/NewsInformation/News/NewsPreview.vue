@@ -537,10 +537,16 @@ export default {
   },
   computed: {
     headerImage() {
+      const { mode } = this.$route.query;
+
+      if (mode && mode === 'local') {
+        return this.news.image;
+      }
+
       /**
        * NOTE:
        * Add random query string on image source to prevent browser cache.
-       * This will ensure the image is rendered when the user downloads the PDF
+       * This will prevent CORS error when users try to download the page
        */
       const randomStr = new Date().getTime();
       return this.news?.image ? `${this.news?.image}?${randomStr}` : null;
@@ -595,7 +601,7 @@ export default {
       /**
        * NOTE:
        * Add random query string on image source to prevent browser cache.
-       * This will ensure the image is rendered when the user downloads the PDF
+       * This will prevent CORS error when users try to download the page
        */
       const images = document.querySelectorAll('.article__body img');
 
