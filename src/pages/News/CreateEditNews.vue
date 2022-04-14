@@ -667,7 +667,6 @@ export default {
       const data = {
         ...this.form,
         id: this.newsId,
-        author: this.author,
         image: this.imagePreview,
         content: this.isEditMode ? this.form.content : this.insertNewsPrefix(this.form.content),
       };
@@ -741,7 +740,11 @@ export default {
           endDate: data.end_date ? formatDate(data.end_date, 'dd/MM/yyyy') : null,
           category: data.category,
           tags: data.tags,
+          author: data.author,
+          reporter: data.reporter,
+          editor: data.editor,
           areaId: data.area.id,
+          updated_at: data.updated_at,
         };
 
         this.newsId = id;
