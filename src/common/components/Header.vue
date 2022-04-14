@@ -34,7 +34,10 @@
       >
         <JdsPopover :value="isUserDropdownOpen">
           <template #activator>
-            <div class="grid grid-cols-[34px,_minmax(0,_1fr)] gap-4 items-center">
+            <div
+              v-on-clickaway="closeUserDropdown"
+              class="grid grid-cols-[34px,_minmax(0,_1fr)] gap-4 items-center"
+            >
               <img
                 ref="header-user-avatar"
                 :src="userAvatar"
@@ -140,6 +143,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { directive as onClickaway } from 'vue-clickaway';
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 import SettingIcon from '@/assets/icons/setting-outline.svg?inline';
@@ -148,6 +152,9 @@ import defaultAvatar from '@/assets/icons/user-avatar.svg';
 
 export default {
   name: 'Header',
+  directives: {
+    onClickaway,
+  },
   components: {
     BaseModal,
     BaseButton,
@@ -176,6 +183,9 @@ export default {
   methods: {
     toggleUserDropdown() {
       this.isUserDropdownOpen = !this.isUserDropdownOpen;
+    },
+    closeUserDropdown() {
+      this.isUserDropdownOpen = false;
     },
     openLogoutModal() {
       this.isUserDropdownOpen = false;
