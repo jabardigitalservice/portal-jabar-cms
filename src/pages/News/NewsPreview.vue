@@ -56,7 +56,6 @@ export default {
         const { data } = response.data;
         this.news = data;
       } catch (error) {
-        console.log({ error });
         if (error.response?.status === 403) {
           this.isUnauthorizedModalOpen = true;
         }
