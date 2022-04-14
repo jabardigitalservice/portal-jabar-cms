@@ -347,7 +347,7 @@
                 <input
                   id="author"
                   v-model.trim="form.author"
-                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   placeholder="Masukkan nama penulis"
                 >
               </div>
@@ -361,7 +361,7 @@
                 <input
                   id="reporter"
                   v-model.trim="form.reporter"
-                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   placeholder="Masukkan nama peliput"
                 >
               </div>
@@ -375,7 +375,7 @@
                 <input
                   id="editor"
                   v-model.trim="form.editor"
-                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   placeholder="Masukkan nama editor"
                 >
               </div>
@@ -667,7 +667,6 @@ export default {
       const data = {
         ...this.form,
         id: this.newsId,
-        author: this.author,
         image: this.imagePreview,
         content: this.isEditMode ? this.form.content : this.insertNewsPrefix(this.form.content),
       };
@@ -741,7 +740,11 @@ export default {
           endDate: data.end_date ? formatDate(data.end_date, 'dd/MM/yyyy') : null,
           category: data.category,
           tags: data.tags,
+          author: data.author,
+          reporter: data.reporter,
+          editor: data.editor,
           areaId: data.area.id,
+          updated_at: data.updated_at,
         };
 
         this.newsId = id;
