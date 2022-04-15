@@ -46,7 +46,7 @@
       <template #item.status="{item}">
         <div
           class="line-clamp-1"
-          :title="item.status"
+          :title="getStatusLabel(item.status)"
         >
           {{ getStatusLabel(item.status) }}
         </div>
