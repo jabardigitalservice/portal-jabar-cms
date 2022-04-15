@@ -163,7 +163,7 @@ export default {
   },
   data() {
     return {
-      notification: true,
+      notification: false,
       isUserDropdownOpen: false,
       isLogoutModalOpen: false,
     };
