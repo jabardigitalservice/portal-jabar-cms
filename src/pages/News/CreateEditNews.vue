@@ -450,27 +450,6 @@
         </div>
       </template>
     </BaseModal>
-    <BaseModal :open="isUnauthorizedModalOpen">
-      <div class="w-full h-full px-2 pb-4">
-        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
-          Pengubahan tidak diizinkan!
-        </h1>
-        <p class="text-gray-800 text-sm">
-          Berita ini tidak dapat diubah dikarenakan berita ini tidak dibuat oleh Anda.
-        </p>
-      </div>
-      <template #footer>
-        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
-          <BaseButton
-            type="button"
-            class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            @click="$router.go(-1);"
-          >
-            Saya mengerti
-          </BaseButton>
-        </div>
-      </template>
-    </BaseModal>
   </main>
 </template>
 
@@ -479,6 +458,7 @@ import Editor from '@tinymce/tinymce-vue';
 import Compressor from 'compressorjs';
 import debounce from 'lodash.debounce';
 import isequal from 'lodash.isequal';
+import { EventBus } from '@/common/helpers/event-bus';
 import { daysDifference, formatDate } from '@/common/helpers/date';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
@@ -757,7 +737,7 @@ export default {
         this.initialForm = Object.freeze({ ...formData });
       } catch (error) {
         if (error.response?.status === 403) {
-          this.isUnauthorizedModalOpen = true;
+          EventBus.$emit('error:forbidden');
         }
       }
     } else {
