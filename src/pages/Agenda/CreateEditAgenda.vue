@@ -291,6 +291,27 @@
         </div>
       </template>
     </BaseModal>
+    <BaseModal :open="isUnauthorizedModalOpen">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Pengubahan tidak diizinkan!
+        </h1>
+        <p class="text-gray-800 text-sm">
+          Anda tidak punya akses untuk mengubah agenda ini.
+        </p>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
+          <BaseButton
+            type="button"
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="$router.push('/agenda');"
+          >
+            Saya mengerti
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
     <ProgressModal
       :open="loading"
       :value="progress"
@@ -371,6 +392,7 @@ export default {
         title: '',
         body: '',
       },
+      isUnauthorizedModalOpen: false,
       isMessageModalOpen: false,
       isPreviewModalOpen: false,
       isConfirmationModalOpen: false,
@@ -497,20 +519,26 @@ export default {
   },
   async mounted() {
     if (this.isEditMode) {
-      const { id } = this.$route.params;
-      const response = await agendaRepository.getEventById(id);
-      const { data } = response.data;
-      this.form = {
-        title: data.title,
-        type: data.type,
-        address: data.address,
-        url: data.url,
-        date: formatDate(data.date, 'dd/MM/yyyy'),
-        start_hour: data.start_hour,
-        end_hour: data.end_hour,
-        category: data.category,
-        tags: data.tags,
-      };
+      try {
+        const { id } = this.$route.params;
+        const response = await agendaRepository.getEventById(id);
+        const { data } = response.data;
+        this.form = {
+          title: data.title,
+          type: data.type,
+          address: data.address,
+          url: data.url,
+          date: formatDate(data.date, 'dd/MM/yyyy'),
+          start_hour: data.start_hour,
+          end_hour: data.end_hour,
+          category: data.category,
+          tags: data.tags,
+        };
+      } catch (error) {
+        if (error.response?.status === 403) {
+          this.isUnauthorizedModalOpen = true;
+        }
+      }
     }
   },
   methods: {
