@@ -7,21 +7,18 @@
         <slot />
       </div>
     </div>
-    <ForbiddenAccessModal />
   </div>
 </template>
 
 <script>
 import Sidebar from '@/common/components/Sidebar';
 import Header from '@/common/components/Header';
-import ForbiddenAccessModal from '@/common/components/ForbiddenAccessModal';
 
 export default {
   name: 'AppLayoutPrivate',
   components: {
     Sidebar,
     Header,
-    ForbiddenAccessModal,
   },
 };
 </script>
