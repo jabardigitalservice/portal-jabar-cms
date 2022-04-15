@@ -1145,6 +1145,10 @@ export default {
     },
     onNewsPreview() {
       if (this.isFormValid) {
+        const data = this.$store.getters['news/newsPreview'];
+        const newsPreview = { ...data, content: this.insertNewsPrefix(data.content) };
+        this.$store.dispatch('news/createNewsPreview', newsPreview);
+
         const url = `/berita-dan-artikel/${this.newsId}/pratinjau?mode=local`;
         window.open(url, '_blank').focus();
       }
