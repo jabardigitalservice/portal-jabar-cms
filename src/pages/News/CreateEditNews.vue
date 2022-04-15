@@ -695,8 +695,6 @@ export default {
           const currentTags = JSON.stringify(form.tags);
           const initialTags = JSON.stringify(this.initialForm.tags);
 
-          console.log(currentTags, initialTags);
-
           this.isFormDataChanged = isequal(form, initialForm) && currentTags === initialTags;
         }
         this.$store.dispatch('news/createNewsPreview', this.newsPreview);
