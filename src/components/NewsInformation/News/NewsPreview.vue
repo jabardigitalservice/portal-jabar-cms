@@ -454,6 +454,7 @@ const defaultNews = {
   category: '',
   author: '',
   reporter: '',
+  editor: '',
   created_at: new Date(),
   updated_at: new Date(),
 };
