@@ -804,12 +804,15 @@ export default {
           .filter((item) => item.innerText.trim() !== '' && !item.contains(item.querySelector('img')));
 
         if (textOnlyParagraphs.length) {
+          const oldPrefixText = container.querySelector('#news-prefix');
+          if (oldPrefixText) oldPrefixText.remove();
+
           const firstParagraph = textOnlyParagraphs[0];
 
           const selectedLocation = this.locationOptions
             .find((item) => item.value === this.form.areaId);
 
-          const prefixText = `<span><strong>PORTALJABAR, ${selectedLocation.label} - </strong></span>`;
+          const prefixText = `<span id="news-prefix"><strong>PORTALJABAR, ${selectedLocation.label} - </strong></span>`;
 
           // Insert prefix before the first paragraph's text content
           firstParagraph.insertAdjacentHTML('afterbegin', prefixText);
@@ -1097,7 +1100,7 @@ export default {
         title,
         excerpt: this.sanitizeHTML(content).slice(0, 160),
         image,
-        content: this.isEditMode ? content : this.insertNewsPrefix(content),
+        content: this.insertNewsPrefix(content),
         duration,
         start_date: this.selectedDate ? formatDate(this.selectedDate, 'yyyy-MM-dd') : null,
         end_date: normalizeEndDate ? formatDate(normalizeEndDate, 'yyyy-MM-dd') : null,
