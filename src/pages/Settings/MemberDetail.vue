@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/common/helpers/event-bus';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import DeactivateMemberModal from '@/components/Settings/Member/DeactivateMemberModal';
@@ -195,10 +196,14 @@ export default {
 
         this.member = data;
       } catch (error) {
-        this.$toast({
-          type: 'error',
-          message: 'Gagal mendapatkan data Member, silakan coba beberapa saat lagi',
-        });
+        if (error.response?.status === 403) {
+          EventBus.$emit('error:forbidden');
+        } else {
+          this.$toast({
+            type: 'error',
+            message: 'Gagal mendapatkan data Member, silakan coba beberapa saat lagi',
+          });
+        }
       } finally {
         this.loading = false;
       }
