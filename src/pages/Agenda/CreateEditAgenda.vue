@@ -291,27 +291,6 @@
         </div>
       </template>
     </BaseModal>
-    <BaseModal :open="isUnauthorizedModalOpen">
-      <div class="w-full h-full px-2 pb-4">
-        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
-          Pengubahan tidak diizinkan!
-        </h1>
-        <p class="text-gray-800 text-sm">
-          Anda tidak punya akses untuk mengubah agenda ini.
-        </p>
-      </div>
-      <template #footer>
-        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
-          <BaseButton
-            type="button"
-            class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            @click="$router.push('/agenda');"
-          >
-            Saya mengerti
-          </BaseButton>
-        </div>
-      </template>
-    </BaseModal>
     <ProgressModal
       :open="loading"
       :value="progress"
@@ -325,6 +304,7 @@ import ProgressModal from '@/common/components/ProgressModal';
 import {
   daysDifference, formatDate, isToday, minutesDifference,
 } from '@/common/helpers/date';
+import { EventBus } from '@/common/helpers/event-bus';
 import { AGENDA_CATEGORIES } from '@/common/constants';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
@@ -536,7 +516,7 @@ export default {
         };
       } catch (error) {
         if (error.response?.status === 403) {
-          this.isUnauthorizedModalOpen = true;
+          EventBus.$emit('error:forbidden');
         }
       }
     }
