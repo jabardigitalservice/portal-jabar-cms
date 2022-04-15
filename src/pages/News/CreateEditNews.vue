@@ -692,7 +692,10 @@ export default {
             ...this.initialForm,
             content: this.sanitizeHTML(this.initialForm.content),
           };
-          this.isFormDataChanged = isequal(form, initialForm);
+          const currentTags = JSON.stringify(form.tags);
+          const initialTags = JSON.stringify(this.initialForm.tags);
+
+          this.isFormDataChanged = isequal(form, initialForm) && currentTags === initialTags;
         }
         this.$store.dispatch('news/createNewsPreview', this.newsPreview);
       },
@@ -739,7 +742,7 @@ export default {
           startDate: formatDate(data.start_date, 'dd/MM/yyyy'),
           endDate: data.end_date ? formatDate(data.end_date, 'dd/MM/yyyy') : null,
           category: data.category,
-          tags: data.tags,
+          tags: data.tags.map((tag, index) => ({ id: index, tag_name: tag.tag_name })),
           author: data.author,
           reporter: data.reporter,
           editor: data.editor,
@@ -863,16 +866,21 @@ export default {
       }
     },
     setTags(tag) {
+      const id = this.form.tags.length;
       this.form.tags = [
         ...this.form.tags,
-        { tag_name: tag },
+        { id, tag_name: tag },
       ];
     },
     setTagSuggestions(tagSuggestions) {
       this.tagSuggestions = tagSuggestions;
     },
     removeTag(index) {
+      // Remove the tag
       this.form.tags.splice(index, 1);
+
+      // Re-index the tags
+      this.form.tags = this.form.tags.map((tag, idx) => ({ id: idx, tag_name: tag.tag_name }));
     },
     clearTag() {
       this.tag = '';
