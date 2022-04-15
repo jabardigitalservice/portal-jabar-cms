@@ -285,6 +285,7 @@
 
 <script>
 import { formatDate } from '@/common/helpers/date';
+import { EventBus } from '@/common/helpers/event-bus';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import LinkButton from '@/common/components/LinkButton';
@@ -340,10 +341,14 @@ export default {
 
       this.event = data;
     } catch (error) {
-      this.$toast({
-        type: 'error',
-        message: 'Gagal mendapatkan data Agenda, silakan coba beberapa saat lagi',
-      });
+      if (error?.response.status === 403) {
+        EventBus.$emit('error:forbidden');
+      } else {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Agenda, silakan coba beberapa saat lagi',
+        });
+      }
     } finally {
       this.loading = false;
     }
