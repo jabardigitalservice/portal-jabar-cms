@@ -1,6 +1,9 @@
 <template>
   <div>
-    <NewsPreview :news="news" />
+    <NewsPreview
+      :news="news"
+      :loading="loading"
+    />
     <BaseModal :open="isUnauthorizedModalOpen">
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
@@ -43,6 +46,7 @@ export default {
   data() {
     return {
       news: null,
+      loading: false,
       isUnauthorizedModalOpen: false,
     };
   },
@@ -51,6 +55,7 @@ export default {
       this.news = this.$store.getters['news/newsPreview'];
     } else {
       try {
+        this.loading = true;
         const { id } = this.$route.params;
         const response = await newsRepository.getNewsById(id);
         const { data } = response.data;
@@ -59,6 +64,8 @@ export default {
         if (error.response?.status === 403) {
           this.isUnauthorizedModalOpen = true;
         }
+      } finally {
+        this.loading = false;
       }
     }
   },
