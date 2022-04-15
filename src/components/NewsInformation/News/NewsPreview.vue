@@ -57,7 +57,7 @@
       <div class="relative z-20 max-w-screen-xl w-full mx-auto mt-[42px] pb-16">
         <!-- Title skeleton -->
         <div
-          v-show="!title"
+          v-show="loading"
           class="w-full h-[96px] flex flex-col gap-4 justify-center mb-6"
         >
           <div class="w-3/5 h-[28px] bg-gray-500 opacity-25 rounded-lg animate-pulse" />
@@ -65,7 +65,7 @@
         </div>
         <!-- end of skeleton -->
         <h1
-          v-show="title"
+          v-show="!loading"
           class="font-lora font-medium text-[34px] leading-[48px] text-white mb-6 max-w-3xl"
         >
           {{ title }}
@@ -75,13 +75,13 @@
             <CalendarIcon class="inline mr-[10px] w-4 h-4 fill-gray-200" />
             <!-- Date skeleton -->
             <span
-              v-show="!date"
+              v-show="loading"
               class="w-[132px] h-5 flex items-center"
             >
               <div class="w-full h-[14px] bg-gray-500 opacity-25 rounded-md animate-pulse " />
             </span>
             <!-- end of skeleton -->
-            <span v-show="date">{{ date }}</span>
+            <span v-show="!loading">{{ date }}</span>
           </p>
         </div>
         <div class="flex gap-3 items-center mb-6">
@@ -90,14 +90,14 @@
             Penulis :
             <!-- Author skeleton -->
             <span
-              v-show="!author"
+              v-show="loading"
               class="ml-3 w-[132px] h-5 flex items-center"
             >
               <div class="w-full h-[14px] bg-gray-500 opacity-25 rounded-md animate-pulse" />
             </span>
             <!-- end of skeleton -->
             <span
-              v-show="author"
+              v-show="!loading"
               class="ml-3"
             >
               {{ author }}
@@ -111,14 +111,14 @@
             Peliput :
             <!-- Reporter skeleton -->
             <span
-              v-show="!reporter"
+              v-show="loading"
               class="ml-3 w-[132px] h-5 flex items-center"
             >
               <div class="w-full h-[14px] bg-gray-500 opacity-25 rounded-md animate-pulse" />
             </span>
             <!-- end of skeleton -->
             <span
-              v-show="reporter"
+              v-show="!loading"
               class="ml-3"
             >
               {{ reporter }}
@@ -182,7 +182,7 @@
         <div>
           <!-- News content skeleton -->
           <div
-            v-show="!content"
+            v-show="loading"
             class="w-full min-h-screen"
           >
             <div
@@ -199,7 +199,7 @@
           </div>
           <!-- end of skeleton -->
           <article
-            v-show="content"
+            v-show="!loading"
             class="article__body min-h-screen"
             v-html="content"
           />
@@ -454,6 +454,7 @@ const defaultNews = {
   category: '',
   author: '',
   reporter: '',
+  editor: '',
   created_at: new Date(),
   updated_at: new Date(),
 };
@@ -481,6 +482,10 @@ export default {
     news: {
       type: Object,
       default: () => ({ ...defaultNews }),
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
