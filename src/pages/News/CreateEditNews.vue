@@ -695,6 +695,8 @@ export default {
           const currentTags = JSON.stringify(form.tags);
           const initialTags = JSON.stringify(this.initialForm.tags);
 
+          console.log(currentTags, initialTags);
+
           this.isFormDataChanged = isequal(form, initialForm) && currentTags === initialTags;
         }
         this.$store.dispatch('news/createNewsPreview', this.newsPreview);
@@ -877,7 +879,7 @@ export default {
     },
     removeTag(index) {
       // Remove the tag
-      this.form.tags.splice(index, 1);
+      this.form.tags = this.form.tags.filter((tag, tagIndex) => tagIndex !== index);
 
       // Re-index the tags
       this.form.tags = this.form.tags.map((tag, idx) => ({ id: idx, tag_name: tag.tag_name }));
