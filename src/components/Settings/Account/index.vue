@@ -1,7 +1,8 @@
 <template>
   <main class="space-y-4 pb-4">
     <PersonalInformationSection />
-    <NotificationSection />
+    <!-- NOTE: Temporarily hide this feature -->
+    <!-- <NotificationSection /> -->
     <PrivacyAndSecuritySection />
     <Restricted permission="user.request-to-be-admin">
       <RequestUpgradeRoleSection />
@@ -11,7 +12,7 @@
 
 <script>
 import PersonalInformationSection from './PersonalInformationSection';
-import NotificationSection from './NotificationSection';
+// import NotificationSection from './NotificationSection';
 import PrivacyAndSecuritySection from './PrivacyAndSecuritySection';
 import RequestUpgradeRoleSection from './RequestUpgradeRoleSection';
 import Restricted from '@/common/components/Restricted';
@@ -20,7 +21,7 @@ export default {
   name: 'AccountSettings',
   components: {
     PersonalInformationSection,
-    NotificationSection,
+    // NotificationSection,
     PrivacyAndSecuritySection,
     RequestUpgradeRoleSection,
     Restricted,
