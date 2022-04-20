@@ -192,27 +192,27 @@ export const MEMBER_TABLE_HEADER = [
   {
     key: 'name',
     text: 'Nama',
-    sortable: true,
+    // sortable: true,
   },
   {
     key: 'email',
     text: 'Email',
-    sortable: true,
+    // sortable: true,
   },
   {
     key: 'role',
     text: 'Keanggotaan',
-    sortable: true,
+    // sortable: true,
   },
   {
     key: 'last_active',
     text: 'Terakhir Aktif',
-    sortable: true,
+    // sortable: true,
   },
   {
     key: 'status',
     text: 'Status',
-    sortable: true,
+    // sortable: true,
   },
   {
     key: 'action',
