@@ -81,14 +81,15 @@
           </div>
         </div>
       </div>
-      <div class="w-full text-right">
-        <div
+      <div class="w-full text-right mb-6">
+      <!-- NOTE: Temporarily hide this feature -->
+        <!-- <div
           ref="forgot-password-link"
-          class="text-[#1E88E5] inline-block mb-6 text-sm cursor-pointer"
+          class="text-[#1E88E5] inline-block text-sm cursor-pointer"
           @click="toggleForgotPasswordModal"
         >
           Lupa kata sandi?
-        </div>
+        </div> -->
       </div>
       <button
         v-if="!isLoading"
