@@ -11,7 +11,8 @@
     </h1>
     <div class="flex">
       <!-- Notification -->
-      <button
+      <!-- NOTE: Temporarily hide this feature -->
+      <!-- <button
         ref="header-notification"
         title="Notification"
       >
@@ -26,7 +27,7 @@
             size="20px"
           />
         </JdsBadge>
-      </button>
+      </button> -->
       <!-- User Dropdown -->
       <div
         ref="header-user"
