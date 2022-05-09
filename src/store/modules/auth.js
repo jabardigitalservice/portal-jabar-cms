@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import jwtDecode from 'jwt-decode';
 import { RepositoryFactory } from '../../repositories/RepositoryFactory';
 import { getAllCookies, removeAllCookies, setCookies } from '@/common/helpers/cookies';
@@ -36,12 +37,12 @@ export default {
   },
   actions: {
     async getUser({ dispatch }) {
-      const token = getAllCookies();
-      if (!Object.keys(token).length) return;
+      const { access_token, refresh_token } = getAllCookies();
+      if (!access_token && !refresh_token) return;
 
       try {
         const response = await userRepository.getUser();
-        dispatch('setToken', token);
+        dispatch('setToken', { access_token, refresh_token });
         dispatch('setUser', response.data.data);
       } catch (error) {
         dispatch('setToken', null);
@@ -49,10 +50,10 @@ export default {
       }
     },
     getPermissions({ dispatch }) {
-      const token = getAllCookies();
-      if (!Object.keys(token).length) return;
+      const { access_token, refresh_token } = getAllCookies();
+      if (!access_token && !refresh_token) return;
 
-      const decodedToken = jwtDecode(token.access_token);
+      const decodedToken = jwtDecode(access_token);
       const { permissions } = decodedToken;
       dispatch('setPermissions', permissions);
     },
