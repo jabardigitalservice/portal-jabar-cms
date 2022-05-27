@@ -103,6 +103,7 @@
           <input
             id="name"
             v-model="updatedUser['name']"
+            maxlength="100"
             type="text"
             class="focus:outline-none border border-gray-400 p-2 rounded-md font-lato text-sm text-blue-gray-800"
             placeholder="Masukkan nama baru"
@@ -121,6 +122,7 @@
           <input
             id="occupation"
             v-model="updatedUser['occupation']"
+            maxlength="100"
             type="text"
             class="focus:outline-none border border-gray-400 p-2 rounded-md font-lato text-sm text-blue-gray-800"
             placeholder="Masukkan jabatan"
