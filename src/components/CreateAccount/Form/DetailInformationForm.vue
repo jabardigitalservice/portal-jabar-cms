@@ -49,7 +49,7 @@
           id="occupation"
           :value="occupation"
           type="text"
-          maxlength="35"
+          maxlength="100"
           autocomplete="off"
           placeholder="Masukkan jabatan Anda"
           class="text-sm placeholder:text-gray-600 p-2 w-full focus:outline-none focus-within:placeholder:text-gray-500"
