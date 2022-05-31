@@ -202,7 +202,7 @@ export default {
          *  so we need to convert it back to YYYY/MM/dd before reformatting it
          */
         const reversedDate = date.split('/').reverse().join('/');
-        return formatDate(reversedDate, 'EEE, dd MMM yyyy');
+        return formatDate(reversedDate, 'EEEE, dd MMM yyyy');
       }
 
       return '-';
