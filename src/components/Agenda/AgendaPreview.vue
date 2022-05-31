@@ -195,7 +195,17 @@ export default {
       return '-';
     },
     date() {
-      return this.event?.date ? formatDate(this.event.date, 'EEEE, dd MMM yyyy') : '-';
+      if (this.event?.date) {
+        const { date } = this.event;
+        /**
+         * `this.event.date` is already formatted to dd/MM/YYYY (id-ID locale)
+         *  so we need to convert it back to YYYY/MM/dd before reformatting it
+         */
+        const reversedDate = date.split('/').reverse().join('/');
+        return formatDate(reversedDate, 'EEEE, dd MMM yyyy');
+      }
+
+      return '-';
     },
     hasTags() {
       return this.event?.tags && !!this.event?.tags.length;
