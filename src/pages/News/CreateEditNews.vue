@@ -719,7 +719,7 @@ export default {
           image: data.image,
           content: data.content,
           duration: data.duration,
-          startDate: formatDate(data.start_date, 'dd/MM/yyyy'),
+          startDate: data.start_date ? formatDate(data.start_date, 'dd/MM/yyyy') : null,
           endDate: data.end_date ? formatDate(data.end_date, 'dd/MM/yyyy') : null,
           category: data.category,
           tags: data.tags.map((tag, index) => ({ id: index, tag_name: tag.tag_name })),
