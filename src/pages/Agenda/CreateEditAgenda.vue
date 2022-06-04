@@ -645,6 +645,9 @@ export default {
     async updateEvent(data) {
       this.progress = 50;
       try {
+        if (!this.isFormValid) {
+          throw new Error();
+        }
         const { id } = this.$route.params;
         await agendaRepository.updateEvent(id, data);
         this.successMessage = {
